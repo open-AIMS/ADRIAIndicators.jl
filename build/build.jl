@@ -10,4 +10,5 @@ PackageCompiler.create_library("$(@__DIR__)/..", target_dir;
                                 incremental=false,
                                 filter_stdlibs=true,
                                 force=true, # Overwrite target_dir.
+                                header_files = [joinpath(@__DIR__, "ReefMetrics.h")]
                             )

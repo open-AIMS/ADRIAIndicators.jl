@@ -15,4 +15,3 @@ ReefMetrics.coral_diversity(
     pointer(dummy_input), 
     pointer(dummy_output)
 )
-print(dummy_output)
