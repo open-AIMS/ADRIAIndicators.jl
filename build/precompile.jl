@@ -13,5 +13,5 @@ ReefMetrics.coral_diversity(
     n_groups, 
     n_locs, 
     pointer(dummy_input), 
-    pointer(dummy_output)
+    dummy_output#pointer(dummy_output)
 )
