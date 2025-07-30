@@ -1,1 +1,4 @@
 sandbox/
+docs/build/
+build/*.so
+build/*.dll
