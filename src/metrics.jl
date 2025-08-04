@@ -1,3 +1,65 @@
+function _dimension_mismatch_message(
+    array_name_1::String,
+    array_name_2::String,
+    dims1::Tuple,
+    dims2::Tuple
+)::String
+    msg = "\'$(array_name_1)\' and \'$(array_name_2)\' have mismatching dimensions. "
+    msg += "\'$(array_name_1)\' and \'$(array_name_2)\' have shapes, $(dims1) and $(dims2) "
+    msg += "respectively. Please check the expected shapes and dimensions are correct."
+    return msg
+end
+
+"""
+    _relative_habitable_cover!(relative_habitable_cover::Array{T,2}, habitable_area_m²::Vector{T}, out_relative_habitable_cover::Vector{T})::Nothing
+
+# Arguments
+- relative_habitable_cover : Array containing relative habitable cover with dimensions [timesteps ⋅ locations].
+- habitable_area_m² : Habitable area.
+- out_relative_habitable_cover : Output vector buffer for relative cover with dimensions [timesteps].
+"""
+function _relative_habitable_cover!(
+    relative_habitable_cover::Array{T,2},
+    habitable_area_m²::Vector{T},
+    out_relative_habitable_cover::Vector{T}
+)::Nothing
+    total_area::T = sum(habitable_area_m²)
+    out_relative_habitable_cover .= dropdims(sum(
+        relative_habitable_cover .* habitable_area_m²', dims=2
+    ), dims=2) ./ total_area
+
+    return nothing
+end
+
+"""
+    _relative_habitable_cover(relative_habitable_cover::Array{T,2}, habitable_area_m²::Vector{T})::Vector{T} where {T<:Real}
+
+# Arguments
+- relative_habitable_cover : Coral cover relative to habitable_area with dimensions [timesteps ⋅ locations]
+- habitable_area_m² : The habitable area of each location with dimensions [locations]
+"""
+function relative_habitable_cover(
+    relative_habitable_cover::Array{T,2},
+    habitable_area_m²::Vector{T}
+)::Vector{T} where {T<:AbstractFloat}
+    n_locations::Int64 = size(relative_habitable_cover, 2)
+
+    if (size(habitable_area_m²) != n_locations)
+        throw(DimensionMismatch(_dimension_mismatch_message(
+            "relative_habitable_cover",
+            "habitable_area_m²",
+            size(relative_habitable_cover),
+            size(habitable_area_m²)
+        )))
+    end
+
+    out_rel_cover::Vector{T} = zeros(T, n_locations)
+    _relative_habitable_cover!(relative_habitable_cover, habitable_area_m², out_rel_cover)
+
+    return out_rel_cover
+end
+
+
 """
     _coral_diversity(r_taxa_cover::Array{T, 3}, out_coral_diversity::Array{T,2})::Nothing where {T<:Real}
 using Base: _dim_stack
@@ -266,18 +328,6 @@ function _relative_shelter_volume!(
     out_RSV .= ASV_m³ ./ reshape(MSV_m³, (1, n_groups,1 , n_locations))
 
     return nothing
-end
-
-function _dimension_mismatch_message(
-    array_name_1::String,
-    array_name_2::String,
-    dims1::Tuple,
-    dims2::Tuple
-)::String
-    msg = "\'$(array_name_1)\' and \'$(array_name_2)\' have mismatching dimensions. "
-    msg += "\'$(array_name_1)\' and \'$(array_name_2)\' have shapes, $(dims1) and $(dims2) "
-    msg += "respectively. Please check the expected shapes and dimensions are correct."
-    return msg
 end
 
 """

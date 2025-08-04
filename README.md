@@ -1,5 +1,11 @@
 # ReefMetrics.jl
 
+## Naming Conventions
+
+- **Relative Habitable Cover** - The proportion of habitable reef covered by coral
+- **Relative Reef Cover** - The proportion of reef (habitable and uninhabitable) covered by
+  coral.
+
 ## Build Instructions
 
 ```bash
@@ -14,31 +20,53 @@ julia --project=. build.jl
 
 **Reef State Metrics**
 
-- Relative Cover
-- Total Absolute Cover
-- Relative Taxa Cover
-- Relative Loc Taxa Cover
-- Relative Juveniles
-- Absolute Juveniles
-- Coral Diversity
-- Coral Evenness
-- Juveniles Indicator
-- Absolute Shelter Volume
-- Relative Shelter Volume
+- [ ] Relative Cover
+- [ ] Total Absolute Cover
+- [ ] Relative Taxa Cover
+- [ ] Relative Loc Taxa Cover
+- [ ] Relative Juveniles
+- [ ] Absolute Juveniles
+- [x] Coral Diversity
+- [x] Coral Evenness
+- [ ] Juveniles Indicator
+- [x] Absolute Shelter Volume
+- [x] Relative Shelter Volume
 
 **Biodiversity Metrics**
 
-- Reef Biodiversity Condition Index
+- [ ] Reef Biodiversity Condition Index
 
 **Economic Metrics**
 
-- Reef Tourism Index
-- Reef Condition Index
-- Reef Fish Index
+- [ ] Reef Tourism Index
+- [ ] Reef Condition Index
+- [ ] Reef Fish Index
 
-**Others**
+## Tested Metrics
 
-- Simpsons Diversity
+**Reef State Metrics**
+
+- [ ] Relative Cover
+- [ ] Total Absolute Cover
+- [ ] Relative Taxa Cover
+- [ ] Relative Loc Taxa Cover
+- [ ] Relative Juveniles
+- [ ] Absolute Juveniles
+- [x] Coral Diversity
+- [ ] Coral Evenness
+- [ ] Juveniles Indicator
+- [ ] Absolute Shelter Volume
+- [ ] Relative Shelter Volume
+
+**Biodiversity Metrics**
+
+- [ ] Reef Biodiversity Condition Index
+
+**Economic Metrics**
+
+- [ ] Reef Tourism Index
+- [ ] Reef Condition Index
+- [ ] Reef Fish Index
 
 ## Function inputs
 
