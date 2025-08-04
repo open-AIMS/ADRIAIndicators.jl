@@ -66,7 +66,6 @@ using ReefMetrics: coral_diversity
         rel_cover[3, 3, 3] = 0.3
 
         cor_div::Matrix{Float64} = coral_diversity(rel_cover)
-        println(cor_div)
         @test all(cor_div[1, 1] .≈ 0.75)
         @test all(cor_div[1, 2] .≈ 0.75)
         @test all(cor_div[1, 3] .≈ 0.75)
