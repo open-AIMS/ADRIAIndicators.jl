@@ -34,11 +34,11 @@ Calculates coral taxa diversity as a dimensionless metric. Derived from the simp
 Formulated as part of a reef condition index by Dr Mike Williams (mjmcwilliam@outlook.com) and
 Dr Morgan Pratchett (morgan.pratchett@jcu.edu.au).
 
-The coral diversity metric (``D``) for a given location and timestep if given as
+The coral diversity metric (``D``) for a given location and timestep is given as
 
 ```math
 \\begin{aligned}
-D(x) = \\sum_{g=1}^{G} (\\frac{x_g}{x_T})^2,
+D(x) = 1 - \\sum_{g=1}^{G} (\\frac{x_g}{x_T})^2,
 \\end{aligned}
 ```
 
@@ -53,14 +53,14 @@ Matrix containing coral diversity metric of dimension [timesteps ⋅ locations]
 """
 function coral_diversity(rel_cover::Array{T,3})::Array{T,2} where {T<:Real}
     n_tsteps, n_groups, n_locs = size(rel_cover)
-    coral_div::Array{T,2} = zeros(T, n_steps, n_locs)
+    coral_div::Array{T,2} = zeros(T, n_tsteps, n_locs)
     _coral_diversity!(rel_cover, coral_div)
 
     return coral_div
 end
 
 """
-    coral_evenness(r_taxa_cover::AbstractArray{T})::AbstractArray{T} where {T<:Real}
+    _coral_evenness!(r_taxa_cover::AbstractArray{T,3}, out_coral_evenness::Array{T,2})::Nothing where {T<:Real}
 
 Calculates evenness across functional coral groups in ADRIA as a diversity metric.
 Inverse Simpsons diversity indicator.
@@ -89,7 +89,7 @@ function _coral_evenness!(
             1.0 ./ sum((rel_cover[:, :, loc] ./ loc_cover[:, loc]) .^ 2; dims=2)
     end
 
-    replace!(
+    out_coral_evenness = replace!(
         out_coral_evenness, NaN => 0.0, Inf => 0.0
     ) ./ n_grps
 
@@ -274,19 +274,21 @@ function _dimension_mismatch_message(
     dims1::Tuple,
     dims2::Tuple
 )::String
-    msg = "\'$(array_name_1)\' and \'$(array_name_2)\' have mismatching dimensions. " 
+    msg = "\'$(array_name_1)\' and \'$(array_name_2)\' have mismatching dimensions. "
     msg += "\'$(array_name_1)\' and \'$(array_name_2)\' have shapes, $(dims1) and $(dims2) "
     msg += "respectively. Please check the expected shapes and dimensions are correct."
     return msg
 end
 
 """
+    relative_shelter_volume(relative_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::Vector{T})::Array{T,4} where {T<:Real}
+
 Calculate the relative shelter volume for a range of covers. Relative shelter volume (RSV) is
 given by
 
 ```math
 \\begin{align}
-    \\text{RSV}(x) = \frac{ASV(x)}{MSV(x)},
+    \\text{RSV}(x) = \\frac{ASV(x)}{MSV(x)},
 \\end{align}
 ```
 
@@ -301,7 +303,7 @@ where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respect
 # Returns
 Relative shelter volume in an array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
 """
-function _relative_shelter_volume(
+function relative_shelter_volume(
     relative_cover::Array{T,4},
     colony_mean_area_cm::Array{T,2},
     planar_area_params::Array{T,3},
@@ -311,25 +313,25 @@ function _relative_shelter_volume(
 
     if size(colony_mean_area_cm) != (n_groups, n_sizes)
         throw(DimensionMismatch(_dimension_mismatch_message(
-            "relative_cover", 
-            "colony_mean_area_cm", 
-            size(relative_cover), 
+            "relative_cover",
+            "colony_mean_area_cm",
+            size(relative_cover),
             size(colony_mean_area_cm)
         )))
     end
     if size(planar_area_params) != (n_groups, n_sizes, 2)
         throw(DimensionMismatch(_dimension_mismatch_message(
-            "relative_cover", 
-            "planar_area_params", 
-            size(relative_cover), 
+            "relative_cover",
+            "planar_area_params",
+            size(relative_cover),
             size(planar_area_params)
         )))
     end
     if size(habitable_area_m²) != n_locs
         throw(DimensionMismatch(_dimension_mismatch_message(
-            "relative_cover", 
-            "habitable_area_m²", 
-            size(relative_cover), 
+            "relative_cover",
+            "habitable_area_m²",
+            size(relative_cover),
             size(habitable_area_m²)
         )))
     end
