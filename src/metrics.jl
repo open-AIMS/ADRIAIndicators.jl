@@ -1,3 +1,17 @@
+"""
+    _dimension_mismatch_message(array_name_1::String, array_name_2::String, dims1::Tuple, dims2::Tuple)::String
+
+Construct an informative error message when a discrepency between array dimensions is detected.
+
+# Arguments
+- array_name_1 : Name of the first array.
+- array_name_2 : Name of the second array.
+- dims1 : Shape of the first array.
+- dims2 : Shape of the second array.
+
+# Returns
+String containing an informative error message.
+"""
 function _dimension_mismatch_message(
     array_name_1::String,
     array_name_2::String,
@@ -8,27 +22,6 @@ function _dimension_mismatch_message(
     msg += "\'$(array_name_1)\' and \'$(array_name_2)\' have shapes, $(dims1) and $(dims2) "
     msg += "respectively. Please check the expected shapes and dimensions are correct."
     return msg
-end
-
-"""
-    _relative_habitable_cover!(relative_habitable_cover::Array{T,2}, habitable_area_m²::Vector{T}, out_relative_habitable_cover::Vector{T})::Nothing
-
-# Arguments
-- relative_habitable_cover : Array containing relative habitable cover with dimensions [timesteps ⋅ locations].
-- habitable_area_m² : Habitable area.
-- out_relative_habitable_cover : Output vector buffer for relative cover with dimensions [timesteps].
-"""
-function _relative_habitable_cover!(
-    relative_habitable_cover::Array{T,2},
-    habitable_area_m²::Vector{T},
-    out_relative_habitable_cover::Vector{T}
-)::Nothing
-    total_area::T = sum(habitable_area_m²)
-    out_relative_habitable_cover .= dropdims(sum(
-        relative_habitable_cover .* habitable_area_m²', dims=2
-    ), dims=2) ./ total_area
-
-    return nothing
 end
 
 """
@@ -54,9 +47,19 @@ function relative_habitable_cover(
     end
 
     out_rel_cover::Vector{T} = zeros(T, n_locations)
-    _relative_habitable_cover!(relative_habitable_cover, habitable_area_m², out_rel_cover)
+    _aggregate_relative_cover!(relative_habitable_cover, habitable_area_m², out_rel_cover)
 
     return out_rel_cover
+end
+
+"""
+    relative_reef_cover(relative_habitable_cover::Array{T,2}, habitable_area_m²::Vector{T})::Vector{T} where {T<:AbstractFloat}
+"""
+function relative_reef_cover(
+    relative_habitable_cover::Array{T,2},
+    habitable_area_m²::Vector{T}
+)::Vector{T} where {T<:AbstractFloat}
+    return []
 end
 
 
