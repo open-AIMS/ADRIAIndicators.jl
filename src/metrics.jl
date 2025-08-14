@@ -200,7 +200,6 @@ end
 
 """
     _coral_diversity(r_taxa_cover::Array{T, 3}, out_coral_diversity::Array{T,2})::Nothing where {T<:Real}
-using Base: _dim_stack
 
 Calculates coral taxa diversity as a dimensionless metric.
 

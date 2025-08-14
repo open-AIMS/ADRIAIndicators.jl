@@ -1,6 +1,6 @@
 using Test
 
-using ReefMetrics: coral_diversity
+using ReefMetrics: coral_diversity, coral_evenness
 
 @testset "Coral Diversity" begin
 
@@ -76,5 +76,33 @@ using ReefMetrics: coral_diversity
         @test all(cor_div[3, 2] .≈ 0.0)
         @test all(cor_div[3, 3] .≈ 0.0)
 
+    end
+end
+
+@testset "Coral Evenness" begin
+
+    @testset "All Zero" begin
+        rel_cover = zeros(Float64, 10, 5, 20)
+        evenness = coral_evenness(rel_cover)
+        @test all(evenness .== 0.0)
+    end
+
+    @testset "Multi-timestep, Multi-location" begin
+        n_tsteps, n_groups, n_locs = 2, 4, 2
+        rel_cover = zeros(Float64, n_tsteps, n_groups, n_locs)
+
+        rel_cover[1, :, 1] .= 0.2
+        rel_cover[1, :, 2] = [0.4, 0.1, 0.1, 0.2]
+        rel_cover[2, 1, 1] = 0.5
+
+        evenness = coral_evenness(rel_cover)
+
+        @test evenness[1, 1] ≈ 4.0
+        @test evenness[1, 2] ≈ (1 / 0.34375)
+        @test evenness[2, 1] ≈ 1.0
+        @test evenness[2, 2] == 0.0
+
+        out_evenness = coral_evenness(rel_cover)
+        @test out_evenness == evenness
     end
 end
