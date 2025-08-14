@@ -75,6 +75,6 @@ using ReefMetrics: coral_diversity
         @test all(cor_div[3, 1] .≈ 0.0)
         @test all(cor_div[3, 2] .≈ 0.0)
         @test all(cor_div[3, 3] .≈ 0.0)
-        
+
     end
 end

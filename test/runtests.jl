@@ -1,1 +1,1 @@
-include("coral_diverstiy.jl")
+include("test_diversity_metrics.jl")
