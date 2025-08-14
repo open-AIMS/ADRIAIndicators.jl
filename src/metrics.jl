@@ -21,6 +21,7 @@ function _dimension_mismatch_message(
     msg = "\'$(array_name_1)\' and \'$(array_name_2)\' have mismatching dimensions. "
     msg += "\'$(array_name_1)\' and \'$(array_name_2)\' have shapes, $(dims1) and $(dims2) "
     msg += "respectively. Please check the expected shapes and dimensions are correct."
+
     return msg
 end
 
@@ -39,6 +40,7 @@ function _relative_loc_cover!(
 )::Nothing where {T<:Real}
     # Sum over groups and sizes
     out_relative_cover .= dropdims(sum(relative_cover; dims=(2, 3)); dims=(2, 3))
+
     return nothing
 end
 
@@ -57,6 +59,7 @@ function relative_loc_cover(relative_cover::Array{T,4})::Array{T,2} where {T<:Re
     n_timesteps, _, _, n_locations = size(relative_cover)
     out_relative_cover = zeros(T, n_timesteps, n_locations)
     _relative_loc_cover!(relative_cover, out_relative_cover)
+
     return out_relative_cover
 end
 
@@ -80,6 +83,7 @@ function _relative_taxa_cover!(
     absolute_group_cover = group_cover .* k_area'
     total_k_area = sum(k_area)
     out_relative_taxa_cover .= dropdims(sum(absolute_group_cover; dims=3); dims=3) ./ total_k_area
+
     return nothing
 end
 
@@ -105,6 +109,7 @@ function relative_taxa_cover(
     end
     out_relative_taxa_cover = zeros(T, n_timesteps, n_groups)
     _relative_taxa_cover!(relative_cover, k_area, out_relative_taxa_cover)
+
     return out_relative_taxa_cover
 end
 
@@ -127,6 +132,7 @@ function _relative_cover!(
     out_relative_cover .= dropdims(sum(
         relative_cover .* reshape(location_area, (1, 1, 1, -1)), dims=(2, 3, 4)
     ), dims=(2, 3, 4)) ./ total_area
+
     return nothing
 end
 
@@ -149,7 +155,47 @@ function relative_cover(
     n_timesteps = size(relative_cover, 4)
     out_relative_cover = zeros(T, n_timesteps)
     _relative_cover!(relative_cover, location_area, out_relative_cover)
+
     return out_relative_cover
+end
+
+"""
+    _relative_loc_taxa_cover!(relative_cover::Array{T,4}, out_relative_loc_taxa_cover::Array{T,3})::Nothing where {T<:Real}
+
+Calculate the relative taxa cover for each location.
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `out_relative_loc_taxa_cover` : Output array buffer with dimensions [timesteps ⋅ groups ⋅ locations].
+"""
+function _relative_loc_taxa_cover!(
+    relative_cover::Array{T,4},
+    out_relative_loc_taxa_cover::Array{T,3}
+)::Nothing where {T<:Real}
+    out_relative_loc_taxa_cover .= dropdims(sum(relative_cover; dims=3); dims=3)
+
+    return nothing
+end
+
+"""
+    relative_loc_taxa_cover(relative_cover::Array{T,4})::Array{T,3} where {T<:Real}
+
+Calculate the relative taxa cover for each location.
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+
+# Returns
+A 3D array of relative taxa cover with dimensions [timesteps ⋅ groups ⋅ locations].
+"""
+function relative_loc_taxa_cover(
+    relative_cover::Array{T,4}
+)::Array{T,3} where {T<:Real}
+    n_timesteps, n_groups, _, n_locations = size(relative_cover)
+    out_relative_loc_taxa_cover = zeros(T, n_timesteps, n_groups, n_locations)
+    _relative_loc_taxa_cover!(relative_cover, out_relative_loc_taxa_cover)
+
+    return out_relative_loc_taxa_cover
 end
 
 """
@@ -484,4 +530,131 @@ function relative_shelter_volume(
     )
 
     return RSV
+end
+
+"""
+    _relative_juveniles!(relative_cover::Array{T,4}, is_juvenile::Vector{Bool}, out_relative_juveniles::Array{T,2})::Nothing where {T<:Real}
+
+Calculate the relative juvenile cover.
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
+"""
+function _relative_juveniles!(
+    relative_cover::Array{T,4},
+    is_juvenile::Vector{Bool},
+    out_relative_juveniles::Array{T,2}
+)::Nothing where {T<:Real}
+    juvenile_cover = relative_cover[:, :, is_juvenile, :]
+    out_relative_juveniles .= dropdims(sum(juvenile_cover; dims=(2, 3)); dims=(2, 3))
+    return nothing
+end
+
+"""
+    relative_juveniles(relative_cover::Array{T,4}, is_juvenile::Vector{Bool})::Array{T,2} where {T<:Real}
+
+Calculate the relative juvenile cover.
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+
+# Returns
+A 2D array of relative juvenile cover with dimensions [timesteps ⋅ locations].
+"""
+function relative_juveniles(
+    relative_cover::Array{T,4},
+    is_juvenile::Vector{Bool}
+)::Array{T,2} where {T<:Real}
+    n_timesteps, _, n_sizes, n_locations = size(relative_cover)
+    if length(is_juvenile) != n_sizes
+        throw(DimensionMismatch("The length of is_juvenile must match the number of size classes in relative_cover."))
+    end
+    out_relative_juveniles = zeros(T, n_timesteps, n_locations)
+    _relative_juveniles!(relative_cover, is_juvenile, out_relative_juveniles)
+    return out_relative_juveniles
+end
+
+"""
+    _absolute_juveniles!(relative_juveniles::Array{T,2}, k_area::Vector{T}, out_absolute_juveniles::Array{T,2})::Nothing where {T<:Real}
+
+Calculate the absolute juvenile cover.
+
+# Arguments
+- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
+- `k_area` : Habitable area for each location.
+- `out_absolute_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
+"""
+function _absolute_juveniles!(
+    relative_juveniles::Array{T,2},
+    k_area::Vector{T},
+    out_absolute_juveniles::Array{T,2}
+)::Nothing where {T<:Real}
+    out_absolute_juveniles .= relative_juveniles .* k_area'
+    return nothing
+end
+
+"""
+    absolute_juveniles(relative_juveniles::Array{T,2}, k_area::Vector{T})::Array{T,2} where {T<:Real}
+
+Calculate the absolute juvenile cover.
+
+# Arguments
+- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
+- `k_area` : Habitable area for each location.
+
+# Returns
+A 2D array of absolute juvenile cover with dimensions [timesteps ⋅ locations].
+"""
+function absolute_juveniles(
+    relative_juveniles::Array{T,2},
+    k_area::Vector{T}
+)::Array{T,2} where {T<:Real}
+    n_timesteps, n_locations = size(relative_juveniles)
+    if length(k_area) != n_locations
+        throw(DimensionMismatch("The number of locations in relative_juveniles and k_area must match."))
+    end
+    out_absolute_juveniles = zeros(T, n_timesteps, n_locations)
+    _absolute_juveniles!(relative_juveniles, k_area, out_absolute_juveniles)
+    return out_absolute_juveniles
+end
+
+"""
+    _max_juvenile_area(max_colony_area_m2::T, max_juv_density::T)::T where {T<:Real}
+
+Calculate the maximum possible area that can be covered by juveniles for a given m².
+
+# Arguments
+- `max_colony_area_m2` : Maximum colony area of a juvenile in m².
+- `max_juv_density` : Maximum juvenile density in individuals/m².
+"""
+function _max_juvenile_area(max_colony_area_m2::T, max_juv_density::T)::T where {T<:Real}
+    return max_juv_density * max_colony_area_m2
+end
+
+"""
+    _juvenile_indicator!(absolute_juveniles::Array{T,2}, k_area::Vector{T}, max_colony_area_m2::T, max_juv_density::T, out_juvenile_indicator::Array{T,2})::Nothing where {T<:Real}
+
+Calculate the juvenile indicator.
+
+# Arguments
+- `absolute_juveniles` : Absolute juvenile cover with dimensions [timesteps ⋅ locations].
+- `k_area` : Habitable area for each location.
+- `max_colony_area_m2` : Maximum colony area of a juvenile in m².
+- `max_juv_density` : Maximum juvenile density in individuals/m².
+- `out_juvenile_indicator` : Output array buffer with dimensions [timesteps ⋅ locations].
+"""
+function _juvenile_indicator!(
+    absolute_juveniles::Array{T,2},
+    k_area::Vector{T},
+    max_colony_area_m2::T,
+    max_juv_density::T,
+    out_juvenile_indicator::Array{T,2}
+)::Nothing where {T<:Real}
+    max_juv_area = _max_juvenile_area(max_colony_area_m2, max_juv_density)
+    usable_k_area = max.(k_area, 1.0)'
+    out_juvenile_indicator .= absolute_juveniles ./ (max_juv_area .* usable_k_area)
+    return nothing
 end

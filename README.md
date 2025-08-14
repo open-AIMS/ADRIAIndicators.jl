@@ -20,10 +20,10 @@ julia --project=. build.jl
 
 **Reef State Metrics**
 
-- [ ] Relative Cover
+- [] Relative Cover
 - [ ] Total Absolute Cover
-- [ ] Relative Taxa Cover
-- [ ] Relative Loc Taxa Cover
+- [x] Relative Taxa Cover
+- [x] Relative Loc Taxa Cover
 - [ ] Relative Juveniles
 - [ ] Absolute Juveniles
 - [x] Coral Diversity
