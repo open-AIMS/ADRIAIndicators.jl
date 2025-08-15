@@ -19,6 +19,25 @@ using ReefMetrics: absolute_shelter_volume, relative_shelter_volume
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05]
 
     colony_mean_area_cm = [
+        100.0 100.0 100.0;
+        100.0 100.0 100.0;
+    ]
+
+    # Make shelter volume per m² equal to 0.1
+    planar_area_params[:, :, 1] .= 0.0 # intercept
+    planar_area_params[:, :, 2] .= 1.0 # coefficient
+
+    asv = absolute_shelter_volume(
+        relative_cover, colony_mean_area_cm, planar_area_params, habitable_area
+    )
+    println(asv)
+
+    @test all(asv[1, :, :, 2] .≈ 0.0)
+    @test all(asv[2, :, :, 1] .≈ 0.0)
+    @test all(asv[1, :, :, 1] .≈ (relative_cover[1, :, :, 1] .* habitable_area[1] .* 0.1))
+    @test all(asv[2, :, :, 2] .≈ (relative_cover[2, :, :, 2] .* habitable_area[2]) .* 0.1)
+
+    colony_mean_area_cm = [
         15.0 20.0 25.0;
         20.0 25.0 30.0;
     ]

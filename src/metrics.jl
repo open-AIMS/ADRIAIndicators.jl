@@ -184,8 +184,8 @@ function _colony_Lcm2_to_m3m2(
     colony_litres_per_cm2::T = exp(
         planar_area_int + planar_area_coef * log(colony_mean_area_cm)
     )
-    cm2_to_m3_per_m2::T = 10^-3
-    colony_vol_m3_per_m2::T = colony_litres_per_cm2 .* cm2_to_m3_per_m2
+    dm3_to_m3_per_m2::T = 10^-3
+    colony_vol_m3_per_m2::T = colony_litres_per_cm2 .* dm3_to_m3_per_m2
 
     return colony_vol_m3_per_m2
 end
