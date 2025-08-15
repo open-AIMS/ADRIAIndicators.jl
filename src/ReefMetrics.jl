@@ -1,8 +1,10 @@
 module ReefMetrics
 
 include("conversions.jl")
-include("indices.jl")
 include("metrics.jl")
+include("indices.jl")
+include("juvenile_metrics.jl")
+include("cover_metrics.jl")
 
 export relative_cover, relative_loc_cover, relative_taxa_cover, 
     relative_loc_taxa_cover
