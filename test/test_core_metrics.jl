@@ -80,5 +80,51 @@ end
         @test abs_juv[2, 1] ≈ 0.0
         @test abs_juv[2, 2] ≈ 180.0
     end
+end
 
+@testset "Juvenile Indicator" begin
+    n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
+    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
+    location_area = [100.0, 200.0]
+
+    is_juvenile = [true, true, false, false]
+
+    relative_cover[1, 1, :, 1] = [0.1, 0.1, 0.05, 0.05]
+    relative_cover[1, 2, :, 1] = [0.05, 0.05, 0.2, 0.2]
+
+    relative_cover[2, 1, :, 2] = [0.0, 0.05, 0.3, 0.3]
+    relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
+
+    @testset "Normal Cases" begin
+        max_juv_colony_area = 0.1
+        max_juv_density = 3.0
+        juv_ind = juvenile_indicator(
+            relative_cover, is_juvenile, location_area, max_juv_colony_area, max_juv_density
+        )
+
+        @test juv_ind[1, 1] ≈ 30.0 / 30.0
+        @test juv_ind[1, 2] ≈ 0.0
+        @test juv_ind[2, 1] ≈ 0.0
+        @test juv_ind[2, 2] ≈ 50.0 / 60.0
+
+        max_juv_colony_area = 0.2
+        max_juv_density = 3.0
+        juv_ind = juvenile_indicator(
+            relative_cover, is_juvenile, location_area, max_juv_colony_area, max_juv_density
+        )
+
+        @test juv_ind[1, 1] ≈ 30.0 / 60.0
+        @test juv_ind[1, 2] ≈ 0.0
+        @test juv_ind[2, 1] ≈ 0.0
+        @test juv_ind[2, 2] ≈ 50.0 / 120.0
+    end
+
+    @testset "Edge Cases" begin
+        no_juveniles = [false, false, false, false]
+        max_juv_colony_area = 0.2
+        max_juv_density = 3.0
+        @test all(juvenile_indicator(
+            relative_cover, no_juveniles, location_area, max_juv_colony_area, max_juv_density
+        ) .== 0.0)
+    end
 end
