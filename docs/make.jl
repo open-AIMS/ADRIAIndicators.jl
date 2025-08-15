@@ -15,7 +15,8 @@ makedocs(
             [
                 "metrics.md",
                 "conversions.md",
-                "aggregation.md",
+                "juvenile_metrics.md",
+                "indices.md"
             ],
     ]
 )
