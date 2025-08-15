@@ -163,11 +163,11 @@ Helper function to convert coral colony values from Litres/cm² to m³/m²
 
 # Arguments
 - `colony_mean_diams_cm` : Matrix of mean colony diameters
-- `planar_area_a` : planar area parameter a
-- `planar_area_b` : planar area parameter b
+- `planar_area_int` : planar area model intercept
+- `planar_area_coef` : planar area model coefficient
 
 # Returns
-Tuple : Assumed colony volume (m³/m²) for each species/size class, theoretical maximum for each species class
+Tuple : Assumed colony volume (m³/m²) for each species/size class
 
 # References
 1. Aston Eoghan A., Duce Stephanie, Hoey Andrew S., Ferrari Renata (2022).
@@ -178,11 +178,11 @@ Tuple : Assumed colony volume (m³/m²) for each species/size class, theoretical
 """
 function _colony_Lcm2_to_m3m2(
     colony_mean_area_cm::T,
-    planar_area_a::T,
-    planar_area_b::T
+    planar_area_int::T,
+    planar_area_coef::T
 )::T where {T<:AbstractFloat}
     colony_litres_per_cm2::T = exp(
-        planar_area_a + planar_area_b * log(colony_mean_area_cm)
+        planar_area_int + planar_area_coef * log(colony_mean_area_cm)
     )
     cm2_to_m3_per_m2::T = 10^-3
     colony_vol_m3_per_m2::T = colony_litres_per_cm2 .* cm2_to_m3_per_m2
@@ -209,12 +209,12 @@ function _absolute_shelter_volume!(
 )::Nothing where {T<:AbstractFloat}
     colony_vol_m3_per_m2 = _colony_Lcm2_to_m3m2.(
         colony_mean_area_cm,
-        view(planar_area_params[:, :, 1]),
-        view(planar_area_params[:, :, 2])
+        view(planar_area_params, :, :, 1),
+        view(planar_area_params, :, :, 2)
     )
     n_groups, n_sizes = size(colony_mean_area_cm)
 
-    abs_cover = rel_cover .* reshape(habitable_area(1, 1, 1, -1))
+    abs_cover = rel_cover .* reshape(habitable_area, (1, 1, 1, :))
     out_ASV .= abs_cover .* reshape(colony_vol_m3_per_m2, (1, n_groups, n_sizes, 1))
 
     return nothing
@@ -314,7 +314,7 @@ function _relative_shelter_volume!(
     n_groups::Int64, n_sizes::Int64 = size(colony_mean_area_cm)
     n_locations::Int64 = length(habitable_area_m²)
 
-    abs_cover_m²::Array{T,4} = rel_cover .* reshape(habitable_area_m², (1, 1, 1, -1))
+    abs_cover_m²::Array{T,4} = rel_cover .* reshape(habitable_area_m², (1, 1, 1, :))
     ASV_m³ = abs_cover_m² .* reshape(colony_vol_m³_per_m², (1, n_groups, n_sizes, 1))
 
     max_colony_vol_m³::T = max(colony_vol_m³_per_m²)

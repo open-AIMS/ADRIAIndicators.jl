@@ -1,2 +1,3 @@
+include("test_shelter_volume_metrics.jl")
 include("test_juvenile_metrics.jl")
 include("test_diversity_metrics.jl")
