@@ -70,8 +70,10 @@ function _reef_tourism_index!(
 )::Nothing
     intcp = 0.47947 + intcp_u
 
-    out_rti .= intcp .+ (0.12764 .* rc) .+ (0.31946 .* evenness) .+ (0.11676 .* sv) .+ (-0.0036065 .* juves)
-    out_rti .= round.(clamp.(out_rti, 0.1, 0.9), digits=2)
+    out_rti .=
+        intcp .+ (0.12764 .* rc) .+ (0.31946 .* evenness) .+ (0.11676 .* sv) .+
+        (-0.0036065 .* juves)
+    out_rti .= round.(clamp.(out_rti, 0.1, 0.9); digits=2)
 
     return nothing
 end
@@ -131,7 +133,7 @@ function _reef_fish_index!(
     slope2 = 1883.3
 
     out_rfi .= 0.01 .* (intcp2 .+ slope2 .* (intcp1 .+ slope1 .* (rc .* 100.0)))
-    out_rfi .= round.(out_rfi, digits=2)
+    out_rfi .= round.(out_rfi; digits=2)
 
     return nothing
 end

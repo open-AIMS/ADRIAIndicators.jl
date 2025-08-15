@@ -209,8 +209,8 @@ function _absolute_shelter_volume!(
 )::Nothing where {T<:AbstractFloat}
     colony_vol_m3_per_m2 = _colony_Lcm2_to_m3m2.(
         colony_mean_area_cm,
-        view(planar_area_params, :, :, 1),
-        view(planar_area_params, :, :, 2)
+        view(planar_area_params,:,:,1),
+        view(planar_area_params,:,:,2)
     )
     n_groups, n_sizes = size(colony_mean_area_cm)
 
@@ -366,28 +366,40 @@ function relative_shelter_volume(
     n_tsteps::Int64, n_groups::Int64, n_sizes::Int64, n_locs::Int64 = size(relative_cover)
 
     if size(colony_mean_area_cm) != (n_groups, n_sizes)
-        throw(DimensionMismatch(_dimension_mismatch_message(
-            "relative_cover",
-            "colony_mean_area_cm",
-            size(relative_cover),
-            size(colony_mean_area_cm)
-        )))
+        throw(
+            DimensionMismatch(
+                _dimension_mismatch_message(
+                    "relative_cover",
+                    "colony_mean_area_cm",
+                    size(relative_cover),
+                    size(colony_mean_area_cm)
+                )
+            )
+        )
     end
     if size(planar_area_params) != (n_groups, n_sizes, 2)
-        throw(DimensionMismatch(_dimension_mismatch_message(
-            "relative_cover",
-            "planar_area_params",
-            size(relative_cover),
-            size(planar_area_params)
-        )))
+        throw(
+            DimensionMismatch(
+                _dimension_mismatch_message(
+                    "relative_cover",
+                    "planar_area_params",
+                    size(relative_cover),
+                    size(planar_area_params)
+                )
+            )
+        )
     end
     if size(habitable_area_m²) != n_locs
-        throw(DimensionMismatch(_dimension_mismatch_message(
-            "relative_cover",
-            "habitable_area_m²",
-            size(relative_cover),
-            size(habitable_area_m²)
-        )))
+        throw(
+            DimensionMismatch(
+                _dimension_mismatch_message(
+                    "relative_cover",
+                    "habitable_area_m²",
+                    size(relative_cover),
+                    size(habitable_area_m²)
+                )
+            )
+        )
     end
 
     RSV::Array{T,4} = zeros(T, n_tsteps, n_groups, n_sizes, n_locs)

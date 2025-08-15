@@ -55,7 +55,8 @@ function _relative_taxa_cover!(
     group_cover = dropdims(sum(relative_cover; dims=3); dims=3)  # [timesteps, groups, locations]
     absolute_group_cover = group_cover .* k_area'
     total_k_area = sum(k_area)
-    out_relative_taxa_cover .= dropdims(sum(absolute_group_cover; dims=3); dims=3) ./ total_k_area
+    out_relative_taxa_cover .=
+        dropdims(sum(absolute_group_cover; dims=3); dims=3) ./ total_k_area
 
     return nothing
 end
@@ -78,7 +79,11 @@ function relative_taxa_cover(
 )::Array{T,2} where {T<:Real}
     n_timesteps, n_groups, _, n_locations = size(relative_cover)
     if length(k_area) != n_locations
-        throw(DimensionMismatch("The number of locations in relative_cover and k_area must match."))
+        throw(
+            DimensionMismatch(
+                "The number of locations in relative_cover and k_area must match."
+            )
+        )
     end
     out_relative_taxa_cover = zeros(T, n_timesteps, n_groups)
     _relative_taxa_cover!(relative_cover, k_area, out_relative_taxa_cover)
@@ -102,9 +107,11 @@ function _relative_cover!(
     out_relative_cover::Vector{T}
 )::Nothing where {T<:AbstractFloat}
     total_area::T = sum(location_area)
-    out_relative_cover .= dropdims(sum(
-        relative_cover .* reshape(location_area, (1, 1, 1, -1)), dims=(2, 3, 4)
-    ), dims=(2, 3, 4)) ./ total_area
+    out_relative_cover .=
+        dropdims(
+            sum(
+                relative_cover .* reshape(location_area, (1, 1, 1, -1)); dims=(2, 3, 4)
+            ); dims=(2, 3, 4)) ./ total_area
 
     return nothing
 end

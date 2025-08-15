@@ -37,7 +37,11 @@ function relative_juveniles(
 )::Array{T,2} where {T<:Real}
     n_timesteps, _, n_sizes, n_locations = size(relative_cover)
     if length(is_juvenile) != n_sizes
-        throw(DimensionMismatch("The length of is_juvenile must match the number of size classes in relative_cover."))
+        throw(
+            DimensionMismatch(
+                "The length of is_juvenile must match the number of size classes in relative_cover."
+            )
+        )
     end
     out_relative_juveniles = zeros(T, n_timesteps, n_locations)
     _relative_juveniles!(relative_cover, is_juvenile, out_relative_juveniles)
@@ -87,7 +91,11 @@ function absolute_juveniles(
 )::Array{T,2} where {T<:AbstractFloat}
     n_timesteps, _, _, n_locations = size(relative_cover)
     if length(location_area) != n_locations
-        throw(DimensionMismatch("The number of locations in relative_juveniles and k_area must match."))
+        throw(
+            DimensionMismatch(
+                "The number of locations in relative_juveniles and k_area must match."
+            )
+        )
     end
     out_absolute_juveniles = zeros(T, n_timesteps, n_locations)
     _absolute_juveniles!(relative_cover, is_juvenile, location_area, out_absolute_juveniles)
