@@ -422,8 +422,8 @@ end
 """
     _relative_shelter_volume!(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::Vector{T}, out_RSV::Array{T,4})::Nothing where {T<:AbstractFloat}
 
-Calculate the relative shelter volume for a range of covers. Relative to the theoretical 
-maximum of 50% cover of a coral species with the largest colony volume. 
+Calculate the relative shelter volume for a range of covers. Relative to the theoretical
+maximum of 50% cover of a coral species with the largest colony volume.
 Relative shelter volume (RSV) is given by
 
 ```math
@@ -549,6 +549,7 @@ function _relative_juveniles!(
 )::Nothing where {T<:Real}
     juvenile_cover = relative_cover[:, :, is_juvenile, :]
     out_relative_juveniles .= dropdims(sum(juvenile_cover; dims=(2, 3)); dims=(2, 3))
+
     return nothing
 end
 
@@ -574,6 +575,7 @@ function relative_juveniles(
     end
     out_relative_juveniles = zeros(T, n_timesteps, n_locations)
     _relative_juveniles!(relative_cover, is_juvenile, out_relative_juveniles)
+
     return out_relative_juveniles
 end
 
@@ -588,11 +590,14 @@ Calculate the absolute juvenile cover.
 - `out_absolute_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
 """
 function _absolute_juveniles!(
-    relative_juveniles::Array{T,2},
-    k_area::Vector{T},
+    relative_cover::Array{T,4},
+    is_juvenile::Vector{Bool},
+    location_area::Vector{T},
     out_absolute_juveniles::Array{T,2}
-)::Nothing where {T<:Real}
-    out_absolute_juveniles .= relative_juveniles .* k_area'
+)::Nothing where {T<:AbstractFloat}
+    _relative_juveniles!(relative_cover, is_juvenile, out_absolute_juveniles)
+    out_absolute_juveniles .*= location_area'
+
     return nothing
 end
 
@@ -603,21 +608,24 @@ Calculate the absolute juvenile cover.
 
 # Arguments
 - `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
-- `k_area` : Habitable area for each location.
+- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `location_area` : Habitable area for each location.
 
 # Returns
 A 2D array of absolute juvenile cover with dimensions [timesteps ⋅ locations].
 """
 function absolute_juveniles(
-    relative_juveniles::Array{T,2},
-    k_area::Vector{T}
-)::Array{T,2} where {T<:Real}
-    n_timesteps, n_locations = size(relative_juveniles)
-    if length(k_area) != n_locations
+    relative_cover::Array{T,4},
+    is_juvenile::Vector{Bool},
+    location_area::Vector{T}
+)::Array{T,2} where {T<:AbstractFloat}
+    n_timesteps, _, _, n_locations = size(relative_cover)
+    if length(location_area) != n_locations
         throw(DimensionMismatch("The number of locations in relative_juveniles and k_area must match."))
     end
     out_absolute_juveniles = zeros(T, n_timesteps, n_locations)
-    _absolute_juveniles!(relative_juveniles, k_area, out_absolute_juveniles)
+    _absolute_juveniles!(relative_cover, is_juvenile, location_area, out_absolute_juveniles)
+
     return out_absolute_juveniles
 end
 
@@ -632,29 +640,4 @@ Calculate the maximum possible area that can be covered by juveniles for a given
 """
 function _max_juvenile_area(max_colony_area_m2::T, max_juv_density::T)::T where {T<:Real}
     return max_juv_density * max_colony_area_m2
-end
-
-"""
-    _juvenile_indicator!(absolute_juveniles::Array{T,2}, k_area::Vector{T}, max_colony_area_m2::T, max_juv_density::T, out_juvenile_indicator::Array{T,2})::Nothing where {T<:Real}
-
-Calculate the juvenile indicator.
-
-# Arguments
-- `absolute_juveniles` : Absolute juvenile cover with dimensions [timesteps ⋅ locations].
-- `k_area` : Habitable area for each location.
-- `max_colony_area_m2` : Maximum colony area of a juvenile in m².
-- `max_juv_density` : Maximum juvenile density in individuals/m².
-- `out_juvenile_indicator` : Output array buffer with dimensions [timesteps ⋅ locations].
-"""
-function _juvenile_indicator!(
-    absolute_juveniles::Array{T,2},
-    k_area::Vector{T},
-    max_colony_area_m2::T,
-    max_juv_density::T,
-    out_juvenile_indicator::Array{T,2}
-)::Nothing where {T<:Real}
-    max_juv_area = _max_juvenile_area(max_colony_area_m2, max_juv_density)
-    usable_k_area = max.(k_area, 1.0)'
-    out_juvenile_indicator .= absolute_juveniles ./ (max_juv_area .* usable_k_area)
-    return nothing
 end
