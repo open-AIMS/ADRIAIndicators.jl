@@ -1,7 +1,7 @@
 """
     _dimension_mismatch_message(array_name_1::String, array_name_2::String, dims1::Tuple, dims2::Tuple)::String
 
-Construct an informative error message when a discrepency between array dimensions is detected.
+Construct an informative error message when a discrepancy between array dimensions is detected.
 
 # Arguments
 - array_name_1 : Name of the first array.
@@ -55,7 +55,7 @@ end
 """
     coral_diversity(rel_cover::Array{T, 3})::Array{T,2} where {T<:Real}
 
-Calculates coral taxa diversity as a dimensionless metric. Derived from the simpsons diversity.
+Calculates coral taxa diversity as a dimensionless metric. Derived from the Simpson's Diversity Index.
 
 Formulated as part of a reef condition index by Dr Mike Williams (mjmcwilliam@outlook.com) and
 Dr Morgan Pratchett (morgan.pratchett@jcu.edu.au).
@@ -196,7 +196,7 @@ end
 # Arguments
 - `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
 - `colony_mean_area_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
-- `planar_area_params` : 3-D array of planar area params with dimensions [groups ⋅ size ⋅ param_type]
+- `planar_area_params` : 3-D array of planar area parameters with dimensions [groups ⋅ size ⋅ (intercept, coefficient)]
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
 - `out_ASV` : Output array buffer for absolute shelter volume [timesteps ⋅ groups ⋅ size ⋅ locations]
 """
@@ -223,14 +223,44 @@ end
 """
     absolute_shelter_volume(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area::Vector{T})::Array{T,4} where {T<:AbstractFloat}
 
+Calculate the volume of shelter provided by the given coral cover. This function uses
+log-log linear models to predict the volume of shelter provided from a given planar area.
+The parametrisation of this log-log linear model must be provided by the user. The log-log
+linear model is given by
+
+```math
+\\begin{align}
+    \\log(S) = b + a\\log(PA),
+\\end{align}
+```
+where ``S`` and ``PA`` are shelter volume (``m^3m_{-2}``) and planar area, respectively.
+Then absolute shelter volume is given by
+
+```math
+\\begin{align}
+    ASV = A_C \\cdot S,
+\\end{align}
+where ``ASV`` and ``A_C`` refers to absolute shelter volume and absolute coral cover,
+respectively.
+```
+
 # Arguments
 - `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
 - `colony_mean_area_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
-- `planar_area_params` : 3-D array of planar area params with dimensions [groups ⋅ size ⋅ param_type]
+- `planar_area_params` : 3-D array of planar area params with dimensions [groups ⋅ size ⋅ (intercept, coefficient)]
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
 
 # Returns
 - Output array containing absolute shelter volume [timesteps ⋅ groups ⋅ size ⋅ locations]
+
+# References
+1. Urbina-Barreto, I., Chiroleu, F., Pinel, R., Fréchon, L., Mahamadaly, V.,
+     Elise, S., Kulbicki, M., Quod, J.-P., Dutrieux, E., Garnier, R.,
+     Henrich Bruggemann, J., Penin, L., & Adjeroud, M. (2021).
+   Quantifying the shelter capacity of coral reefs using photogrammetric
+     3D modeling: From colonies to reefscapes.
+   Ecological Indicators, 121, 107151.
+   https://doi.org/10.1016/j.ecolind.2020.107151
 """
 function absolute_shelter_volume(
     rel_cover::Array{T,4},
@@ -264,7 +294,7 @@ where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respect
 # Arguments
 - rel_cover : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - colony_mean_area_cm : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
-- planar_area_params : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ param_type].
+- planar_area_params : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
 - habitable_area_m² : Habitable area in m² with dimensions [locations].
 - out_RSV : Output Relative shelter volume array buffer with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 """
@@ -312,11 +342,20 @@ where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respect
 # Arguments
 - rel_cover : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - colony_mean_area_cm : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
-- planar_area_params : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ param_type].
+- planar_area_params : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
 - habitable_area_m² : Habitable area in m² with dimensions [locations].
 
 # Returns
 Relative shelter volume in an array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
+
+# References
+1. Urbina-Barreto, I., Chiroleu, F., Pinel, R., Fréchon, L., Mahamadaly, V.,
+     Elise, S., Kulbicki, M., Quod, J.-P., Dutrieux, E., Garnier, R.,
+     Henrich Bruggemann, J., Penin, L., & Adjeroud, M. (2021).
+   Quantifying the shelter capacity of coral reefs using photogrammetric
+     3D modeling: From colonies to reefscapes.
+   Ecological Indicators, 121, 107151.
+   https://doi.org/10.1016/j.ecolind.2020.107151
 """
 function relative_shelter_volume(
     relative_cover::Array{T,4},

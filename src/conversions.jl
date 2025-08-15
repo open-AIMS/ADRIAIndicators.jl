@@ -8,7 +8,7 @@ Convert relative habitable cover to relative reef cover.
 - `habitable_area_m²` : Habitable area of reef.
 - `reef_area_m²` : Area of entire reef.
 - `location_dim` : Index of the location dimensions. For example location_dim=3 if the 
-third dimension in `relative_reef_cover` is the location dimsnions.
+third dimension in `relative_reef_cover` is the location dimensions.
 - `out_rrc` : Array buffer of the same shape as relative_reef_cover
 """
 function _rhc_to_rrc!(

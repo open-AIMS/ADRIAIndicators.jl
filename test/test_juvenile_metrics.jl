@@ -1,9 +1,5 @@
 """
-This file tests
-
-- all relative cover metrics
-- juvenile metrics
-- shelter volume metrics
+Tests for juvenile metrics
 """
 
 using Test

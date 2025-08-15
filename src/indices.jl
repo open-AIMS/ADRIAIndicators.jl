@@ -1,33 +1,4 @@
 """
-    juvenile_indicator(absolute_juveniles::Array{T,2}, k_area::Vector{T}, max_colony_area_m2::T; max_juv_density::T=51.8)::Array{T,2} where {T<:Real}
-
-Calculate the juvenile indicator.
-
-# Arguments
-- `absolute_juveniles` : Absolute juvenile cover with dimensions [timesteps ⋅ locations].
-- `k_area` : Habitable area for each location.
-- `max_colony_area_m2` : Maximum colony area of a juvenile in m².
-- `max_juv_density` : Maximum juvenile density in individuals/m². Defaults to 51.8.
-
-# Returns
-A 2D array of the juvenile indicator with dimensions [timesteps ⋅ locations].
-"""
-function juvenile_indicator(
-    absolute_juveniles::Array{T,2},
-    k_area::Vector{T},
-    max_colony_area_m2::T;
-    max_juv_density::T=51.8
-)::Array{T,2} where {T<:Real}
-    n_timesteps, n_locations = size(absolute_juveniles)
-    if length(k_area) != n_locations
-        throw(DimensionMismatch("The number of locations in absolute_juveniles and k_area must match."))
-    end
-    out_juvenile_indicator = zeros(T, n_timesteps, n_locations)
-    _juvenile_indicator!(absolute_juveniles, k_area, max_colony_area_m2, max_juv_density, out_juvenile_indicator)
-    return out_juvenile_indicator
-end
-
-"""
     _reef_condition_index!(rc::AbstractArray, evenness::AbstractArray, sv::AbstractArray, juves::AbstractArray, out_rci::AbstractArray; threshold=2)::Nothing
 
 Calculate the Reef Condition Index (RCI).
@@ -36,9 +7,7 @@ Calculate the Reef Condition Index (RCI).
 - `rc` : Relative coral cover.
 - `evenness` : Coral evenness.
 - `sv` : Relative shelter volume.
-- `juves` : Juvenile indicator.
 - `out_rci` : Output array buffer for the RCI.
-- `threshold` : The number of metrics that must meet a condition category.
 """
 function _reef_condition_index!(
     rc::AbstractArray{T,N},
@@ -59,8 +28,6 @@ Calculate the Reef Condition Index (RCI).
 - `rc` : Relative coral cover.
 - `evenness` : Coral evenness.
 - `sv` : Relative shelter volume.
-- `juves` : Juvenile indicator.
-- `threshold` : The number of metrics that must meet a condition category.
 
 # Returns
 A 2D array of the Reef Condition Index.
@@ -68,16 +35,14 @@ A 2D array of the Reef Condition Index.
 function reef_condition_index(
     rc::AbstractArray,
     evenness::AbstractArray,
-    sv::AbstractArray,
-    juves::AbstractArray;
-    threshold=2
+    sv::AbstractArray
 )::AbstractArray
-    if (size(rc) != size(evenness)) || (size(rc) != size(sv)) || (size(rc) != size(juves))
+    if (size(rc) != size(evenness)) || (size(rc) != size(sv))
         throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
     end
 
     out_rci = zeros(Float64, size(rc))
-    _reef_condition_index!(rc, evenness, sv, juves, out_rci; threshold=threshold)
+    _reef_condition_index!(rc, evenness, sv, out_rci)
 
     return out_rci
 end

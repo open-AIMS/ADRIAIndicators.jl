@@ -1,3 +1,7 @@
+"""
+Tests for coral_diversity and coral_evenness.
+"""
+
 using Test
 
 using ReefMetrics: coral_diversity, coral_evenness

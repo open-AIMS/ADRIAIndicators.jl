@@ -1,7 +1,7 @@
 """
     _relative_juveniles!(relative_cover::Array{T,4}, is_juvenile::Vector{Bool}, out_relative_juveniles::Array{T,2})::Nothing where {T<:Real}
 
-Calculate the relative juvenile cover.
+Calculate the relative coral cover composed of juveniles.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
@@ -22,7 +22,7 @@ end
 """
     relative_juveniles(relative_cover::Array{T,4}, is_juvenile::Vector{Bool})::Array{T,2} where {T<:Real}
 
-Calculate the relative juvenile cover.
+Calculate the relative coral cover composed of juveniles.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
@@ -48,7 +48,7 @@ end
 """
     _absolute_juveniles!(relative_juveniles::Array{T,2}, k_area::Vector{T}, out_absolute_juveniles::Array{T,2})::Nothing where {T<:Real}
 
-Calculate the absolute juvenile cover.
+Calculate the absolute coral cover composed of juveniles.
 
 # Arguments
 - `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
@@ -70,7 +70,7 @@ end
 """
     absolute_juveniles(relative_juveniles::Array{T,2}, k_area::Vector{T})::Array{T,2} where {T<:Real}
 
-Calculate the absolute juvenile cover.
+Calculate the absolute coral cover composed of juveniles.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
@@ -140,6 +140,21 @@ end
 
 """
     juvenile_indicator(relative_cover::Array{T,4}, is_juvenile::Vector{Bool}, location_area::Vector{T}, max_juv_colony_area::T, max_juv_density::T)::Array{T,2} where {T<:AbstractFloat}
+
+Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical density for
+juveniles have been achieved. The juvenile indicator is defined as follows.
+
+The maximum juvenile colony area ``J_A`` refers to the maximum mean colony area over all juvenile
+size classes and all functional groups. Maximum juvenile density ``J_D``refers to the
+maximum density juvenile can occur at over all juvenile size classes and functional groups.
+Then Juvenile Indicator (I) is given as,
+
+```math
+\\begin{align}
+    I(x; J_A, J_D, H_A) = \\frac{A(x; H_A)}{J_A \\times J_D \\times H_A},
+\\end{align}
+```
+where ``H_A`` refers to habitable area and ``A(x; H_A)`` refers to absolute juvenile cover.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
