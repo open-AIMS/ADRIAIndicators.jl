@@ -295,7 +295,7 @@ where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respect
 - `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `colony_mean_area_cm` : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
 - `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
-- `habitable_area_`m² : Habitable area in m² with dimensions [locations].
+- `habitable_area_m²` : Habitable area in m² with dimensions [locations].
 - `out_RSV` : Output Relative shelter volume array buffer with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 """
 function _relative_shelter_volume!(
@@ -347,7 +347,7 @@ the maximum.
 - `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `colony_mean_area_cm` : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
 - `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
-- `habitable_area_`m² : Habitable area in m² with dimensions [locations].
+- `habitable_area_m²` : Habitable area in m² with dimensions [locations].
 
 # Returns
 Relative shelter volume in an array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
