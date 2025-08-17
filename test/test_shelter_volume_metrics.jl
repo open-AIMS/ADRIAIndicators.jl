@@ -51,16 +51,22 @@ using ReefMetrics: absolute_shelter_volume, relative_shelter_volume
         -9.69 2.49
     ]
 
-    sv = exp.(planar_area_params[:, :, 1] .+ planar_area_params[:, :, 2] .* log.(colony_mean_area_cm))
+    sv = exp.(
+        planar_area_params[:, :, 1] .+
+        planar_area_params[:, :, 2] .* log.(colony_mean_area_cm)
+    )
     sv .*= 0.001
 
     asv = absolute_shelter_volume(
         relative_cover, colony_mean_area_cm, planar_area_params, habitable_area
     )
     @test size(asv) == (n_tsteps, n_groups, n_sizes, n_locs)
-    @test all(asv .≈ (
-        relative_cover .* reshape(habitable_area, (1, 1, 1, :)) .* reshape(sv, (1, 2, 3, 1))
-    ))
+    @test all(
+        asv .≈ (
+            relative_cover .* reshape(habitable_area, (1, 1, 1, :)) .*
+            reshape(sv, (1, 2, 3, 1))
+        )
+    )
 end
 
 @testset "Relative Shelter Volume" begin
@@ -109,7 +115,10 @@ end
         -9.69 2.49
     ]
 
-    sv = exp.(planar_area_params[:, :, 1] .+ planar_area_params[:, :, 2] .* log.(colony_mean_area_cm))
+    sv = exp.(
+        planar_area_params[:, :, 1] .+
+        planar_area_params[:, :, 2] .* log.(colony_mean_area_cm)
+    )
     sv .*= 0.001
 
     msv = sv[1, 3] .* habitable_area .* 0.5
@@ -117,7 +126,11 @@ end
         relative_cover, colony_mean_area_cm, planar_area_params, habitable_area
     )
     @test size(rsv) == (n_tsteps, n_groups, n_sizes, n_locs)
-    @test all(rsv .≈ (
-        relative_cover .* reshape(habitable_area, (1, 1, 1, :)) .* reshape(sv, (1, 2, 3, 1))
-    ) ./ reshape(msv, (1, 1, 1, 2)))
+    @test all(
+        rsv .≈
+        (
+            relative_cover .* reshape(habitable_area, (1, 1, 1, :)) .*
+            reshape(sv, (1, 2, 3, 1))
+        ) ./ reshape(msv, (1, 1, 1, 2))
+    )
 end

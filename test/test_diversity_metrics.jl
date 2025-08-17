@@ -7,19 +7,18 @@ using Test
 using ReefMetrics: coral_diversity, coral_evenness
 
 @testset "Coral Diversity" begin
-
     @testset "All Zero" begin
-        rel_cover::Array{Float64, 3} = zeros(Float64, 10, 5, 20)
-        cor_div::Array{Float64, 2} = coral_diversity(rel_cover)
+        rel_cover::Array{Float64,3} = zeros(Float64, 10, 5, 20)
+        cor_div::Array{Float64,2} = coral_diversity(rel_cover)
 
         @test all(cor_div .== 0.0) || "A Matrix of all zeros should return 0 diversity."
     end
 
     @testset "One timestep, One Location" begin
-        rel_cover::Array{Float64, 3} = zeros(Float64, 1, 5, 1)
+        rel_cover::Array{Float64,3} = zeros(Float64, 1, 5, 1)
         rel_cover .= 0.2
 
-        cor_div::Array{Float64, 2} = coral_diversity(rel_cover)
+        cor_div::Array{Float64,2} = coral_diversity(rel_cover)
         @test all(cor_div .≈ 0.8)
 
         rel_cover .= 0.1
@@ -58,7 +57,7 @@ using ReefMetrics: coral_diversity, coral_evenness
     end
 
     @testset "Multi-timestep, Multi-location" begin
-        rel_cover::Array{Float64, 3} = zeros(Float64, 3, 4, 3)
+        rel_cover::Array{Float64,3} = zeros(Float64, 3, 4, 3)
         rel_cover[1, :, 1] .= 0.25
         rel_cover[1, :, 2] .= 0.2
         rel_cover[1, :, 3] .= 0.15
@@ -79,12 +78,10 @@ using ReefMetrics: coral_diversity, coral_evenness
         @test all(cor_div[3, 1] .≈ 0.0)
         @test all(cor_div[3, 2] .≈ 0.0)
         @test all(cor_div[3, 3] .≈ 0.0)
-
     end
 end
 
 @testset "Coral Evenness" begin
-
     @testset "All Zero" begin
         rel_cover = zeros(Float64, 10, 5, 20)
         evenness = coral_evenness(rel_cover)

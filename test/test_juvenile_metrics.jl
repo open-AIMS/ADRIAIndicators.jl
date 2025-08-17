@@ -34,7 +34,7 @@ using ReefMetrics
 
         # Test with all classes as juveniles
         all_juveniles = [true, true, true, true]
-        expected_sum = dropdims(sum(relative_cover, dims=(2,3)), dims=(2,3))
+        expected_sum = dropdims(sum(relative_cover, dims=(2, 3)), dims=(2, 3))
         @test relative_juveniles(relative_cover, all_juveniles) ≈ expected_sum
     end
 end
@@ -119,8 +119,11 @@ end
         no_juveniles = [false, false, false, false]
         max_juv_colony_area = 0.2
         max_juv_density = 3.0
-        @test all(juvenile_indicator(
-            relative_cover, no_juveniles, location_area, max_juv_colony_area, max_juv_density
-        ) .== 0.0)
+        @test all(
+            juvenile_indicator(
+                relative_cover, no_juveniles, location_area, max_juv_colony_area,
+                max_juv_density
+            ) .== 0.0
+        )
     end
 end

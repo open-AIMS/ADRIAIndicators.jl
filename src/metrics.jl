@@ -4,10 +4,10 @@
 Construct an informative error message when a discrepancy between array dimensions is detected.
 
 # Arguments
-- array_name_1 : Name of the first array.
-- array_name_2 : Name of the second array.
-- dims1 : Shape of the first array.
-- dims2 : Shape of the second array.
+- `array_name_1` : Name of the first array.
+- `array_name_2` : Name of the second array.
+- `dims1` : Shape of the first array.
+- `dims2` : Shape of the second array.
 
 # Returns
 String containing an informative error message.
@@ -292,11 +292,11 @@ Relative shelter volume (RSV) is given by
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.
 
 # Arguments
-- rel_cover : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
-- colony_mean_area_cm : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
-- planar_area_params : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
-- habitable_area_m² : Habitable area in m² with dimensions [locations].
-- out_RSV : Output Relative shelter volume array buffer with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `colony_mean_area_cm` : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
+- `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
+- `habitable_area_`m² : Habitable area in m² with dimensions [locations].
+- `out_RSV` : Output Relative shelter volume array buffer with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 """
 function _relative_shelter_volume!(
     rel_cover::Array{T,4},
@@ -307,8 +307,8 @@ function _relative_shelter_volume!(
 )::Nothing where {T<:AbstractFloat}
     colony_vol_m³_per_m² = _colony_Lcm2_to_m3m2.(
         colony_mean_area_cm,
-        view(planar_area_params, :, :, 1),
-        view(planar_area_params, :, :, 2)
+        view(planar_area_params,:,:,1),
+        view(planar_area_params,:,:,2)
     )
 
     n_groups::Int64, n_sizes::Int64 = size(colony_mean_area_cm)
@@ -344,10 +344,10 @@ it by calculating the shelter volume for each functional group and size class an
 the maximum.
 
 # Arguments
-- rel_cover : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
-- colony_mean_area_cm : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
-- planar_area_params : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
-- habitable_area_m² : Habitable area in m² with dimensions [locations].
+- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `colony_mean_area_cm` : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
+- `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
+- `habitable_area_`m² : Habitable area in m² with dimensions [locations].
 
 # Returns
 Relative shelter volume in an array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]

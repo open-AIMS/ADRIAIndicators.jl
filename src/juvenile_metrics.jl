@@ -159,7 +159,7 @@ Then Juvenile Indicator (I) is given as,
 
 ```math
 \\begin{align}
-    I(x; J_A, J_D, H_A) = \\frac{A(x; H_A)}{J_A \\times J_D \\times H_A},
+    I(x; J_A, J_D, H_A) = \\frac{A(x; H_A)}{J_A \\cdot J_D \\cdot H_A},
 \\end{align}
 ```
 where ``H_A`` refers to habitable area and ``A(x; H_A)`` refers to absolute juvenile cover.
