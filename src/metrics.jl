@@ -240,9 +240,9 @@ Then absolute shelter volume is given by
 \\begin{align}
     ASV = A_C \\cdot S,
 \\end{align}
+```
 where ``ASV`` and ``A_C`` refers to absolute shelter volume and absolute coral cover,
 respectively.
-```
 
 # Arguments
 - `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
