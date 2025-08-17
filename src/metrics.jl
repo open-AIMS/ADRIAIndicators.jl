@@ -19,8 +19,8 @@ function _dimension_mismatch_message(
     dims2::Tuple
 )::String
     msg = "\'$(array_name_1)\' and \'$(array_name_2)\' have mismatching dimensions. "
-    msg += "\'$(array_name_1)\' and \'$(array_name_2)\' have shapes, $(dims1) and $(dims2) "
-    msg += "respectively. Please check the expected shapes and dimensions are correct."
+    msg *= "\'$(array_name_1)\' and \'$(array_name_2)\' have shapes, $(dims1) and $(dims2) "
+    msg *= "respectively. Please check the expected shapes and dimensions are correct."
 
     return msg
 end
@@ -307,8 +307,8 @@ function _relative_shelter_volume!(
 )::Nothing where {T<:AbstractFloat}
     colony_vol_m³_per_m² = _colony_Lcm2_to_m3m2.(
         colony_mean_area_cm,
-        view(planar_area_params[:, :, 1]),
-        view(planar_area_params[:, :, 2])
+        view(planar_area_params, :, :, 1),
+        view(planar_area_params, :, :, 2)
     )
 
     n_groups::Int64, n_sizes::Int64 = size(colony_mean_area_cm)
@@ -317,9 +317,9 @@ function _relative_shelter_volume!(
     abs_cover_m²::Array{T,4} = rel_cover .* reshape(habitable_area_m², (1, 1, 1, :))
     ASV_m³ = abs_cover_m² .* reshape(colony_vol_m³_per_m², (1, n_groups, n_sizes, 1))
 
-    max_colony_vol_m³::T = max(colony_vol_m³_per_m²)
+    max_colony_vol_m³::T = maximum(colony_vol_m³_per_m²)
     # Calculate maximum shelter volume m³ [group ⋅ location]
-    MSV_m³::Vector{T} = habitable_area_m²' .* max_colony_vol_m³ .* 0.5
+    MSV_m³::Vector{T} = habitable_area_m² .* max_colony_vol_m³ .* 0.5
     out_RSV .= ASV_m³ ./ reshape(MSV_m³, (1, 1, 1, n_locations))
 
     return nothing
@@ -338,6 +338,10 @@ given by
 ```
 
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.
+Previously, the maximum shelter volume has been defined by assuming the maximum theoretical
+shelter volume produced by the largest size class of Tabular Acropora. This function defines
+it by calculating the shelter volume for each functional group and size class and picking
+the maximum.
 
 # Arguments
 - rel_cover : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
@@ -389,7 +393,7 @@ function relative_shelter_volume(
             )
         )
     end
-    if size(habitable_area_m²) != n_locs
+    if size(habitable_area_m², 1) != n_locs
         throw(
             DimensionMismatch(
                 _dimension_mismatch_message(
