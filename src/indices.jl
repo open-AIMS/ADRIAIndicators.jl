@@ -134,8 +134,8 @@ end
 
 Calculate the Reef Fish Index (RFI) for a single scenario. The RFI is composed
 of two linear regressions mapping relative coral cover to structural complexity and finally,
-structural complexity to fish biomass. RFI (kg/km²) as a functional of relative cover (``x``)
-is given as
+structural complexity to fish biomass. The index is based off figure 4a and 6b in
+Graham et al., 2013 [1]. RFI (kg/km²) as a functional of relative cover (``x``) is given as
 
 ```math
 \\begin{align*}
@@ -150,6 +150,10 @@ where SC is the structural complexity of the location.
 
 # Returns
 A 2D array of the Reef Fish Index.
+
+# References
+1. Graham, N.A.J., Nash, K.L. The importance of structural complexity in coral reef
+ecosystems. Coral Reefs 32, 315–326 (2013). https://doi.org/10.1007/s00338-012-0984-y
 """
 function reef_fish_index(
     relative_cover::Array{T,2},
