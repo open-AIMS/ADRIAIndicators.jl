@@ -63,9 +63,9 @@ Dr Morgan Pratchett (morgan.pratchett@jcu.edu.au).
 The coral diversity metric (``D``) for a given location and timestep is given as
 
 ```math
-\\begin{aligned}
+\\begin{align*}
 D(x) = 1 - \\sum_{g=1}^{G} (\\frac{x_g}{x_T})^2,
-\\end{aligned}
+\\end{align*}
 ```
 
 where ``x_g`` is the relative coral cover for the functional group, ``g``, and ``x_T`` is
@@ -131,9 +131,9 @@ Inverse Simpsons diversity indicator.
 The coral evenness metric (E) is given as follows,
 
 ```math
-\\begin{align}
+\\begin{align*}
 E(x) = \\left(\\sum_{g=1}^{G}\\left(\\frac{x_g}{x_T} \\right)^2\\right)^{-1}
-\\end{align}
+\\end{align*}
 ```
 
 # Arguments
@@ -229,17 +229,17 @@ The parametrisation of this log-log linear model must be provided by the user. T
 linear model is given by
 
 ```math
-\\begin{align}
+\\begin{align*}
     \\log(S) = b + a\\log(PA),
-\\end{align}
+\\end{align*}
 ```
 where ``S`` and ``PA`` are shelter volume (``m^3m_{-2}``) and planar area, respectively.
 Then absolute shelter volume is given by
 
 ```math
-\\begin{align}
+\\begin{align*}
     ASV = A_C \\cdot S,
-\\end{align}
+\\end{align*}
 ```
 where ``ASV`` and ``A_C`` refers to absolute shelter volume and absolute coral cover,
 respectively.
@@ -284,9 +284,9 @@ maximum of 50% cover of a coral species with the largest colony volume.
 Relative shelter volume (RSV) is given by
 
 ```math
-\\begin{align}
+\\begin{align*}
     \\text{RSV}(x) = \frac{ASV(x)}{MSV(x)},
-\\end{align}
+\\end{align*}
 ```
 
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.
@@ -332,9 +332,9 @@ Calculate the relative shelter volume for a range of covers. Relative shelter vo
 given by
 
 ```math
-\\begin{align}
+\\begin{align*}
     \\text{RSV}(x) = \\frac{ASV(x)}{MSV(x)},
-\\end{align}
+\\end{align*}
 ```
 
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.

@@ -33,9 +33,9 @@ end
 Convert relative habitable cover to relative reef cover. The conversion is given by
 
 ```math
-\\begin{align}
+\\begin{align*}
 \\text{RRC} = \\text{RHC} \\cdot \\frac{A_H}{A_R},
-\\end{align}
+\\end{align*}
 ```
 
 where RRC, RHC, ``A_H`` and ``A_R`` represenht relative reef cover, relative habitable cover
@@ -104,9 +104,9 @@ end
 Convert relative reef cover to relative habitable cover. The conversion is given by
 
 ```math
-\\begin{align}
+\\begin{align*}
 \\text{RHC} = \\text{RRC} \\cdot \\frac{A_R}{A_H},
-\\end{align}
+\\end{align*}
 ```
 
 where RRC, RHC, ``A_H`` and ``A_R`` represenht relative reef cover, relative habitable cover
