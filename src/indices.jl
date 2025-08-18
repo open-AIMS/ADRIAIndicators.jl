@@ -117,22 +117,13 @@ Calculate the Reef Fish Index (RFI) for a single scenario.
 
 # Arguments
 - `rc` : Relative coral cover.
-- `intcp_u1` : Scenario-specific intercept for the first linear model.
-- `intcp_u2` : Scenario-specific intercept for the second linear model.
 - `out_rfi` : Output array buffer for the RFI.
 """
 function _reef_fish_index!(
     rc::AbstractArray,
-    intcp_u1::Real,
-    intcp_u2::Real,
     out_rfi::AbstractArray
 )::Nothing
-    intcp1 = 1.232 + intcp_u1
-    intcp2 = -1623.6 + intcp_u2
-    slope1 = 0.007476
-    slope2 = 1883.3
-
-    out_rfi .= 0.01 .* (intcp2 .+ slope2 .* (intcp1 .+ slope1 .* (rc .* 100.0)))
+    out_rfi .= 0.01 .* (-1623.6 .+ 1883.3 .* (1.232 .+ 0.007476 .* (rc .* 100.0)))
     out_rfi .= round.(out_rfi; digits=2)
 
     return nothing
@@ -141,22 +132,29 @@ end
 """
     reef_fish_index(rc::AbstractArray, intcp_u1::Real, intcp_u2::Real)::AbstractArray
 
-Calculate the Reef Fish Index (RFI) for a single scenario.
+Calculate the Reef Fish Index (RFI) for a single scenario. The RFI is composed
+of two linear regressions mapping relative coral cover to structural complexity and finally,
+structural complexity to fish biomass. RFI as a functional of relative cover (``x``)
+is given as
+
+```math
+\\begin{align}
+\\text{SC}(x) &= 1.232 .+ 0.007476 ⋅ x ⋅ 100
+\\text{RFI} &= 0.01 ⋅ (-1623.6 + 1883.3 ⋅ SC) (\\text{kgkm}_{-2}),
+\\end{align}
+```
+where SC is the structural complexity of the location.
 
 # Arguments
-- `rc` : Relative coral cover.
-- `intcp_u1` : Scenario-specific intercept for the first linear model.
-- `intcp_u2` : Scenario-specific intercept for the second linear model.
+- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
 
 # Returns
 A 2D array of the Reef Fish Index.
 """
 function reef_fish_index(
-    rc::AbstractArray,
-    intcp_u1::Real,
-    intcp_u2::Real
-)::AbstractArray
+    relative_cover::Array{T,2},
+)::Array{T,2} where {T<:Real}
     out_rfi = zeros(Float64, size(rc))
-    _reef_fish_index!(rc, intcp_u1, intcp_u2, out_rfi)
+    _reef_fish_index!(relative_cover, out_rfi)
     return out_rfi
 end
