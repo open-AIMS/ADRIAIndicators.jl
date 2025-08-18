@@ -153,7 +153,7 @@ A 2D array of the Reef Fish Index.
 
 # References
 1. Graham, N.A.J., Nash, K.L. The importance of structural complexity in coral reef
-ecosystems. Coral Reefs 32, 315–326 (2013). https://doi.org/10.1007/s00338-012-0984-y
+    ecosystems. Coral Reefs 32, 315–326 (2013). https://doi.org/10.1007/s00338-012-0984-y
 """
 function reef_fish_index(
     relative_cover::Array{T,2},
