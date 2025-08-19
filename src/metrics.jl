@@ -26,7 +26,7 @@ function _dimension_mismatch_message(
 end
 
 """
-    _coral_diversity(r_taxa_cover::Array{T, 3}, out_coral_diversity::Array{T,2})::Nothing where {T<:Real}
+    coral_diversity(r_taxa_cover::Array{T, 3}, out_coral_diversity::Array{T,2})::Nothing where {T<:Real}
 
 Calculates coral taxa diversity as a dimensionless metric.
 
@@ -34,7 +34,7 @@ Calculates coral taxa diversity as a dimensionless metric.
 - `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
 - `out_coral_diversity` : Output array buffer [timesteps ⋅ locations]
 """
-function _coral_diversity!(
+function coral_diversity!(
     r_taxa_cover::Array{T,3},
     out_coral_diversity::Array{T,2}
 )::Nothing where {T<:Real}
@@ -80,13 +80,13 @@ Matrix containing coral diversity metric of dimension [timesteps ⋅ locations]
 function coral_diversity(rel_cover::Array{T,3})::Array{T,2} where {T<:Real}
     n_tsteps, n_groups, n_locs = size(rel_cover)
     coral_div::Array{T,2} = zeros(T, n_tsteps, n_locs)
-    _coral_diversity!(rel_cover, coral_div)
+    coral_diversity!(rel_cover, coral_div)
 
     return coral_div
 end
 
 """
-    _coral_evenness!(r_taxa_cover::AbstractArray{T,3}, out_coral_evenness::Array{T,2})::Nothing where {T<:Real}
+    coral_evenness!(r_taxa_cover::AbstractArray{T,3}, out_coral_evenness::Array{T,2})::Nothing where {T<:Real}
 
 Calculates evenness across functional coral groups in ADRIA as a diversity metric.
 Inverse Simpsons diversity indicator.
@@ -101,7 +101,7 @@ Diversity and Evenness: A Unifying Notation and Its Consequences.
 Ecology, 54(2), 427-432.
 https://doi.org/10.2307/1934352
 """
-function _coral_evenness!(
+function coral_evenness!(
     rel_cover::AbstractArray{T,3},
     out_coral_evenness::Array{T,2}
 )::Nothing where {T<:Real}
@@ -151,7 +151,7 @@ https://doi.org/10.2307/1934352
 function coral_evenness(rel_cover::Array{T,3})::Array{T,2} where {T<:Real}
     n_steps, _, n_locs = size(rel_cover)
     coral_even::Array{T,2} = zeros(T, n_steps, n_locs)
-    _coral_evenness!(rel_cover, coral_even)
+    coral_evenness!(rel_cover, coral_even)
 
     return coral_even
 end
@@ -191,7 +191,7 @@ function _colony_Lcm2_to_m3m2(
 end
 
 """
-    _absolute_shelter_volume!(rel_cover::Array{T,3}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area::T, ASV::Array{T,3})::Nothing where {T<:AbstractFloat}
+    absolute_shelter_volume!(rel_cover::Array{T,3}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area::T, ASV::Array{T,3})::Nothing where {T<:AbstractFloat}
 
 # Arguments
 - `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
@@ -200,7 +200,7 @@ end
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
 - `out_ASV` : Output array buffer for absolute shelter volume [timesteps ⋅ groups ⋅ size ⋅ locations]
 """
-function _absolute_shelter_volume!(
+function absolute_shelter_volume!(
     rel_cover::Array{T,4},
     colony_mean_area_cm::Array{T,2},
     planar_area_params::Array{T,3},
@@ -269,7 +269,7 @@ function absolute_shelter_volume(
     habitable_area::Vector{T}
 )::Array{T,4} where {T<:AbstractFloat}
     out_ASV::Array{T,4} = zeros(T, size(rel_cover)...)
-    _absolute_shelter_volume!(
+    absolute_shelter_volume!(
         rel_cover, colony_mean_area_cm, planar_area_params, habitable_area, out_ASV
     )
 
@@ -277,7 +277,7 @@ function absolute_shelter_volume(
 end
 
 """
-    _relative_shelter_volume!(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::Vector{T}, out_RSV::Array{T,4})::Nothing where {T<:AbstractFloat}
+    relative_shelter_volume!(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::Vector{T}, out_RSV::Array{T,4})::Nothing where {T<:AbstractFloat}
 
 Calculate the relative shelter volume for a range of covers. Relative to the theoretical
 maximum of 50% cover of a coral species with the largest colony volume.
@@ -298,7 +298,7 @@ where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respect
 - `habitable_area_m²` : Habitable area in m² with dimensions [locations].
 - `out_RSV` : Output Relative shelter volume array buffer with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 """
-function _relative_shelter_volume!(
+function relative_shelter_volume!(
     rel_cover::Array{T,4},
     colony_mean_area_cm::Array{T,2},
     planar_area_params::Array{T,3},
@@ -407,7 +407,7 @@ function relative_shelter_volume(
     end
 
     RSV::Array{T,4} = zeros(T, n_tsteps, n_groups, n_sizes, n_locs)
-    _relative_shelter_volume!(
+    relative_shelter_volume!(
         relative_cover, colony_mean_area_cm, planar_area_params, habitable_area_m², RSV
     )
 

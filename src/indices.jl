@@ -1,5 +1,5 @@
 """
-    _reef_biodiversity_condition_index!(rc::Array{T,2}, cd::AbstractArray{T,2}, sv::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    reef_biodiversity_condition_index!(rc::Array{T,2}, cd::AbstractArray{T,2}, sv::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Biodiversity Condition Index (RBCI).
 
@@ -9,7 +9,7 @@ Calculate the Reef Biodiversity Condition Index (RBCI).
 - `sv` : Relative shelter volume.
 - `out_rci` : Output array buffer for the RCI.
 """
-function _reef_biodiversity_condition_index!(
+function reef_biodiversity_condition_index!(
     rc::Array{T,2},
     cd::AbstractArray{T,2},
     sv::AbstractArray{T,2},
@@ -51,7 +51,7 @@ function reef_biodiversity_condition_index(
     end
 
     out_rci = zeros(Float64, size(relative_cover))
-    _reef_biodiversity_condition_index!(
+    reef_biodiversity_condition_index!(
         relative_cover, coral_diversity, shelter_volume, out_rci
     )
 
@@ -59,7 +59,7 @@ function reef_biodiversity_condition_index(
 end
 
 """
-    _reef_tourism_index!(relative_cover::Array{T,2}, shelter_volume::Array{T,2}, relative_juveniles::Array{T,2}, cots::Array{T,2}, rubble::Array{T,2}, out_rti::Array{T,2})::Nothing where {T<:AbstractFloat}
+    reef_tourism_index!(relative_cover::Array{T,2}, shelter_volume::Array{T,2}, relative_juveniles::Array{T,2}, cots::Array{T,2}, rubble::Array{T,2}, out_rti::Array{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Tourism Index (RTI) for a single scenario.
 
@@ -71,7 +71,7 @@ Calculate the Reef Tourism Index (RTI) for a single scenario.
 - `rubble` : Rubble.
 - `out_rti` : Output array buffer for the RTI.
 """
-function _reef_tourism_index!(
+function reef_tourism_index!(
     relative_cover::Array{T,2},
     shelter_volume::Array{T,2},
     relative_juveniles::Array{T,2},
@@ -129,7 +129,7 @@ function reef_tourism_index(
     end
 
     out_rti = zeros(Float64, rc_size)
-    _reef_tourism_index!(
+    reef_tourism_index!(
         relative_cover, shelter_volume, relative_juveniles, cots, rubble, out_rti
     )
 
@@ -137,7 +137,7 @@ function reef_tourism_index(
 end
 
 """
-    _reef_fish_index!(rc::AbstractArray, out_rfi::AbstractArray)::Nothing
+    reef_fish_index!(rc::AbstractArray, out_rfi::AbstractArray)::Nothing
 
 Calculate the Reef Fish Index (RFI) for a single scenario.
 
@@ -145,7 +145,7 @@ Calculate the Reef Fish Index (RFI) for a single scenario.
 - `rc` : Relative coral cover.
 - `out_rfi` : Output array buffer for the RFI.
 """
-function _reef_fish_index!(
+function reef_fish_index!(
     rc::AbstractArray,
     out_rfi::AbstractArray
 )::Nothing
@@ -185,7 +185,7 @@ function reef_fish_index(
     relative_cover::Array{T,2},
 )::Array{T,2} where {T<:Real}
     out_rfi = zeros(Float64, size(relative_cover))
-    _reef_fish_index!(relative_cover, out_rfi)
+    reef_fish_index!(relative_cover, out_rfi)
 
     return out_rfi
 end

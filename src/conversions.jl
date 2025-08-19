@@ -11,7 +11,7 @@ Convert relative habitable cover to relative reef cover.
 third dimension in `relative_reef_cover` is the location dimensions.
 - `out_rrc` : Array buffer of the same shape as relative_reef_cover
 """
-function _rhc_to_rrc!(
+function rhc_to_rrc!(
     relative_habitable_cover::Array{T,N},
     habitable_area_m²::Vector{T},
     reef_area_m²::Vector{T},
@@ -57,8 +57,8 @@ function rhc_to_rrc(
     reef_area_m²::Vector{T},
     location_dim::Int64
 )::Array{T} where {T<:AbstractFloat}
-    out_rrc::Array{T,N} = zeros(T, size(relative_habitable_cover)...)
-    _rhc_to_rrc!(
+    out_rrc::Array{T} = zeros(T, size(relative_habitable_cover)...)
+    rhc_to_rrc!(
         relative_habitable_cover,
         habitable_area_m²,
         reef_area_m²,
@@ -70,7 +70,7 @@ function rhc_to_rrc(
 end
 
 """
-    _rrc_to_rhc!(relative_reef_cover::Array{T}, habitable_area_m²::Vector{T}, reef_area_m²::Vector{T}, location_dim::Int64, out_rhc::Array{T,N})::Nothing where {T<:AbstractFloat}
+    rrc_to_rhc!(relative_reef_cover::Array{T}, habitable_area_m²::Vector{T}, reef_area_m²::Vector{T}, location_dim::Int64, out_rhc::Array{T,N})::Nothing where {T<:AbstractFloat}
 
 Convert relative reef cover to relative habitable cover.
 
@@ -82,7 +82,7 @@ Convert relative reef cover to relative habitable cover.
 third dimension in `relative_reef_cover` is the location dimsnions.
 - `out_rhc` : Array buffer of the same shape as relative_reef_cover
 """
-function _rrc_to_rhc!(
+function rrc_to_rhc!(
     relative_reef_cover::Array{T,N},
     habitable_area_m²::Vector{T},
     reef_area_m²::Vector{T},
@@ -130,7 +130,7 @@ function rrc_to_rhc(
     location_dim::Int64
 )::Array{T} where {T<:AbstractFloat}
     out_rhc::Array{T,N} = zeros(T, size(relative_reef_cover)...)
-    _rrc_to_rhc!(
+    rrc_to_rhc!(
         relative_reef_cover,
         habitable_area_m²,
         reef_area_m²,

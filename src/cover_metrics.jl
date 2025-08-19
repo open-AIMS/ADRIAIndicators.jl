@@ -1,5 +1,5 @@
 """
-    _relative_loc_cover!(relative_cover::Array{T,4}, out_relative_cover::Array{T,2})::Nothing where {T<:Real}
+    relative_loc_cover!(relative_cover::Array{T,4}, out_relative_cover::Array{T,2})::Nothing where {T<:Real}
 
 Calculate the relative cover per location by summing over groups and size classes.
 
@@ -7,7 +7,7 @@ Calculate the relative cover per location by summing over groups and size classe
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `out_relative_cover` : Output array buffer for relative cover with dimensions [timesteps ⋅ locations].
 """
-function _relative_loc_cover!(
+function relative_loc_cover!(
     relative_cover::Array{T,4},
     out_relative_cover::Array{T,2}
 )::Nothing where {T<:Real}
@@ -31,13 +31,13 @@ A 2D array of relative cover with dimensions [timesteps ⋅ locations].
 function relative_loc_cover(relative_cover::Array{T,4})::Array{T,2} where {T<:Real}
     n_timesteps, _, _, n_locations = size(relative_cover)
     out_relative_cover = zeros(T, n_timesteps, n_locations)
-    _relative_loc_cover!(relative_cover, out_relative_cover)
+    relative_loc_cover!(relative_cover, out_relative_cover)
 
     return out_relative_cover
 end
 
 """
-    _relative_taxa_cover!(relative_cover::Array{T,4}, k_area::Vector{T}, out_relative_taxa_cover::Array{T,2})::Nothing where {T<:Real}
+    relative_taxa_cover!(relative_cover::Array{T,4}, k_area::Vector{T}, out_relative_taxa_cover::Array{T,2})::Nothing where {T<:Real}
 
 Calculate the relative taxa cover, summed up across all locations.
 
@@ -46,7 +46,7 @@ Calculate the relative taxa cover, summed up across all locations.
 - `k_area` : The coral habitable area for each location.
 - `out_relative_taxa_cover` : Output array buffer with dimensions [timesteps ⋅ groups].
 """
-function _relative_taxa_cover!(
+function relative_taxa_cover!(
     relative_cover::Array{T,4},
     k_area::Vector{T},
     out_relative_taxa_cover::Array{T,2}
@@ -86,13 +86,13 @@ function relative_taxa_cover(
         )
     end
     out_relative_taxa_cover = zeros(T, n_timesteps, n_groups)
-    _relative_taxa_cover!(relative_cover, k_area, out_relative_taxa_cover)
+    relative_taxa_cover!(relative_cover, k_area, out_relative_taxa_cover)
 
     return out_relative_taxa_cover
 end
 
 """
-    _relative_cover!(relative_cover::Array{T,4}, location_area::Vector{T}, out_relative_cover::Vector{T})::Nothing where {T<:AbstractFloat}
+    relative_cover!(relative_cover::Array{T,4}, location_area::Vector{T}, out_relative_cover::Vector{T})::Nothing where {T<:AbstractFloat}
 
 For each timestep, calculate the proportion of the entire study area covered by coral.
 
@@ -101,7 +101,7 @@ For each timestep, calculate the proportion of the entire study area covered by 
 - `location_areas` : Location area for each location.
 - `out_relative_cover` : Vector of dimensions [timesteps].
 """
-function _relative_cover!(
+function relative_cover!(
     relative_cover::Array{T,4},
     location_area::Vector{T},
     out_relative_cover::Vector{T}
@@ -134,13 +134,13 @@ function relative_cover(
 )::Vector{T} where {T<:AbstractFloat}
     n_timesteps = size(relative_cover, 4)
     out_relative_cover = zeros(T, n_timesteps)
-    _relative_cover!(relative_cover, location_area, out_relative_cover)
+    relative_cover!(relative_cover, location_area, out_relative_cover)
 
     return out_relative_cover
 end
 
 """
-    _relative_loc_taxa_cover!(relative_cover::Array{T,4}, out_relative_loc_taxa_cover::Array{T,3})::Nothing where {T<:Real}
+    relative_loc_taxa_cover!(relative_cover::Array{T,4}, out_relative_loc_taxa_cover::Array{T,3})::Nothing where {T<:Real}
 
 Calculate the relative taxa cover for each location.
 
@@ -148,7 +148,7 @@ Calculate the relative taxa cover for each location.
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `out_relative_loc_taxa_cover` : Output array buffer with dimensions [timesteps ⋅ groups ⋅ locations].
 """
-function _relative_loc_taxa_cover!(
+function relative_loc_taxa_cover!(
     relative_cover::Array{T,4},
     out_relative_loc_taxa_cover::Array{T,3}
 )::Nothing where {T<:Real}
@@ -173,7 +173,7 @@ function relative_loc_taxa_cover(
 )::Array{T,3} where {T<:Real}
     n_timesteps, n_groups, _, n_locations = size(relative_cover)
     out_relative_loc_taxa_cover = zeros(T, n_timesteps, n_groups, n_locations)
-    _relative_loc_taxa_cover!(relative_cover, out_relative_loc_taxa_cover)
+    relative_loc_taxa_cover!(relative_cover, out_relative_loc_taxa_cover)
 
     return out_relative_loc_taxa_cover
 end
