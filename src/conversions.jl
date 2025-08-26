@@ -1,5 +1,5 @@
 """
-    _rhc_to_rrc!(relative_habitable_cover::Array{T}, habitable_area_m²::Vector{T}, reef_area_m²::Vector{T}, location_dim::Int64, out_rrc::Array{T,N})::Nothing where {T<:AbstractFloat}
+    _rhc_to_rrc!(relative_habitable_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_rrc::Array{T,N})::Nothing where {T<:AbstractFloat}
 
 Convert relative habitable cover to relative reef cover.
 
@@ -13,8 +13,8 @@ third dimension in `relative_reef_cover` is the location dimensions.
 """
 function rhc_to_rrc!(
     relative_habitable_cover::Array{T,N},
-    habitable_area_m²::Vector{T},
-    reef_area_m²::Vector{T},
+    habitable_area_m²::AbstractVector{T},
+    reef_area_m²::AbstractVector{T},
     location_dim::Int64,
     out_rrc::Array{T,N}
 )::Nothing where {T<:AbstractFloat,N}
@@ -28,7 +28,7 @@ function rhc_to_rrc!(
 end
 
 """
-    rhc_to_rrc(relative_habitable_cover::Array{T}, habitable_area_m²::Vector{T}, reef_area_m²::Vector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
+    rhc_to_rrc(relative_habitable_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
 
 Convert relative habitable cover to relative reef cover. The conversion is given by
 
@@ -38,7 +38,7 @@ Convert relative habitable cover to relative reef cover. The conversion is given
 \\end{align*}
 ```
 
-where RRC, RHC, ``A_H`` and ``A_R`` represenht relative reef cover, relative habitable cover
+where RRC, RHC, ``A_H`` and ``A_R`` represent relative reef cover, relative habitable cover
 habitable area and reef area respectively.
 
 # Arguments
@@ -53,8 +53,8 @@ Relative reef cover with same array shape as the input `relative_reef_cover`.
 """
 function rhc_to_rrc(
     relative_habitable_cover::Array{T},
-    habitable_area_m²::Vector{T},
-    reef_area_m²::Vector{T},
+    habitable_area_m²::AbstractVector{T},
+    reef_area_m²::AbstractVector{T},
     location_dim::Int64
 )::Array{T} where {T<:AbstractFloat}
     out_rrc::Array{T} = zeros(T, size(relative_habitable_cover)...)
@@ -70,7 +70,7 @@ function rhc_to_rrc(
 end
 
 """
-    rrc_to_rhc!(relative_reef_cover::Array{T}, habitable_area_m²::Vector{T}, reef_area_m²::Vector{T}, location_dim::Int64, out_rhc::Array{T,N})::Nothing where {T<:AbstractFloat}
+    rrc_to_rhc!(relative_reef_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_rhc::Array{T,N})::Nothing where {T<:AbstractFloat}
 
 Convert relative reef cover to relative habitable cover.
 
@@ -84,22 +84,22 @@ third dimension in `relative_reef_cover` is the location dimsnions.
 """
 function rrc_to_rhc!(
     relative_reef_cover::Array{T,N},
-    habitable_area_m²::Vector{T},
-    reef_area_m²::Vector{T},
+    habitable_area_m²::AbstractVector{T},
+    reef_area_m²::AbstractVector{T},
     location_dim::Int64,
     out_rhc::Array{T,N}
 )::Array{T} where {T<:AbstractFloat,N}
     reshape_idx::Tuple = Tuple(
         i == location_dim ? -1 : 1 for i in 1:ndims(relative_reef_cover)
     )
-    area_coefficient::Vector{T} = reshape(reef_area_m² ./ habitable_area_m², reshape_idx)
+    area_coefficient::AbstractVector{T} = reshape(reef_area_m² ./ habitable_area_m², reshape_idx)
     out_rhc .= relative_reef_cover .* area_coefficient
 
     return nothing
 end
 
 """
-    rrc_to_rhc(relative_reef_cover::Array{T}, habitable_area_m²::Vector{T}, reef_area_m²::Vector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
+    rrc_to_rhc(relative_reef_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
 
 Convert relative reef cover to relative habitable cover. The conversion is given by
 
@@ -125,8 +125,8 @@ Relative habitable cover with same array shape as the input `relative_reef_cover
 """
 function rrc_to_rhc(
     relative_reef_cover::Array{T},
-    habitable_area_m²::Vector{T},
-    reef_area_m²::Vector{T},
+    habitable_area_m²::AbstractVector{T},
+    reef_area_m²::AbstractVector{T},
     location_dim::Int64
 )::Array{T} where {T<:AbstractFloat}
     out_rhc::Array{T,N} = zeros(T, size(relative_reef_cover)...)

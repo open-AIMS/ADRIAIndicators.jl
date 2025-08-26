@@ -204,7 +204,7 @@ function absolute_shelter_volume!(
     rel_cover::Array{T,4},
     colony_mean_area_cm::Array{T,2},
     planar_area_params::Array{T,3},
-    habitable_area::Vector{T},
+    habitable_area::AbstractVector{T},
     out_ASV::Array{T,4}
 )::Nothing where {T<:AbstractFloat}
     colony_vol_m3_per_m2 = _colony_Lcm2_to_m3m2.(
@@ -221,7 +221,7 @@ function absolute_shelter_volume!(
 end
 
 """
-    absolute_shelter_volume(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area::Vector{T})::Array{T,4} where {T<:AbstractFloat}
+    absolute_shelter_volume(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area::AbstractVector{T})::Array{T,4} where {T<:AbstractFloat}
 
 Calculate the volume of shelter provided by the given coral cover. This function uses
 log-log linear models to predict the volume of shelter provided from a given planar area.
@@ -266,7 +266,7 @@ function absolute_shelter_volume(
     rel_cover::Array{T,4},
     colony_mean_area_cm::Array{T,2},
     planar_area_params::Array{T,3},
-    habitable_area::Vector{T}
+    habitable_area::AbstractVector{T}
 )::Array{T,4} where {T<:AbstractFloat}
     out_ASV::Array{T,4} = zeros(T, size(rel_cover)...)
     absolute_shelter_volume!(
@@ -277,7 +277,7 @@ function absolute_shelter_volume(
 end
 
 """
-    relative_shelter_volume!(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::Vector{T}, out_RSV::Array{T,4})::Nothing where {T<:AbstractFloat}
+    relative_shelter_volume!(rel_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::AbstractVector{T}, out_RSV::Array{T,4})::Nothing where {T<:AbstractFloat}
 
 Calculate the relative shelter volume for a range of covers. Relative to the theoretical
 maximum of 50% cover of a coral species with the largest colony volume.
@@ -302,7 +302,7 @@ function relative_shelter_volume!(
     rel_cover::Array{T,4},
     colony_mean_area_cm::Array{T,2},
     planar_area_params::Array{T,3},
-    habitable_area_m²::Vector{T},
+    habitable_area_m²::AbstractVector{T},
     out_RSV::Array{T,4}
 )::Nothing where {T<:AbstractFloat}
     colony_vol_m³_per_m² = _colony_Lcm2_to_m3m2.(
@@ -319,14 +319,14 @@ function relative_shelter_volume!(
 
     max_colony_vol_m³::T = maximum(colony_vol_m³_per_m²)
     # Calculate maximum shelter volume m³ [group ⋅ location]
-    MSV_m³::Vector{T} = habitable_area_m² .* max_colony_vol_m³ .* 0.5
+    MSV_m³::AbstractVector{T} = habitable_area_m² .* max_colony_vol_m³ .* 0.5
     out_RSV .= ASV_m³ ./ reshape(MSV_m³, (1, 1, 1, n_locations))
 
     return nothing
 end
 
 """
-    relative_shelter_volume(relative_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::Vector{T})::Array{T,4} where {T<:Real}
+    relative_shelter_volume(relative_cover::Array{T,4}, colony_mean_area_cm::Array{T,2}, planar_area_params::Array{T,3}, habitable_area_m²::AbstractVector{T})::Array{T,4} where {T<:Real}
 
 Calculate the relative shelter volume for a range of covers. Relative shelter volume (RSV) is
 given by
@@ -365,7 +365,7 @@ function relative_shelter_volume(
     relative_cover::Array{T,4},
     colony_mean_area_cm::Array{T,2},
     planar_area_params::Array{T,3},
-    habitable_area_m²::Vector{T}
+    habitable_area_m²::AbstractVector{T}
 )::Array{T,4} where {T<:Real}
     n_tsteps::Int64, n_groups::Int64, n_sizes::Int64, n_locs::Int64 = size(relative_cover)
 

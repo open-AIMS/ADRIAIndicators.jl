@@ -1,5 +1,5 @@
 """
-    reef_biodiversity_condition_index!(rc::Array{T,2}, cd::AbstractArray{T,2}, sv::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    reef_biodiversity_condition_index!(rc::AbstractArray{T,2}, cd::AbstractArray{T,2}, sv::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Biodiversity Condition Index (RBCI).
 
@@ -10,7 +10,7 @@ Calculate the Reef Biodiversity Condition Index (RBCI).
 - `out_rci` : Output array buffer for the RCI.
 """
 function reef_biodiversity_condition_index!(
-    rc::Array{T,2},
+    rc::AbstractArray{T,2},
     cd::AbstractArray{T,2},
     sv::AbstractArray{T,2},
     out_rci::AbstractArray{T,2}
@@ -21,7 +21,7 @@ function reef_biodiversity_condition_index!(
 end
 
 """
-    reef_biodiversity_condition_index(relative_cover::Array{T,2}, coral_diversity::Array{T,2}, shelter_volume::Array{T,2})::Array{T,2} where {T<:AbstractFloat}
+    reef_biodiversity_condition_index(relative_cover::AbstractArray{T,2}, coral_diversity::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Calculate the Reef Biodiversity Condition Index (RBCI). The RBCI is simply the average of 
 relative cover (RC), coral diversity (CD), and shelter volume (SV). Given as
@@ -41,10 +41,10 @@ relative cover (RC), coral diversity (CD), and shelter volume (SV). Given as
 A 2D array of the Reef Condition Index.
 """
 function reef_biodiversity_condition_index(
-    relative_cover::Array{T,2},
-    coral_diversity::Array{T,2},
-    shelter_volume::Array{T,2}
-)::Array{T,2} where {T<:AbstractFloat}
+    relative_cover::AbstractArray{T,2},
+    coral_diversity::AbstractArray{T,2},
+    shelter_volume::AbstractArray{T,2}
+)::AbstractArray{T,2} where {T<:AbstractFloat}
     rc_size = size(relative_cover)
     if (rc_size != size(coral_diversity)) || (rc_size != size(shelter_volume))
         throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
@@ -59,7 +59,7 @@ function reef_biodiversity_condition_index(
 end
 
 """
-    reef_tourism_index!(relative_cover::Array{T,2}, shelter_volume::Array{T,2}, relative_juveniles::Array{T,2}, cots::Array{T,2}, rubble::Array{T,2}, out_rti::Array{T,2})::Nothing where {T<:AbstractFloat}
+    reef_tourism_index!(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Tourism Index (RTI) for a single scenario.
 
@@ -72,12 +72,12 @@ Calculate the Reef Tourism Index (RTI) for a single scenario.
 - `out_rti` : Output array buffer for the RTI.
 """
 function reef_tourism_index!(
-    relative_cover::Array{T,2},
-    shelter_volume::Array{T,2},
-    relative_juveniles::Array{T,2},
-    cots::Array{T,2},
-    rubble::Array{T,2},
-    out_rti::Array{T,2}
+    relative_cover::AbstractArray{T,2},
+    shelter_volume::AbstractArray{T,2},
+    relative_juveniles::AbstractArray{T,2},
+    cots::AbstractArray{T,2},
+    rubble::AbstractArray{T,2},
+    out_rti::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
     # Intercept and coefficient resulting from regressions.
     intcp::T = 0.47947
@@ -100,7 +100,7 @@ function reef_tourism_index!(
 end
 
 """
-    reef_tourism_index(relative_cover::Array{T,2}, shelter_volume::Array{T,2}, relative_juveniles::Array{T,2}, cots::Array{T,2}, rubble::Array{T,2})::Array{T,2} where {T<:AbstractFloat}
+    reef_tourism_index(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Calculate the Reef Tourism Index (RTI) for a single scenario. The RTI is the Reef
 Condition Index made continuous by fitting a linear regression model using relative cover,
@@ -117,12 +117,12 @@ shelter volume, relative juveniles, cots abundance and rubble to underpin it.
 A 2D array of the Reef Tourism Index.
 """
 function reef_tourism_index(
-    relative_cover::Array{T,2},
-    shelter_volume::Array{T,2},
-    relative_juveniles::Array{T,2},
-    cots::Array{T,2},
-    rubble::Array{T,2}
-)::Array{T,2} where {T<:AbstractFloat}
+    relative_cover::AbstractArray{T,2},
+    shelter_volume::AbstractArray{T,2},
+    relative_juveniles::AbstractArray{T,2},
+    cots::AbstractArray{T,2},
+    rubble::AbstractArray{T,2}
+)::AbstractArray{T,2} where {T<:AbstractFloat}
     rc_size = size(relative_cover)
     if (rc_size != size(shelter_volume)) || (rc_size != size(relative_juveniles)) || (rc_size != size(cots)) || (rc_size != size(cots)) || (rc_size != size(rubble))
         throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
@@ -156,7 +156,7 @@ function reef_fish_index!(
 end
 
 """
-    reef_fish_index(relative_cover::Array{T,2},)::Array{T,2} where {T<:Real}
+    reef_fish_index(relative_cover::AbstractArray{T,2},)::AbstractArray{T,2} where {T<:Real}
 
 Calculate the Reef Fish Index (RFI) for a single scenario. The RFI is composed
 of two linear regressions mapping relative coral cover to structural complexity and finally,
@@ -182,8 +182,8 @@ A 2D array of the Reef Fish Index.
     ecosystems. Coral Reefs 32, 315–326 (2013). https://doi.org/10.1007/s00338-012-0984-y
 """
 function reef_fish_index(
-    relative_cover::Array{T,2},
-)::Array{T,2} where {T<:Real}
+    relative_cover::AbstractArray{T,2},
+)::AbstractArray{T,2} where {T<:Real}
     out_rfi = zeros(Float64, size(relative_cover))
     reef_fish_index!(relative_cover, out_rfi)
 
