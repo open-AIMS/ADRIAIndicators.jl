@@ -1,5 +1,103 @@
 """
-    reef_biodiversity_condition_index!(rc::AbstractArray{T,2}, cd::AbstractArray{T,2}, sv::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    reef_condition_index!(relative_cover::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+
+Calculate the Reef Condition Index (RCI).
+
+# Arguments
+- `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
+- `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
+- `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
+- `cots` : Abundance of crown of the starfish with dimensions [timesteps ⋅ locations].
+- `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
+- `out_rci` : Output RCI buffer with dimenions [timesteps ⋅ locations].
+"""
+function reef_condition_index!(
+    relative_cover::AbstractArray{T,2},
+    relative_shelter_volume::AbstractArray{T,2},
+    relative_juveniles::AbstractArray{T,2},
+    cots::AbstractArray{T,2},
+    rubble::AbstractArray{T,2},
+    out_rci::AbstractArray{T,2}
+)::Nothing where {T<:AbstractFloat}
+    const RCI_CRIT = T[
+        0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
+        # 0.15 0.20 0.25 0.35 0.45;  # coral evenness thresholds
+        0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
+        0.15 0.20 0.25 0.30 0.35;  # coral juveniles thresholds
+        # 0.15 0.15 0.15 0.15 0.25;  # ccas thresholds?
+        0.65 0.70 0.75 0.85 0.95;  # cots outbreak threshold
+        # 0.65 0.85 0.85 0.85 0.95;  # macro algae thresholds
+        0.15 0.70 0.75 0.80 0.85   # rubble thresholds
+    ]
+
+    const CRIT_VAL = T[0.9, 0.7, 0.5, 0.3]
+
+    const N_METRICS = 5
+    const CRITERIA_THRESHOLD = 0.6
+
+    cots_comp = 1.0 .- cots
+    rubble_comp = 1.0 .- rubble
+
+    out_rci .= 0.0
+
+    for i in 1:size(CRIT_VAL, 1)
+        metrics_met = (relative_cover .>= RCI_CRIT[1, i]) .+
+                      (relative_shelter_volume .>= RCI_CRIT[2, i]) .+
+                      (relative_juveniles .>= RCI_CRIT[3, i]) .+
+                      (cots_comp .>= RCI_CRIT[4, i]) .+
+                      (rubble_comp .>= RCI_CRIT[5, i])
+
+        pass_mask = (metrics_met ./ N_METRICS) .>= CRITERIA_THRESHOLD
+
+        out_rci[pass_mask] .+= CRIT_VAL[i]
+    end
+
+    vg_sum = sum(CRIT_VAL)
+    g_sum = sum(CRIT_VAL[2:end])
+    f_sum = sum(CRIT_VAL[3:end])
+    p_sum = CRIT_VAL[4]
+
+    out_rci[out_rci .≈ vg_sum] .= 0.9 # Very Good
+    out_rci[out_rci .≈ g_sum] .= 0.7  # Good
+    out_rci[out_rci .≈ f_sum] .= 0.5  # Fair
+    out_rci[out_rci .≈ p_sum] .= 0.3  # Poor
+    out_rci[out_rci .== 0.0] .= 0.1
+
+    return nothing
+end
+
+"""
+    reef_condition_index(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
+
+Calculate the Reef Condition Index (RCI).
+
+# Arguments
+- `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
+- `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
+- `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
+- `cots` : Abundance of crown of the starfish with dimensions [timesteps ⋅ locations].
+- `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
+
+# Returns
+Output RCI buffer with dimenions [timesteps ⋅ locations].
+"""
+function reef_condition_index(
+    relative_cover::AbstractArray{T,2},
+    shelter_volume::AbstractArray{T,2},
+    relative_juveniles::AbstractArray{T,2},
+    cots::AbstractArray{T,2},
+    rubble::AbstractArray{T,2}
+)::AbstractArray{T,2} where {T<:AbstractFloat}
+    out_rci::Array{T,2} = zeros(T, size(relative_cover)...)
+    reef_condition_index!(
+        relative_cover, shelter_volume, relative_juveniles, cots, rubble, out_rci
+    )
+
+    return out_rci
+end
+
+"""
+    reef_biodiversity_condition_index!(rc::AbstractArray{T,2}, cd::AbstractArray{T,2}, sv::AbstractArray{T,2}, out_rbci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Biodiversity Condition Index (RBCI).
 
@@ -7,15 +105,15 @@ Calculate the Reef Biodiversity Condition Index (RBCI).
 - `rc` : Relative coral cover.
 - `cd` : Coral diversity.
 - `sv` : Relative shelter volume.
-- `out_rci` : Output array buffer for the RCI.
+- `out_rbci` : Output array buffer for the RCI.
 """
 function reef_biodiversity_condition_index!(
     rc::AbstractArray{T,2},
     cd::AbstractArray{T,2},
     sv::AbstractArray{T,2},
-    out_rci::AbstractArray{T,2}
+    out_rbci::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
-    out_rci .= clamp.((rc .+ cd .+ sv) ./ 3.0, 0.0, 1.0)
+    out_rbci .= clamp.((rc .+ cd .+ sv) ./ 3.0, 0.0, 1.0)
 
     return nothing
 end
@@ -23,7 +121,7 @@ end
 """
     reef_biodiversity_condition_index(relative_cover::AbstractArray{T,2}, coral_diversity::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
-Calculate the Reef Biodiversity Condition Index (RBCI). The RBCI is simply the average of 
+Calculate the Reef Biodiversity Condition Index (RBCI). The RBCI is simply the average of
 relative cover (RC), coral diversity (CD), and shelter volume (SV). Given as
 
 ```math
@@ -50,12 +148,12 @@ function reef_biodiversity_condition_index(
         throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
     end
 
-    out_rci = zeros(Float64, size(relative_cover))
+    out_rbci = zeros(Float64, size(relative_cover))
     reef_biodiversity_condition_index!(
-        relative_cover, coral_diversity, shelter_volume, out_rci
+        relative_cover, coral_diversity, shelter_volume, out_rbci
     )
 
-    return out_rci
+    return out_rbci
 end
 
 """
@@ -64,12 +162,12 @@ end
 Calculate the Reef Tourism Index (RTI) for a single scenario.
 
 # Arguments
-- `relative_cover` : Relative coral cover.
-- `shelter_volume` : Relative shelter volume.
-- `relative_juveniles` : Relative juvenile cover.
-- `cots` : COTS abundance.
-- `rubble` : Rubble.
-- `out_rti` : Output array buffer for the RTI.
+- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
+- `shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
+- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
+- `cots` : COTS abundance as a count with dimensions [timesteps ⋅ locations].
+- `rubble` : Rubble as a proportion of location area with dimensions [timesteps ⋅ locations].
+- `out_rti` : Output array buffer for the RTI with dimensions [timesteps ⋅ locations].
 """
 function reef_tourism_index!(
     relative_cover::AbstractArray{T,2},
@@ -107,14 +205,14 @@ Condition Index made continuous by fitting a linear regression model using relat
 shelter volume, relative juveniles, cots abundance and rubble to underpin it.
 
 # Arguments
-- `relative_cover` : Relative coral cover.
-- `shelter_volume` : Relative shelter volume.
-- `relative_juveniles` : Relative juvenile cover.
-- `cots` : COTS abundance.
-- `rubble` : Rubble.
+- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
+- `shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
+- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
+- `cots` : COTS abundance with dimensions [timesteps ⋅ locations].
+- `rubble` : Rubble as proportion of location area with dimensions [timesteps ⋅ locations].
 
 # Returns
-A 2D array of the Reef Tourism Index.
+A 2D array of the Reef Tourism Index with dimensions [timesteps ⋅ locations].
 """
 function reef_tourism_index(
     relative_cover::AbstractArray{T,2},
@@ -142,13 +240,13 @@ end
 Calculate the Reef Fish Index (RFI) for a single scenario.
 
 # Arguments
-- `rc` : Relative coral cover.
-- `out_rfi` : Output array buffer for the RFI.
+- `rc` : Relative coral cover with dimensions [timesteps ⋅ locations].
+- `out_rfi` : Output array buffer for the RFI with dimensions [timesteps ⋅ locations].
 """
 function reef_fish_index!(
-    rc::AbstractArray,
-    out_rfi::AbstractArray
-)::Nothing
+    rc::AbstractArray{T,2},
+    out_rfi::AbstractArray{T,2}
+)::Nothing where {T<:Real}
     out_rfi .= 0.01 .* (-1623.6 .+ 1883.3 .* (1.232 .+ 0.007476 .* (rc .* 100.0)))
     out_rfi .= round.(out_rfi; digits=2)
 
@@ -175,7 +273,7 @@ where SC is the structural complexity of the location.
 - `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
 
 # Returns
-A 2D array of the Reef Fish Index.
+A 2D array of the Reef Fish Index with dimensions [timesteps ⋅ locations].
 
 # References
 1. Graham, N.A.J., Nash, K.L. The importance of structural complexity in coral reef
