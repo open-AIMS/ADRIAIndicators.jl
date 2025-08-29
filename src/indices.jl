@@ -9,7 +9,7 @@ Calculate the Reef Condition Index (RCI).
 - `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
 - `cots` : Abundance of crown of the starfish with dimensions [timesteps ⋅ locations].
 - `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
-- `out_rci` : Output RCI buffer with dimenions [timesteps ⋅ locations].
+- `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
 """
 function reef_condition_index!(
     relative_cover::AbstractArray{T,2},
@@ -19,7 +19,7 @@ function reef_condition_index!(
     rubble::AbstractArray{T,2},
     out_rci::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
-    const RCI_CRIT = T[
+    RCI_CRIT = T[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
         # 0.15 0.20 0.25 0.35 0.45;  # coral evenness thresholds
         0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
@@ -30,16 +30,15 @@ function reef_condition_index!(
         0.15 0.70 0.75 0.80 0.85   # rubble thresholds
     ]
 
-    const CRIT_VAL = T[0.9, 0.7, 0.5, 0.3]
+    CRIT_VAL = T[0.1, 0.3, 0.5, 0.7, 0.9]
 
-    const N_METRICS = 5
-    const CRITERIA_THRESHOLD = 0.6
+    N_METRICS = 5
+    CRITERIA_THRESHOLD = 0.6
 
     cots_comp = 1.0 .- cots
     rubble_comp = 1.0 .- rubble
 
     out_rci .= 0.0
-
     for i in 1:size(CRIT_VAL, 1)
         metrics_met = (relative_cover .>= RCI_CRIT[1, i]) .+
                       (relative_shelter_volume .>= RCI_CRIT[2, i]) .+
@@ -53,15 +52,17 @@ function reef_condition_index!(
     end
 
     vg_sum = sum(CRIT_VAL)
-    g_sum = sum(CRIT_VAL[2:end])
-    f_sum = sum(CRIT_VAL[3:end])
-    p_sum = CRIT_VAL[4]
+    g_sum = sum(CRIT_VAL[1:end - 1])
+    f_sum = sum(CRIT_VAL[1:end - 2])
+    p_sum = sum(CRIT_VAL[1:end - 3])
+    vp_sum = CRIT_VAL[1]
 
-    out_rci[out_rci .≈ vg_sum] .= 0.9 # Very Good
-    out_rci[out_rci .≈ g_sum] .= 0.7  # Good
-    out_rci[out_rci .≈ f_sum] .= 0.5  # Fair
+    out_rci[out_rci .≈ 0.0] .= 0.1 # Very Poor
+    out_rci[out_rci .≈ vp_sum] .= 0.1 # Very Poor
     out_rci[out_rci .≈ p_sum] .= 0.3  # Poor
-    out_rci[out_rci .== 0.0] .= 0.1
+    out_rci[out_rci .≈ f_sum] .= 0.5  # Fair
+    out_rci[out_rci .≈ g_sum] .= 0.7  # Good
+    out_rci[out_rci .≈ vg_sum] .= 0.9 # Very Good
 
     return nothing
 end
@@ -71,6 +72,29 @@ end
 
 Calculate the Reef Condition Index (RCI).
 
+The RCI is a categorical index assessing the overall health and condition of a reef location
+based on five key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
+representing categories from "Very Poor" to "Very Good".
+
+The RCI accepts five inputs
+ - Relative Coral Cover
+ - Relative Shelter Volume
+ - Relative Juvenile Cover
+ - Crown-of-Thorns Starfish (COTS) abundance
+ - Rubble cover
+
+For each input there are five levels of condition ranging from very poor to very good. COTS
+and Rubble Cover is inverted, where high values indicate worse condition. Then the location
+is assigned a condition of very poor to very good if that location meets 60% of the metrics
+condition criteria. The condition level is then assigned a numerical value based on its
+categorisation
+
+0.9: Very Good
+0.7: Good
+0.5: Fair
+0.3: Poor
+0.1: Very Poor
+
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
 - `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
@@ -79,7 +103,7 @@ Calculate the Reef Condition Index (RCI).
 - `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
 
 # Returns
-Output RCI buffer with dimenions [timesteps ⋅ locations].
+Output RCI buffer with dimensions [timesteps ⋅ locations].
 """
 function reef_condition_index(
     relative_cover::AbstractArray{T,2},

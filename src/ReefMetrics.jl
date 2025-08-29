@@ -14,7 +14,8 @@ export juvenile_indicator, relative_juveniles, absolute_juveniles
 export coral_diversity, coral_evenness, absolute_shelter_volume,
     relative_shelter_volume
 
-export reef_fish_index, reef_tourism_index, reef_biodiversity_condition_index
+export reef_fish_index, reef_tourism_index, reef_biodiversity_condition_index,
+    reef_condition_index
 
 export rhc_to_rrc, rrc_to_rhc
 
