@@ -91,3 +91,53 @@ using ReefMetrics
         @test actual_rci ≈ expected_rci
     end
 end
+
+@testset "Reef Tourism Index" begin
+
+    @testset "Core Calculation and Rounding" begin
+        # Inputs chosen to produce a value that requires rounding.
+        # Raw value = 0.47947 + 0.1 * (0.7678 + 0.2945 + 0.8371 + 0.2822 + 0.7764)
+        #           = 0.47947 + 0.1 * 2.958 = 0.47947 + 0.2958 = 0.77527
+        # Clamped value = 0.77527
+        # Rounded value = 0.78
+        rc =     fill(0.1, 1, 1)
+        sv =     fill(0.1, 1, 1)
+        juv =    fill(0.1, 1, 1)
+        cots =   fill(0.1, 1, 1)
+        rubble = fill(0.1, 1, 1)
+
+        expected_rti = [0.78]
+
+        # Test the wrapper function
+        actual_rti_wrapper = reef_tourism_index(rc, sv, juv, cots, rubble)
+        @test actual_rti_wrapper ≈ expected_rti
+    end
+
+    @testset "Dimension Mismatch" begin
+        rc =     zeros(1, 2)
+        sv =     zeros(1, 2)
+        juv =    zeros(1, 2)
+        cots =   zeros(1, 2)
+        rubble = zeros(1, 1) # Mismatched dimension
+
+        @test_throws DimensionMismatch reef_tourism_index(rc, sv, juv, cots, rubble)
+    end
+
+    @testset "Combined Matrix Test" begin
+        # Each column represents a different test case:
+        # 1. Standard/Rounding Case
+        # 2. Upper Clamp Case
+        # 3. Lower Clamp Case (with negative inputs)
+        # 4. Zero Input Case
+        rc =     [0.1 1.0 -1.0 0.0]
+        sv =     [0.1 1.0 -1.0 0.0]
+        juv =    [0.1 1.0 -1.0 0.0]
+        cots =   [0.1 1.0 -1.0 0.0]
+        rubble = [0.1 1.0 -1.0 0.0]
+
+        expected_rti = [0.78 0.9 0.1 0.48]
+        actual_rti = reef_tourism_index(rc, sv, juv, cots, rubble)
+
+        @test actual_rti ≈ expected_rti
+    end
+end
