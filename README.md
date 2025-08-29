@@ -32,11 +32,10 @@ relative_juveniles(raw_model_cover, is_juvenile, rel_juveniles)
 - Coral Diversity
 - Coral Evenness
 
+- Reef Condition Index
 - Reef Biodiversity Condition Index
 - Reef Tourism Index
 - Reef Fish Index
-
-*To Do: Reef Condition Index*
 
 ## Building Documentation
 
