@@ -42,9 +42,9 @@ function relative_juveniles(
     relative_cover::AbstractArray{T,4},
     is_juveniles::AbstractVector{Bool},
     location_area::AbstractVector{T}
-)::AbstractArray{T,2} where {T<:AbstractFloat}
+)::Vector{T} where {T<:AbstractFloat}
     n_tsteps = size(relative_cover, 1)
-    out_relative_juveniles::AbstractVector{T} = zeros(T, n_tsteps)
+    out_relative_juveniles::Vector{T} = zeros(T, n_tsteps)
     relative_juveniles!(relative_cover, is_juveniles, location_area, out_relative_juveniles)
 
     return out_relative_juveniles
@@ -146,9 +146,9 @@ function relative_taxa_juveniles(
     location_area::AbstractVector{T}
 )::Array{T,2} where {T<:AbstractFloat}
     n_tsteps, n_groups, _, _ = size(relative_cover)
-    out_relative_taxa_juveniles::Array{T,3} = zeros(T, n_tsteps, n_groups)
+    out_relative_taxa_juveniles::Array{T,2} = zeros(T, n_tsteps, n_groups)
     relative_taxa_juveniles!(
-        relative_cover, is_juveniles, location_area, out_relative_taxa_juveniles
+        relative_cover, is_juvenile, location_area, out_relative_taxa_juveniles
     )
 
     return out_relative_taxa_juveniles
@@ -163,56 +163,52 @@ location. Returns the output into a preallocated buffer
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `location_area` : Vector containing the area of each location with dimensions [locations].
 - `out_relative_taxa_juveniles` : Output array buffer with dimensions [timesteps ⋅ groups ⋅ locations].
 """
 function relative_loc_taxa_juveniles!(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
-    location_area::AbstractVector{T},
-    out_relative_loc_taxa_juveniles::AbstractArray{T,2}
+    out_relative_loc_taxa_juveniles::AbstractArray{T,3}
 )::Nothing where {T<:AbstractFloat}
     _is_juveniles = reshape(is_juvenile, (1, 1, :, 1))
-    _location_area = reshape(location_area, (1, 1, 1, :))
     out_relative_loc_taxa_juveniles .=
         dropdims(sum(
-                relative_cover .* _location_area .* _is_juveniles; dims=(3,)
-            ); dims=(3,)) ./ sum(location_area)
+                relative_cover .* _is_juveniles; dims=(3,)
+    ); dims=(3,))
 
     return nothing
 end
 
 """
-Calculate the realtive coral cover composed of juveniles over time, functional group and
+    relative_loc_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool},)::Array{T,3} where {T<:AbstractFloat}
+
+Calculate the relative coral cover composed of juveniles over time, functional group and
 location.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `location_area` : Vector containing the area of each location with dimensions [locations].
 
 # Returns
 Array with dimensions [timesteps ⋅ groups ⋅ locations].
 """
 function relative_loc_taxa_juveniles(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
-    location_area::AbstractVector{T},
-    out_relative_loc_taxa_juveniles::AbstractArray{T,2}
+    is_juvenile::AbstractVector{Bool}
 )::Array{T,3} where {T<:AbstractFloat}
     n_tsteps, n_groups, _, n_locs = size(relative_cover)
     out_relative_loc_taxa_juveniles::Array{T,3} = zeros(T, n_tsteps, n_groups, n_locs)
     relative_loc_taxa_juveniles!(
-        relative_cover, is_juvenile, location_area, out_relative_loc_taxa_juveniles
+        relative_cover, is_juvenile, out_relative_loc_taxa_juveniles
     )
 
-    return nothing
+    return out_relative_loc_taxa_juveniles
 end
 
 """
     absolute_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_juveniles::AbstractVector{T})::Nothing where {T<:AbstractFloat}
 
-Calculate the coral cover composed of juvenile corals in absolute units for each timesteps. 
+Calculate the coral cover composed of juvenile corals in absolute units for each timesteps.
 Write results into a preallocated buffer.
 
 # Arguments
