@@ -250,12 +250,12 @@ function absolute_juveniles(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
     location_area::AbstractVector{T}
-)::Array{T,2} where {T<:AbstractFloat}
+)::Array{T} where {T<:AbstractFloat}
     n_tsteps = size(relative_cover, 1)
     out_absolute_juveniles::Vector{T} = zeros(T, n_tsteps)
     absolute_juveniles!(relative_cover, is_juvenile, location_area, out_absolute_juveniles)
 
-    return nothing
+    return out_absolute_juveniles
 end
 
 """
@@ -313,7 +313,7 @@ function absolute_loc_juveniles(
 end
 
 """
-    absolute_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_taxa_juveniles::AbstractArray{T,3})::Nothing
+    absolute_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_taxa_juveniles::AbstractArray{T,2})::Nothing
 
 Calculate the coral cover occupied by juveniles over timesteps and functional groups. Write
 results in a preallocated buffer.
@@ -328,7 +328,7 @@ function absolute_taxa_juveniles!(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
     location_area::AbstractVector{T},
-    out_absolute_taxa_juveniles::AbstractArray{T,3}
+    out_absolute_taxa_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
     _is_juveniles = reshape(is_juvenile, (1, 1, :, 1))
     _location_area = reshape(location_area, (1, 1, 1, :))
@@ -365,7 +365,7 @@ function absolute_taxa_juveniles(
         relative_cover, is_juvenile, location_area, out_absolute_taxa_juveniles
     )
 
-    return nothing
+    return out_absolute_taxa_juveniles
 end
 
 """
@@ -421,7 +421,7 @@ function absolute_loc_taxa_juveniles(
         relative_cover, is_juvenile, location_area, out_absolute_loc_taxa_juveniles
     )
 
-    return nothing
+    return out_absolute_loc_taxa_juveniles
 end
 
 """
