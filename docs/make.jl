@@ -14,9 +14,10 @@ makedocs(
         "API" =>
             [
                 "metrics.md",
-                "conversions.md",
+                "cover_metrics.md",
                 "juvenile_metrics.md",
-                "indices.md"
+                "indices.md",
+                "conversions.md"
             ],
     ]
 )

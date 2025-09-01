@@ -5,7 +5,7 @@ Tests for juvenile metrics
 using Test
 using ReefMetrics
 
-@testset "Relative Juveniles" begin
+@testset "Relative Juveniles over Locations" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
 
@@ -18,7 +18,7 @@ using ReefMetrics
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
 
     @testset "Normal Cases" begin
-        rel_juv = relative_juveniles(relative_cover, is_juvenile)
+        rel_juv = relative_loc_juveniles(relative_cover, is_juvenile)
         @test size(rel_juv) == (n_tsteps, n_locs)
 
         @test rel_juv[1, 1] ≈ 0.3
@@ -30,12 +30,12 @@ using ReefMetrics
     @testset "Edge Cases" begin
         # Test with no juvenile classes
         no_juveniles = [false, false, false, false]
-        @test all(relative_juveniles(relative_cover, no_juveniles) .== 0.0)
+        @test all(relative_loc_juveniles(relative_cover, no_juveniles) .== 0.0)
 
         # Test with all classes as juveniles
         all_juveniles = [true, true, true, true]
         expected_sum = dropdims(sum(relative_cover, dims=(2, 3)), dims=(2, 3))
-        @test relative_juveniles(relative_cover, all_juveniles) ≈ expected_sum
+        @test relative_loc_juveniles(relative_cover, all_juveniles) ≈ expected_sum
     end
 end
 
@@ -53,7 +53,7 @@ end
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
 
     @testset "Noraml Cases" begin
-        abs_juv = absolute_juveniles(relative_cover, is_juvenile, location_area)
+        abs_juv = absolute_loc_juveniles(relative_cover, is_juvenile, location_area)
         @test size(abs_juv) == (n_tsteps, n_locs)
 
         @test abs_juv[1, 1] ≈ 30.0
@@ -64,12 +64,12 @@ end
 
     @testset "Edge Cases" begin
         no_juveniles = [false, false, false, false]
-        @test all(absolute_juveniles(
+        @test all(absolute_loc_juveniles(
             relative_cover, no_juveniles, location_area
         ) .== 0.0)
 
         all_juveniles = [true, true, true, true]
-        abs_juv = absolute_juveniles(relative_cover, all_juveniles, location_area)
+        abs_juv = absolute_loc_juveniles(relative_cover, all_juveniles, location_area)
 
         @test abs_juv[1, 1] ≈ 80.0
         @test abs_juv[1, 2] ≈ 0.0
