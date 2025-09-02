@@ -3,7 +3,13 @@ Tests for juvenile metrics
 """
 
 using Test
-using ADRIAIndicators
+using ADRIAIndicators: relative_juveniles, relative_loc_juveniles,
+    relative_loc_taxa_juveniles, relative_taxa_juveniles
+
+using ADRIAIndicators: absolute_juveniles, absolute_loc_juveniles,
+    absolute_loc_taxa_juveniles, absolute_taxa_juveniles
+
+using ADRIAIndicators: juvenile_indicator
 
 @testset "Relative Juveniles" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2

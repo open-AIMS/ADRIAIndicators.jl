@@ -26,7 +26,7 @@ relative_juveniles(raw_model_cover, is_juvenile, rel_juveniles)
 ## Available Metrics
 
 - Relative/Absolute Cover
-- Relative/Absollute Shelter Volume
+- Relative/Absolute Shelter Volume
 - Relative/Absolute Juveniles
 - Juvenile Indicator
 - Coral Diversity
