@@ -1,7 +1,7 @@
 # Reef Indices
 
 ```@autodocs
-Modules = [ReefMetrics]
+Modules = [ADRIAIndicators]
 Pages = joinpath.("src", ["indices.jl"])
 Order   = [:constant, :function, :type]
 Private = false

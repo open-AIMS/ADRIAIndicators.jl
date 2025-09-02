@@ -4,7 +4,7 @@ Tests for shelter volume metrics.
 
 using Test
 
-using ReefMetrics: absolute_shelter_volume, relative_shelter_volume
+using ADRIAIndicators: absolute_shelter_volume, relative_shelter_volume
 
 @testset "Absolute Shelter Volume" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 3, 2

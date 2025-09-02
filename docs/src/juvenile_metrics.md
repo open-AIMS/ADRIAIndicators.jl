@@ -1,7 +1,7 @@
 # Juvenile Metrics
 
 ```@autodocs
-Modules = [ReefMetrics]
+Modules = [ADRIAIndicators]
 Pages = joinpath.("src", ["juvenile_metrics.jl"])
 Order   = [:constant, :function, :type]
 Private = false

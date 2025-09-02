@@ -3,7 +3,7 @@ Tests for juvenile metrics
 """
 
 using Test
-using ReefMetrics
+using ADRIAIndicators
 
 @testset "Relative Juveniles" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2

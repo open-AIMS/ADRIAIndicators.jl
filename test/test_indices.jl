@@ -3,7 +3,7 @@ Tests for reef indices.
 """
 
 using Test
-using ReefMetrics
+using ADRIAIndicators
 
 @testset "Reef Condition Index" begin
 

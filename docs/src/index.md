@@ -1,6 +1,6 @@
-# ReefMetrics.jl
+# ADRIAIndicators.jl
 
-ReefMetrics provides a set of standard metrics for summarizing the state of reef ecological
+ADRIAIndicators provides a set of standard metrics for summarizing the state of reef ecological
 model outputs.
 
 ## Usage
@@ -8,7 +8,7 @@ model outputs.
 Each metrics has an option to perform the computation in place.
 
 ```julia
-using ReefMetrics: relative_juveniles, relative_juveniles!
+using ADRIAIndicators: relative_juveniles, relative_juveniles!
 
 # Raw model coral cover outputs with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
 raw_model_cover::Array{T,4} = ...

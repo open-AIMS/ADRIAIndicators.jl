@@ -1,7 +1,7 @@
 # Aggregation
 
 ```@autodocs
-Modules = [ReefMetrics]
+Modules = [ADRIAIndicators]
 Pages = joinpath.("src", ["aggregation.jl"])
 Order   = [:constant, :function, :type]
 Private = false

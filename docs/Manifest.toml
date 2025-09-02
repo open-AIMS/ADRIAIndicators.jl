@@ -1,8 +1,13 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.11.0"
+julia_version = "1.11.6"
 manifest_format = "2.0"
-project_hash = "c27a799f06ee9c1dc104b823c7d81387059ed61e"
+project_hash = "be1a58fb57afead789f9266c10e04b6742ff83ff"
+
+[[deps.ADRIAIndicators]]
+path = ".."
+uuid = "05ad51df-066f-4748-8c47-f6b67db83211"
+version = "0.1.0"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -228,11 +233,6 @@ version = "1.11.0"
 deps = ["SHA"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 version = "1.11.0"
-
-[[deps.ReefMetrics]]
-path = ".."
-uuid = "05ad51df-066f-4748-8c47-f6b67db83211"
-version = "0.1.0"
 
 [[deps.RegistryInstances]]
 deps = ["LazilyInitializedFields", "Pkg", "TOML", "Tar"]

@@ -1,6 +1,6 @@
 push!(LOAD_PATH, "../src/")
 
-using Documenter, ReefMetrics
+using Documenter, ADRIAIndicators
 
 makedocs(
     ;

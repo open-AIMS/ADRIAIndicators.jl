@@ -1,4 +1,4 @@
-module ReefMetrics
+module ADRIAIndicators
 
 include("conversions.jl")
 
