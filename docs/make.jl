@@ -21,3 +21,10 @@ makedocs(
             ],
     ]
 )
+
+deploydocs(;
+    repo="github.com/open-AIMS/ADRIAIndicators.jl.git",
+    devbranch="main",
+    target="build",
+    push_preview=false
+)
