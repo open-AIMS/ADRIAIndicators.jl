@@ -110,7 +110,7 @@ function relative_cover!(
     out_relative_cover .=
         dropdims(
             sum(
-                relative_cover .* reshape(location_area, (1, 1, 1, -1)); dims=(2, 3, 4)
+                relative_cover .* reshape(location_area, (1, 1, 1, :)); dims=(2, 3, 4)
             ); dims=(2, 3, 4)) ./ total_area
 
     return nothing
@@ -132,7 +132,7 @@ function relative_cover(
     relative_cover::AbstractArray{T,4},
     location_area::AbstractVector{T}
 )::AbstractVector{T} where {T<:AbstractFloat}
-    n_timesteps = size(relative_cover, 4)
+    n_timesteps = size(relative_cover, 1)
     out_relative_cover = zeros(T, n_timesteps)
     relative_cover!(relative_cover, location_area, out_relative_cover)
 
