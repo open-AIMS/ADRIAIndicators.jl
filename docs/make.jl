@@ -4,7 +4,8 @@ using Documenter, ADRIAIndicators
 
 makedocs(
     ;
-    sitename="My Documentation",
+    sitename="ADRIAIndicators",
+    modules = [ADRIAIndicators],
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", nothing) == "true",
         assets=["assets/favicon.ico"]
