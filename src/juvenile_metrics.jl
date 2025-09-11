@@ -438,6 +438,18 @@ function _max_juvenile_area(max_juv_colony_area::T, max_juv_density::T)::T where
 end
 
 """
+    _maximum_colony_area(size_spec::AbstractArray{T,2})::T where {T<:AbstractFloat}
+
+Calculate the largest colony size given a range of size classes.
+"""
+function _maximum_colony_area(mean_colony_diams::AbstractArray{T,2})::T where {T<:AbstractFloat}
+    max_idx = argmax(mean_colony_diams)
+    mean_colony_size::T = (π / 4) * mean_colony_diams[max_idx]
+
+    return mean_colony_size
+end
+
+"""
     juvenile_indicator!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, max_juv_colony_area::T, max_juv_density::T)::Nothing
 
 Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical density for
@@ -447,7 +459,7 @@ juveniles have been achieved.
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `habitable_area` : Available area habitable by coral for each location.
-- `max_juv_colony_area` : Maximum juvenile colony area for a single juvenile.
+- `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
 - `max_juv_density` : Maximum density juveniles can occur in.
 - `out_juvenile_indicator` : Output array buffer for the juvenile indicator metrics with dimensions [timesteps ⋅ locations]
 """
@@ -455,14 +467,15 @@ function juvenile_indicator!(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
     habitable_area::AbstractVector{T},
-    max_juv_colony_area::T,
+    mean_colony_diameters::AbstractArray{T,2},
     max_juv_density::T,
     out_juvenile_indicator::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
     # Explicit allocation here
+    max_col_area::T = _maximum_colony_area(view(mean_colony_diameters, :, is_juvenile))
     abs_juv = absolute_loc_juveniles(relative_cover, is_juvenile, habitable_area)
-    max_juv_area::T = _max_juvenile_area(max_juv_colony_area, max_juv_density)
-    out_juvenile_indicator .= abs_juv ./ (max_juv_area .* habitable_area)
+    max_juv_area::T = _max_juvenile_area(max_col_area, max_juv_density)
+    out_juvenile_indicator .= abs_juv ./ (max_juv_area .* habitable_area')
 
     return nothing
 end
@@ -489,7 +502,7 @@ where ``H_A`` refers to habitable area and ``A(x; H_A)`` refers to absolute juve
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
 - `is_juvenile` : Boolean mask indicating which sizes are juveniles.
 - `habitable_area` : Available area habitrable by coral for each location.
-- `max_juv_colony_area` : Maximum colony area acrosses all juvenile size classes and functional groups.
+- `size_spec` : Array containing the size class diameter bounds with dimensions [groups ⋅ size classes + 1]
 - `max_juv_density` : Maximum juvenile density for all juvenile size classes and functional groups.
 
 # Returns
@@ -499,7 +512,7 @@ function juvenile_indicator(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
     habitable_area::AbstractVector{T},
-    max_juv_colony_area::T,
+    size_spec::AbstractArray{T,2},
     max_juv_density::T
 )::AbstractArray{T,2} where {T<:AbstractFloat}
     n_tsteps, _, _, n_locations = size(relative_cover)
@@ -508,7 +521,7 @@ function juvenile_indicator(
         relative_cover,
         is_juvenile,
         habitable_area,
-        max_juv_colony_area,
+        size_spec,
         max_juv_density,
         out_juvenile_indicator
     )

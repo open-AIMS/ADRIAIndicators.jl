@@ -53,7 +53,7 @@ function relative_taxa_cover!(
 )::Nothing where {T<:Real}
     # Sum over sizes
     group_cover = dropdims(sum(relative_cover; dims=3); dims=3)  # [timesteps, groups, locations]
-    absolute_group_cover = group_cover .* k_area'
+    absolute_group_cover = group_cover .* reshape(k_area, (1, 1, :))
     total_k_area = sum(k_area)
     out_relative_taxa_cover .=
         dropdims(sum(absolute_group_cover; dims=3); dims=3) ./ total_k_area
