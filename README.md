@@ -1,6 +1,7 @@
 # ADRIAIndicators.jl
 
-[![Documentation](https://img.shields.io/badge/docs-dev-blue)](https://open-aims.github.io/ADRIAIndicators.jl/dev/)[![DOI](https://zenodo.org/badge/17032475.svg)](https://doi.org/10.5281/zenodo.17032475)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17032475.svg)](https://doi.org/10.5281/zenodo.17032475)
+[![Documentation](https://img.shields.io/badge/docs-dev-blue)](https://open-aims.github.io/ADRIAIndicators.jl/dev/)
 
 ADRIAIndicators provides a set of standard metrics for summarizing the state of reef ecological
 model outputs.
