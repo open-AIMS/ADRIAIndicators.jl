@@ -1,5 +1,7 @@
 # ADRIAIndicators.jl
 
+[![Documentation](https://img.shields.io/badge/docs-dev-blue)](https://open-aims.github.io/ADRIAIndicators.jl/dev/)[![DOI](https://zenodo.org/badge/17032475.svg)](https://doi.org/10.5281/zenodo.17032475)
+
 ADRIAIndicators provides a set of standard metrics for summarizing the state of reef ecological
 model outputs.
 
@@ -20,7 +22,7 @@ rel_juveniles = relative_juveniles(raw_model_cover, is_juvenile)
 
 # Perform the computation inplace.
 rel_juveniles = zeros(Float64, n_timesteps, n_locations)
-relative_juveniles(raw_model_cover, is_juvenile, rel_juveniles)
+relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles)
 ```
 
 ## Available Metrics
@@ -32,10 +34,18 @@ relative_juveniles(raw_model_cover, is_juvenile, rel_juveniles)
 - Coral Diversity
 - Coral Evenness
 
+## Reef Indices
+
+The repository also provides implementations of the following indices:
+
 - Reef Condition Index
 - Reef Biodiversity Condition Index
 - Reef Tourism Index
 - Reef Fish Index
+
+They are described in:
+
+
 
 ## Building Documentation
 
