@@ -413,3 +413,38 @@ function relative_shelter_volume(
 
     return RSV
 end
+
+"""
+    scenario_metric(metric::AbstractArray{T}, location_area::AbstractVector{T}, location_dim::Int; is_relative::Bool=true, return_relative::Bool=true)::AbstractArray{T} where {T<:AbstractFloat}
+
+Aggregate a metric across the location dimension.
+
+This function can take a metric that is either relative to location area or absolute, and
+can return a metric that is either relative to the total area or absolute.
+
+# Arguments
+- `metric` : An array containing the metric to aggregate.
+- `location_area` : A vector of area values for each location.
+- `location_dim` : The dimension of the `metric` array that corresponds to location.
+- `is_relative` : Whether the input `metric` is relative to location area. Defaults to `true`.
+- `return_relative` : Whether the output should be relative to total area. Defaults to `true`.
+
+# Returns
+An array with the location dimension removed, containing the aggregated metric.
+"""
+function scenario_metric(
+    metric::AbstractArray{T}, location_area::AbstractVector{T}, location_dim::Int;
+    is_relative::Bool=true, return_relative::Bool=true
+)::AbstractArray{T} where {T<:AbstractFloat}
+    dims = ones(Int, ndims(metric))
+    dims[location_dim] = length(location_area)
+    _location_area = reshape(location_area, dims...)
+
+    absolute_metric = is_relative ? metric .* _location_area : metric
+    aggregated_metric = sum(absolute_metric; dims=location_dim)
+
+    total_area = sum(location_area)
+    result = return_relative ? aggregated_metric ./ total_area : aggregated_metric
+
+    return dropdims(result; dims=location_dim)
+end

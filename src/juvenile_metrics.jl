@@ -1,78 +1,26 @@
 """
-    relative_juveniles!(relative_cover::AbstractArray{T,4}, is_juveniles::AbstractVector{Bool}, location_area::AbstractVector{T}, out_relative_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
-
-Calculate the relative coral cover composed of juveniles over time.
-
-# Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `location_area` : Vector containing the area of each location with dimensions [locations]
-- `out_relative_loc_juveniles` : Output array buffer with dimensions [timesteps].
-"""
-function relative_juveniles!(
-    relative_cover::AbstractArray{T,4},
-    is_juveniles::AbstractVector{Bool},
-    location_area::AbstractVector{T},
-    out_relative_juveniles::AbstractVector{T}
-)::Nothing where {T<:AbstractFloat}
-    _is_juveniles::Array{Bool,4} = reshape(is_juveniles, (1, 1, :, 1))
-    _location_area::Array{T,4} = reshape(location_area, (1, 1, 1, :))
-    out_relative_juveniles .=
-        dropdims(sum(
-                relative_cover .* _location_area .* _is_juveniles; dims=(2, 3, 4)
-            ); dims=(2, 3, 4)) ./ sum(location_area)
-
-    return nothing
-end
-
-"""
-    relative_juveniles(relative_cover::AbstractArray{T,4}, is_juveniles::AbstractVector{Bool}, location_area::AbstractVector{T})::AbstractArray{T,2} where {T<:AbstractFloat}
-
-Calculate the relative coral cover composed of juveniles over time.
-
-# Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `location_area` : Vector containing the area of each location with dimensions [locations]
-
-# Returns
-Vector of dimensions [timesteps].
-"""
-function relative_juveniles(
-    relative_cover::AbstractArray{T,4},
-    is_juveniles::AbstractVector{Bool},
-    location_area::AbstractVector{T}
-)::Vector{T} where {T<:AbstractFloat}
-    n_tsteps = size(relative_cover, 1)
-    out_relative_juveniles::Vector{T} = zeros(T, n_tsteps)
-    relative_juveniles!(relative_cover, is_juveniles, location_area, out_relative_juveniles)
-
-    return out_relative_juveniles
-end
-
-"""
-    relative_loc_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, out_relative_loc_juveniles::AbstractArray{T,2})::Nothing where {T<:Real}
+    relative_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, out_relative_juveniles::AbstractArray{T,2})::Nothing where {T<:Real}
 
 Calculate the relative coral cover composed of juveniles.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `out_relative_loc_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
+- `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
 """
-function relative_loc_juveniles!(
+function relative_juveniles!(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
-    out_relative_loc_juveniles::AbstractArray{T,2}
+    out_relative_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:Real}
     juvenile_cover = relative_cover[:, :, is_juvenile, :]
-    out_relative_loc_juveniles .= dropdims(sum(juvenile_cover; dims=(2, 3)); dims=(2, 3))
+    out_relative_juveniles .= dropdims(sum(juvenile_cover; dims=(2, 3)); dims=(2, 3))
 
     return nothing
 end
 
 """
-    relative_loc_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool})::AbstractArray{T,2} where {T<:Real}
+    relative_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool})::AbstractArray{T,2} where {T<:Real}
 
 Calculate the relative coral cover composed of juveniles.
 
@@ -83,7 +31,7 @@ Calculate the relative coral cover composed of juveniles.
 # Returns
 A 2D array of relative juvenile cover with dimensions [timesteps ⋅ locations].
 """
-function relative_loc_juveniles(
+function relative_juveniles(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool}
 )::AbstractArray{T,2} where {T<:Real}
@@ -95,10 +43,10 @@ function relative_loc_juveniles(
             )
         )
     end
-    out_relative_loc_juveniles = zeros(T, n_timesteps, n_locations)
-    relative_loc_juveniles!(relative_cover, is_juvenile, out_relative_loc_juveniles)
+    out_relative_juveniles = zeros(T, n_timesteps, n_locations)
+    relative_juveniles!(relative_cover, is_juvenile, out_relative_juveniles)
 
-    return out_relative_loc_juveniles
+    return out_relative_juveniles
 end
 
 """
@@ -274,7 +222,7 @@ function absolute_loc_juveniles!(
     location_area::AbstractVector{T},
     out_absolute_loc_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
-    relative_loc_juveniles!(relative_cover, is_juvenile, out_absolute_loc_juveniles)
+    relative_juveniles!(relative_cover, is_juvenile, out_absolute_loc_juveniles)
     out_absolute_loc_juveniles .*= location_area'
 
     return nothing

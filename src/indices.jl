@@ -1,3 +1,4 @@
+
 """
     reef_condition_index!(relative_cover::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
@@ -17,7 +18,8 @@ function reef_condition_index!(
     relative_juveniles::AbstractArray{T,2},
     cots::AbstractArray{T,2},
     rubble::AbstractArray{T,2},
-    out_rci::AbstractArray{T,2}
+    out_rci::AbstractArray{T,2};
+    n_metrics::Int64=5
 )::Nothing where {T<:AbstractFloat}
     RCI_CRIT = T[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
@@ -32,37 +34,22 @@ function reef_condition_index!(
 
     CRIT_VAL = T[0.1, 0.3, 0.5, 0.7, 0.9]
 
-    N_METRICS = 5
     CRITERIA_THRESHOLD = 0.6
 
-    cots_comp = 1.0 .- cots
-    rubble_comp = 1.0 .- rubble
-
-    out_rci .= 0.0
+    out_rci .= 0.1
+    metrics_met = zeros(T, size(relative_cover)...)
+    pass_mask = falses(size(relative_cover)...)
     for i in 1:size(CRIT_VAL, 1)
-        metrics_met = (relative_cover .>= RCI_CRIT[1, i]) .+
-                      (relative_shelter_volume .>= RCI_CRIT[2, i]) .+
-                      (relative_juveniles .>= RCI_CRIT[3, i]) .+
-                      (cots_comp .>= RCI_CRIT[4, i]) .+
-                      (rubble_comp .>= RCI_CRIT[5, i])
+        @. metrics_met = (relative_cover >= RCI_CRIT[1, i]) +
+                         (relative_shelter_volume >= RCI_CRIT[2, i]) +
+                         (relative_juveniles >= RCI_CRIT[3, i]) +
+                         ((1.0 .- cots) >= RCI_CRIT[4, i]) +
+                         ((1.0 .- rubble) >= RCI_CRIT[5, i])
+        @. pass_mask = (metrics_met / n_metrics) >= CRITERIA_THRESHOLD
 
-        pass_mask = (metrics_met ./ N_METRICS) .>= CRITERIA_THRESHOLD
-
-        out_rci[pass_mask] .+= CRIT_VAL[i]
+        out_rci[pass_mask] .= CRIT_VAL[i]
     end
 
-    vg_sum = sum(CRIT_VAL)
-    g_sum = sum(CRIT_VAL[1:end - 1])
-    f_sum = sum(CRIT_VAL[1:end - 2])
-    p_sum = sum(CRIT_VAL[1:end - 3])
-    vp_sum = CRIT_VAL[1]
-
-    out_rci[out_rci .≈ 0.0] .= 0.1 # Very Poor
-    out_rci[out_rci .≈ vp_sum] .= 0.1 # Very Poor
-    out_rci[out_rci .≈ p_sum] .= 0.3  # Poor
-    out_rci[out_rci .≈ f_sum] .= 0.5  # Fair
-    out_rci[out_rci .≈ g_sum] .= 0.7  # Good
-    out_rci[out_rci .≈ vg_sum] .= 0.9 # Very Good
 
     return nothing
 end
