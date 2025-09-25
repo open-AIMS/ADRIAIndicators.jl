@@ -154,82 +154,30 @@ function relative_loc_taxa_juveniles(
 end
 
 """
-    absolute_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_juveniles::AbstractVector{T})::Nothing where {T<:AbstractFloat}
+    absolute_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
-Calculate the coral cover composed of juvenile corals in absolute units for each timesteps.
-Write results into a preallocated buffer.
+Calculate the absolute coral cover composed of juveniles for each timestep and location.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `location_area` : Vector containing the area of each location with dimensions [locations]
-- `out_absolute_juveniles` : Output array buffer with dimensions [timesteps].
+- `location_area` : Habitable area for each location.
+- `out_absolute_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
 """
 function absolute_juveniles!(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
     location_area::AbstractVector{T},
-    out_absolute_juveniles::AbstractVector{T}
+    out_absolute_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
-    _is_juveniles = reshape(is_juvenile, (1, 1, :, 1))
-    _location_area = reshape(location_area, (1, 1, 1, :))
-    out_absolute_juveniles .=
-        dropdims(sum(
-                relative_cover .* _location_area .* _is_juveniles; dims=(2, 3, 4)
-            ); dims=(2, 3, 4))
+    relative_juveniles!(relative_cover, is_juvenile, out_absolute_juveniles)
+    out_absolute_juveniles .*= location_area'
 
     return nothing
 end
 
 """
-    absolute_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T})::Array{T,2} where {T<:AbstractFloat}
-
-Calculate the coral cover composed of juvenile corals in absolute units for each timestep.
-
-# Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `location_area` : Vector containing the area of each location with dimensions [locations]
-
-# Returns
-Array buffer with dimensions [timesteps].
-"""
-function absolute_juveniles(
-    relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
-    location_area::AbstractVector{T}
-)::Array{T} where {T<:AbstractFloat}
-    n_tsteps = size(relative_cover, 1)
-    out_absolute_juveniles::Vector{T} = zeros(T, n_tsteps)
-    absolute_juveniles!(relative_cover, is_juvenile, location_area, out_absolute_juveniles)
-
-    return out_absolute_juveniles
-end
-
-"""
-    absolute_loc_juveniles!(relative_loc_juveniles::AbstractArray{T,2}, k_area::AbstractVector{T}, out_absolute_loc_juveniles::AbstractArray{T,2})::Nothing where {T<:Real}
-
-Calculate the absolute coral cover composed of juveniles for each timestep and location.
-
-# Arguments
-- `relative_loc_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
-- `k_area` : Habitable area for each location.
-- `out_absolute_loc_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
-"""
-function absolute_loc_juveniles!(
-    relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
-    location_area::AbstractVector{T},
-    out_absolute_loc_juveniles::AbstractArray{T,2}
-)::Nothing where {T<:AbstractFloat}
-    relative_juveniles!(relative_cover, is_juvenile, out_absolute_loc_juveniles)
-    out_absolute_loc_juveniles .*= location_area'
-
-    return nothing
-end
-
-"""
-    absolute_loc_juveniles(relative_loc_juveniles::AbstractArray{T,2}, k_area::AbstractVector{T})::AbstractArray{T,2} where {T<:Real}
+    absolute_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T})::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Calculate the absolute coral cover composed of juveniles for each timestep and location.
 
@@ -241,7 +189,7 @@ Calculate the absolute coral cover composed of juveniles for each timestep and l
 # Returns
 A 2D array of absolute juvenile cover with dimensions [timesteps ⋅ locations].
 """
-function absolute_loc_juveniles(
+function absolute_juveniles(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
     location_area::AbstractVector{T}
@@ -250,14 +198,14 @@ function absolute_loc_juveniles(
     if length(location_area) != n_locations
         throw(
             DimensionMismatch(
-                "The number of locations in relative_cover and k_area must match."
+                "The number of locations in relative_cover and location_area must match."
             )
         )
     end
-    out_absolute_loc_juveniles = zeros(T, n_timesteps, n_locations)
-    absolute_loc_juveniles!(relative_cover, is_juvenile, location_area, out_absolute_loc_juveniles)
+    out_absolute_juveniles = zeros(T, n_timesteps, n_locations)
+    absolute_juveniles!(relative_cover, is_juvenile, location_area, out_absolute_juveniles)
 
-    return out_absolute_loc_juveniles
+    return out_absolute_juveniles
 end
 
 """
@@ -419,9 +367,14 @@ function juvenile_indicator!(
     max_juv_density::T,
     out_juvenile_indicator::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
+    if !any(is_juvenile)
+        out_juvenile_indicator .= 0.0
+        return nothing
+    end
+
     # Explicit allocation here
     max_col_area::T = _maximum_colony_area(view(mean_colony_diameters, :, is_juvenile))
-    abs_juv = absolute_loc_juveniles(relative_cover, is_juvenile, habitable_area)
+    abs_juv = absolute_juveniles(relative_cover, is_juvenile, habitable_area)
     max_juv_area::T = _max_juvenile_area(max_col_area, max_juv_density)
     out_juvenile_indicator .= abs_juv ./ (max_juv_area .* habitable_area')
 
@@ -429,7 +382,7 @@ function juvenile_indicator!(
 end
 
 """
-    juvenile_indicator(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, max_juv_colony_area::T, max_juv_density::T)::AbstractArray{T,2} where {T<:AbstractFloat}
+    juvenile_indicator(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, habitable_area::AbstractVector{T}, mean_colony_diameters::AbstractArray{T,2}, max_juv_density::T)::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical density for
 juveniles have been achieved. The juvenile indicator is defined as follows.
@@ -449,8 +402,8 @@ where ``H_A`` refers to habitable area and ``A(x; H_A)`` refers to absolute juve
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
 - `is_juvenile` : Boolean mask indicating which sizes are juveniles.
-- `habitable_area` : Available area habitrable by coral for each location.
-- `size_spec` : Array containing the size class diameter bounds with dimensions [groups ⋅ size classes + 1]
+- `habitable_area` : Available area habitable by coral for each location.
+- `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
 - `max_juv_density` : Maximum juvenile density for all juvenile size classes and functional groups.
 
 # Returns
@@ -460,7 +413,7 @@ function juvenile_indicator(
     relative_cover::AbstractArray{T,4},
     is_juvenile::AbstractVector{Bool},
     habitable_area::AbstractVector{T},
-    size_spec::AbstractArray{T,2},
+    mean_colony_diameters::AbstractArray{T,2},
     max_juv_density::T
 )::AbstractArray{T,2} where {T<:AbstractFloat}
     n_tsteps, _, _, n_locations = size(relative_cover)
@@ -469,7 +422,7 @@ function juvenile_indicator(
         relative_cover,
         is_juvenile,
         habitable_area,
-        size_spec,
+        mean_colony_diameters,
         max_juv_density,
         out_juvenile_indicator
     )

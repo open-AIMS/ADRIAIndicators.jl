@@ -3,76 +3,13 @@ Tests for juvenile metrics
 """
 
 using Test
-using ADRIAIndicators: relative_juveniles, relative_loc_juveniles,
-    relative_loc_taxa_juveniles, relative_taxa_juveniles
+using ADRIAIndicators: relative_juveniles, relative_loc_taxa_juveniles,
+    relative_taxa_juveniles
 
-using ADRIAIndicators: absolute_juveniles, absolute_loc_juveniles,
-    absolute_loc_taxa_juveniles, absolute_taxa_juveniles
+using ADRIAIndicators: absolute_juveniles, absolute_loc_taxa_juveniles,
+    absolute_taxa_juveniles
 
 using ADRIAIndicators: juvenile_indicator
-
-@testset "Relative Juveniles" begin
-    n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
-    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
-    location_area = [100.0, 200.0]
-    total_area = sum(location_area)
-
-    is_juvenile = [true, true, false, false]
-
-    # Timestep 1: Cover only exists at location 1
-    relative_cover[1, 1, :, 1] = [0.1, 0.1, 0.05, 0.05]
-    relative_cover[1, 2, :, 1] = [0.05, 0.05, 0.2, 0.2]
-
-    # Timestep 2: Cover only exists at location 2
-    relative_cover[2, 1, :, 2] = [0.0, 0.05, 0.3, 0.3]
-    relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
-
-    @testset "Normal Cases" begin
-        rel_juv = relative_juveniles(relative_cover, is_juvenile, location_area)
-
-        # Expected output is a vector of length n_tsteps
-        @test size(rel_juv) == (n_tsteps,)
-
-        # Calculation for Timestep 1:
-        # Absolute juvenile cover at loc 1: ((0.1 + 0.1) + (0.05 + 0.05)) * 100.0 = 0.3 * 100.0 = 30.0
-        # Absolute juvenile cover at loc 2: 0.0
-        # Total absolute juvenile cover: 30.0
-        # Relative to total area: 30.0 / 300.0 = 0.1
-        @test rel_juv[1] ≈ 30.0 / total_area
-
-        # Calculation for Timestep 2:
-        # Absolute juvenile cover at loc 1: 0.0
-        # Absolute juvenile cover at loc 2: ((0.0 + 0.05) + (0.2 + 0.0)) * 200.0 = 0.25 * 200.0 = 50.0
-        # Total absolute juvenile cover: 50.0
-        # Relative to total area: 50.0 / 300.0
-        @test rel_juv[2] ≈ 50.0 / total_area
-    end
-
-    @testset "Edge Cases" begin
-        # Test with no juvenile classes
-        no_juveniles = [false, false, false, false]
-        @test all(relative_juveniles(relative_cover, no_juveniles, location_area) .== 0.0)
-
-        # Test with all classes as juveniles
-        all_juveniles = [true, true, true, true]
-        rel_juv_all = relative_juveniles(relative_cover, all_juveniles, location_area)
-
-        # Calculation for Timestep 1 (all juveniles):
-        # Absolute cover at loc 1: sum(relative_cover[1, :, :, 1]) * 100.0 = 0.8 * 100.0 = 80.0
-        # Relative to total area: 80.0 / 300.0
-        @test rel_juv_all[1] ≈ (sum(relative_cover[1, :, :, 1]) * location_area[1]) / total_area
-
-        # Calculation for Timestep 2 (all juveniles):
-        # Absolute cover at loc 2: sum(relative_cover[2, :, :, 2]) * 200.0 = 0.9 * 200.0 = 180.0
-        # Relative to total area: 180.0 / 300.0
-        @test rel_juv_all[2] ≈ (sum(relative_cover[2, :, :, 2]) * location_area[2]) / total_area
-
-        # Test with zero area for all locations
-        zero_area = [0.0, 0.0]
-        # Division by zero should result in NaN
-        @test all(isnan.(relative_juveniles(relative_cover, is_juvenile, zero_area)))
-    end
-end
 
 @testset "Relative Taxa Juveniles" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
@@ -136,7 +73,7 @@ end
     end
 end
 
-@testset "Relative Location Juveniles" begin
+@testset "Relative Juveniles" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
 
@@ -149,7 +86,7 @@ end
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
 
     @testset "Normal Cases" begin
-        rel_juv = relative_loc_juveniles(relative_cover, is_juvenile)
+        rel_juv = relative_juveniles(relative_cover, is_juvenile)
         @test size(rel_juv) == (n_tsteps, n_locs)
 
         @test rel_juv[1, 1] ≈ 0.3
@@ -161,12 +98,12 @@ end
     @testset "Edge Cases" begin
         # Test with no juvenile classes
         no_juveniles = [false, false, false, false]
-        @test all(relative_loc_juveniles(relative_cover, no_juveniles) .== 0.0)
+        @test all(relative_juveniles(relative_cover, no_juveniles) .== 0.0)
 
         # Test with all classes as juveniles
         all_juveniles = [true, true, true, true]
         expected_sum = dropdims(sum(relative_cover, dims=(2, 3)), dims=(2, 3))
-        @test relative_loc_juveniles(relative_cover, all_juveniles) ≈ expected_sum
+        @test relative_juveniles(relative_cover, all_juveniles) ≈ expected_sum
     end
 end
 
@@ -212,55 +149,6 @@ end
         )
 
         @test rel_juv_all[1, 1, 1] ≈ 0.3
-    end
-end
-
-@testset "Absolute Juveniles" begin
-    n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
-    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
-    location_area = [100.0, 200.0]
-    total_area = sum(location_area)
-
-    is_juvenile = [true, true, false, false]
-
-    # Timestep 1: Cover only exists at location 1
-    relative_cover[1, 1, :, 1] = [0.1, 0.1, 0.05, 0.05]
-    relative_cover[1, 2, :, 1] = [0.05, 0.05, 0.2, 0.2]
-
-    # Timestep 2: Cover only exists at location 2
-    relative_cover[2, 1, :, 2] = [0.0, 0.05, 0.3, 0.3]
-    relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
-
-    @testset "Normal Cases" begin
-        rel_juv = absolute_juveniles(relative_cover, is_juvenile, location_area)
-
-        # Expected output is a vector of length n_tsteps
-        @test size(rel_juv) == (n_tsteps,)
-
-        @test rel_juv[1] ≈ 30.0
-        @test rel_juv[2] ≈ 50.0
-    end
-
-    @testset "Edge Cases" begin
-        # Test with no juvenile classes
-        no_juveniles = [false, false, false, false]
-        @test all(absolute_juveniles(relative_cover, no_juveniles, location_area) .== 0.0)
-
-        # Test with all classes as juveniles
-        all_juveniles = [true, true, true, true]
-        rel_juv_all = absolute_juveniles(relative_cover, all_juveniles, location_area)
-
-        # Calculation for Timestep 1 (all juveniles):
-        # Absolute cover at loc 1: sum(relative_cover[1, :, :, 1]) * 100.0 = 0.8 * 100.0 = 80.0
-        @test rel_juv_all[1] ≈ (sum(relative_cover[1, :, :, 1]) * location_area[1])
-
-        # Calculation for Timestep 2 (all juveniles):
-        # Absolute cover at loc 2: sum(relative_cover[2, :, :, 2]) * 200.0 = 0.9 * 200.0 = 180.0
-        @test rel_juv_all[2] ≈ (sum(relative_cover[2, :, :, 2]) * location_area[2])
-
-        # Test with zero area for all locations
-        zero_area = [0.0, 0.0]
-        @test all(absolute_juveniles(relative_cover, is_juvenile, zero_area) .== 0.0)
     end
 end
 
@@ -319,7 +207,7 @@ end
     end
 end
 
-@testset "Absolute Location Juveniles" begin
+@testset "Absolute Juveniles" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
     location_area = [100.0, 200.0]
@@ -333,7 +221,7 @@ end
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
 
     @testset "Noraml Cases" begin
-        abs_juv = absolute_loc_juveniles(relative_cover, is_juvenile, location_area)
+        abs_juv = absolute_juveniles(relative_cover, is_juvenile, location_area)
         @test size(abs_juv) == (n_tsteps, n_locs)
 
         @test abs_juv[1, 1] ≈ 30.0
@@ -344,12 +232,12 @@ end
 
     @testset "Edge Cases" begin
         no_juveniles = [false, false, false, false]
-        @test all(absolute_loc_juveniles(
+        @test all(absolute_juveniles(
             relative_cover, no_juveniles, location_area
         ) .== 0.0)
 
         all_juveniles = [true, true, true, true]
-        abs_juv = absolute_loc_juveniles(relative_cover, all_juveniles, location_area)
+        abs_juv = absolute_juveniles(relative_cover, all_juveniles, location_area)
 
         @test abs_juv[1, 1] ≈ 80.0
         @test abs_juv[1, 2] ≈ 0.0
@@ -407,7 +295,7 @@ end
 @testset "Juvenile Indicator" begin
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
-    location_area = [100.0, 200.0]
+    habitable_area = [100.0, 200.0]
 
     is_juvenile = [true, true, false, false]
 
@@ -417,24 +305,36 @@ end
     relative_cover[2, 1, :, 2] = [0.0, 0.05, 0.3, 0.3]
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
 
+    mean_colony_diameters = zeros(Float64, n_groups, n_sizes)
+    mean_colony_diameters[1, :] = [0.1, 0.4/π, 0.5, 0.6]
+    mean_colony_diameters[2, :] = [0.1, 0.1, 0.5, 0.6]
+
     @testset "Normal Cases" begin
-        max_juv_colony_area = 0.1
         max_juv_density = 3.0
         juv_ind = juvenile_indicator(
-            relative_cover, is_juvenile, location_area, max_juv_colony_area, max_juv_density
+            relative_cover, is_juvenile, habitable_area, mean_colony_diameters, max_juv_density
         )
 
+        # With mean_colony_diameters, max juvenile diameter is 0.4/pi
+        # This makes max_col_area = (pi/4) * (0.4/pi) = 0.1
+        # This is to match the previous test's max_juv_colony_area = 0.1
+        # Denominator for loc 1: 0.1 * 3.0 * 100.0 = 30.0
+        # Denominator for loc 2: 0.1 * 3.0 * 200.0 = 60.0
         @test juv_ind[1, 1] ≈ 30.0 / 30.0
         @test juv_ind[1, 2] ≈ 0.0
         @test juv_ind[2, 1] ≈ 0.0
         @test juv_ind[2, 2] ≈ 50.0 / 60.0
 
-        max_juv_colony_area = 0.2
-        max_juv_density = 3.0
+        # Another test with different diameters
+        mean_colony_diameters[1, 2] = 0.8/π
+        # Now max juvenile diameter is 0.8/pi
+        # max_col_area is now 0.2
         juv_ind = juvenile_indicator(
-            relative_cover, is_juvenile, location_area, max_juv_colony_area, max_juv_density
+            relative_cover, is_juvenile, habitable_area, mean_colony_diameters, max_juv_density
         )
 
+        # Denominator for loc 1: 0.2 * 3.0 * 100.0 = 60.0
+        # Denominator for loc 2: 0.2 * 3.0 * 200.0 = 120.0
         @test juv_ind[1, 1] ≈ 30.0 / 60.0
         @test juv_ind[1, 2] ≈ 0.0
         @test juv_ind[2, 1] ≈ 0.0
@@ -443,11 +343,10 @@ end
 
     @testset "Edge Cases" begin
         no_juveniles = [false, false, false, false]
-        max_juv_colony_area = 0.2
         max_juv_density = 3.0
         @test all(
             juvenile_indicator(
-                relative_cover, no_juveniles, location_area, max_juv_colony_area,
+                relative_cover, no_juveniles, habitable_area, mean_colony_diameters,
                 max_juv_density
             ) .== 0.0
         )
