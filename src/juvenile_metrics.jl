@@ -340,7 +340,7 @@ Calculate the largest colony size given a range of size classes.
 """
 function _maximum_colony_area(mean_colony_diams::AbstractArray{T,2})::T where {T<:AbstractFloat}
     max_idx = argmax(mean_colony_diams)
-    mean_colony_size::T = (π / 4) * mean_colony_diams[max_idx]
+    mean_colony_size::T = (π / 4) * mean_colony_diams[max_idx]^2
 
     return mean_colony_size
 end
