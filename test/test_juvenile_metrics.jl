@@ -306,7 +306,7 @@ end
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
 
     mean_colony_diameters = zeros(Float64, n_groups, n_sizes)
-    mean_colony_diameters[1, :] = [0.1, 0.4/π, 0.5, 0.6]
+    mean_colony_diameters[1, :] = [0.1, sqrt(0.4 / π), 0.5, 0.6]
     mean_colony_diameters[2, :] = [0.1, 0.1, 0.5, 0.6]
 
     @testset "Normal Cases" begin
@@ -315,8 +315,8 @@ end
             relative_cover, is_juvenile, habitable_area, mean_colony_diameters, max_juv_density
         )
 
-        # With mean_colony_diameters, max juvenile diameter is 0.4/pi
-        # This makes max_col_area = (pi/4) * (0.4/pi) = 0.1
+        # With mean_colony_diameters, max juvenile diameter is sqrt(0.4 / π)
+        # This makes max_col_area = (π / 4) * (sqrt(0.4 / π))^2 = 0.1
         # This is to match the previous test's max_juv_colony_area = 0.1
         # Denominator for loc 1: 0.1 * 3.0 * 100.0 = 30.0
         # Denominator for loc 2: 0.1 * 3.0 * 200.0 = 60.0
@@ -326,8 +326,8 @@ end
         @test juv_ind[2, 2] ≈ 50.0 / 60.0
 
         # Another test with different diameters
-        mean_colony_diameters[1, 2] = 0.8/π
-        # Now max juvenile diameter is 0.8/pi
+        mean_colony_diameters[1, 2] = sqrt(0.8 / π)
+        # Now max juvenile diameter is sqrt(0.8 / π)
         # max_col_area is now 0.2
         juv_ind = juvenile_indicator(
             relative_cover, is_juvenile, habitable_area, mean_colony_diameters, max_juv_density
