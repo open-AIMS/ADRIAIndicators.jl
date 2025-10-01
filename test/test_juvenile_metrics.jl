@@ -352,3 +352,120 @@ end
         )
     end
 end
+
+@testset "Relative Juveniles 5D" begin
+    n_tsteps, n_groups, n_sizes, n_locs, n_scenarios = 2, 2, 4, 2, 2
+    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs, n_scenarios)
+
+    is_juvenile = [true, true, false, false]
+
+    # Scenario 1
+    relative_cover[1, 1, :, 1, 1] = [0.1, 0.1, 0.05, 0.05]
+    relative_cover[1, 2, :, 1, 1] = [0.05, 0.05, 0.2, 0.2]
+    relative_cover[2, 1, :, 2, 1] = [0.0, 0.05, 0.3, 0.3]
+    relative_cover[2, 2, :, 2, 1] = [0.2, 0.0, 0.05, 0.0]
+
+    # Scenario 2 - different values
+    relative_cover[1, 1, :, 1, 2] = [0.2, 0.2, 0.1, 0.1]
+    relative_cover[1, 2, :, 1, 2] = [0.1, 0.1, 0.3, 0.3]
+    relative_cover[2, 1, :, 2, 2] = [0.1, 0.1, 0.4, 0.4]
+    relative_cover[2, 2, :, 2, 2] = [0.3, 0.1, 0.1, 0.1]
+
+    rel_juv_5d = relative_juveniles(relative_cover, is_juvenile)
+    @test size(rel_juv_5d) == (n_tsteps, n_locs, n_scenarios)
+
+    # Check scenario 1 (same as 4D test)
+    @test rel_juv_5d[1, 1, 1] ≈ 0.3
+    @test rel_juv_5d[1, 2, 1] == 0.0
+    @test rel_juv_5d[2, 1, 1] == 0.0
+    @test rel_juv_5d[2, 2, 1] == 0.25
+
+    # Check scenario 2
+    @test rel_juv_5d[1, 1, 2] ≈ 0.6
+    @test rel_juv_5d[1, 2, 2] == 0.0
+    @test rel_juv_5d[2, 1, 2] == 0.0
+    @test rel_juv_5d[2, 2, 2] ≈ 0.6
+end
+
+@testset "Absolute Juveniles 5D" begin
+    n_tsteps, n_groups, n_sizes, n_locs, n_scenarios = 2, 2, 4, 2, 2
+    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs, n_scenarios)
+    location_area = [100.0, 200.0]
+
+    is_juvenile = [true, true, false, false]
+
+    # Scenario 1
+    relative_cover[1, 1, :, 1, 1] = [0.1, 0.1, 0.05, 0.05]
+    relative_cover[1, 2, :, 1, 1] = [0.05, 0.05, 0.2, 0.2]
+    relative_cover[2, 1, :, 2, 1] = [0.0, 0.05, 0.3, 0.3]
+    relative_cover[2, 2, :, 2, 1] = [0.2, 0.0, 0.05, 0.0]
+
+    # Scenario 2 - different values
+    relative_cover[1, 1, :, 1, 2] = [0.2, 0.2, 0.1, 0.1]
+    relative_cover[1, 2, :, 1, 2] = [0.1, 0.1, 0.3, 0.3]
+    relative_cover[2, 1, :, 2, 2] = [0.1, 0.1, 0.4, 0.4]
+    relative_cover[2, 2, :, 2, 2] = [0.3, 0.1, 0.1, 0.1]
+
+    abs_juv_5d = absolute_juveniles(relative_cover, is_juvenile, location_area)
+    @test size(abs_juv_5d) == (n_tsteps, n_locs, n_scenarios)
+
+    # Check scenario 1 (same as 4D test)
+    @test abs_juv_5d[1, 1, 1] ≈ 30.0
+    @test abs_juv_5d[1, 2, 1] ≈ 0.0
+    @test abs_juv_5d[2, 1, 1] ≈ 0.0
+    @test abs_juv_5d[2, 2, 1] ≈ 50.0
+
+    # Check scenario 2
+    @test abs_juv_5d[1, 1, 2] ≈ 60.0
+    @test abs_juv_5d[1, 2, 2] == 0.0
+    @test abs_juv_5d[2, 1, 2] == 0.0
+    @test abs_juv_5d[2, 2, 2] ≈ 120.0
+end
+
+@testset "Juvenile Indicator 5D" begin
+    n_tsteps, n_groups, n_sizes, n_locs, n_scenarios = 2, 2, 4, 2, 2
+    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs, n_scenarios)
+    habitable_area = [100.0, 200.0]
+
+    is_juvenile = [true, true, false, false]
+
+    # Scenario 1
+    relative_cover[1, 1, :, 1, 1] = [0.1, 0.1, 0.05, 0.05]
+    relative_cover[1, 2, :, 1, 1] = [0.05, 0.05, 0.2, 0.2]
+    relative_cover[2, 1, :, 2, 1] = [0.0, 0.05, 0.3, 0.3]
+    relative_cover[2, 2, :, 2, 1] = [0.2, 0.0, 0.05, 0.0]
+
+    # Scenario 2 - different values
+    relative_cover[1, 1, :, 1, 2] = [0.2, 0.2, 0.1, 0.1]
+    relative_cover[1, 2, :, 1, 2] = [0.1, 0.1, 0.3, 0.3]
+    relative_cover[2, 1, :, 2, 2] = [0.1, 0.1, 0.4, 0.4]
+    relative_cover[2, 2, :, 2, 2] = [0.3, 0.1, 0.1, 0.1]
+
+    mean_colony_diameters = zeros(Float64, n_groups, n_sizes)
+    mean_colony_diameters[1, :] = [0.1, sqrt(0.4 / π), 0.5, 0.6]
+    mean_colony_diameters[2, :] = [0.1, 0.1, 0.5, 0.6]
+    
+    max_juv_density = 3.0
+
+    juv_ind_5d = juvenile_indicator(
+        relative_cover, is_juvenile, habitable_area, mean_colony_diameters, max_juv_density
+    )
+
+    @test size(juv_ind_5d) == (n_tsteps, n_locs, n_scenarios)
+
+    # Check scenario 1 (same as 4D test)
+    @test juv_ind_5d[1, 1, 1] ≈ 1.0
+    @test juv_ind_5d[1, 2, 1] ≈ 0.0
+    @test juv_ind_5d[2, 1, 1] ≈ 0.0
+    @test juv_ind_5d[2, 2, 1] ≈ 50.0 / 60.0
+
+    # Check scenario 2
+    # abs_juv_5d[1, 1, 2] was 60.0
+    # Denominator for loc 1: 0.1 * 3.0 * 100.0 = 30.0
+    @test juv_ind_5d[1, 1, 2] ≈ 60.0 / 30.0
+    @test juv_ind_5d[1, 2, 2] == 0.0
+    @test juv_ind_5d[2, 1, 2] == 0.0
+    # abs_juv_5d[2, 2, 2] was 120.0
+    # Denominator for loc 2: 0.1 * 3.0 * 200.0 = 60.0
+    @test juv_ind_5d[2, 2, 2] ≈ 120.0 / 60.0
+end
