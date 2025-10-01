@@ -14,6 +14,12 @@ using Pkg
 Pkg.add("ADRIAIndicators")
 ```
 
+## Testing
+In the ADRIAIndicators.jl testing environment,
+```julia
+julia> ]test
+```
+
 ## Usage
 
 Each metric has an option to perform the computation in place. The in-place version of a function is denoted by a `!` at the end of the function name.
@@ -95,4 +101,4 @@ cd docs
 julia --project=. make.jl
 ```
 
-finally, open `index.html` in the `docs/build` directory.
+Finally, open `index.html` in the `docs/build` directory.
