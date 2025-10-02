@@ -2,3 +2,7 @@ sandbox/
 docs/build/
 build/*.so
 build/*.dll
+
+*.crossref
+*.latex
+*.pdf
