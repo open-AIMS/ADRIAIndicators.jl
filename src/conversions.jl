@@ -17,10 +17,11 @@ function relative_cover_to_ltmp_cover!(
     location_dim::Int64,
     out_ltmp_cover::Array{T,N}
 )::Nothing where {T<:AbstractFloat,N}
-    reshape_idx::Tuple = Tuple(
-        i == location_dim ? -1 : 1 for i in 1:ndims(relative_cover)
-    )
-    area_coefficient::Array{T} = reshape(habitable_area_m² ./ reef_area_m², reshape_idx)
+    dims = ones(Int, ndims(relative_cover))
+    dims[location_dim] = length(habitable_area_m²)
+    reshape_dims = Tuple(dims)
+
+    area_coefficient = reshape(habitable_area_m² ./ reef_area_m², reshape_dims)
     out_ltmp_cover .= relative_cover .* area_coefficient
 
     return nothing
@@ -32,9 +33,9 @@ end
 Convert relative cover to LTMP cover. The conversion is given by
 
 ```math
-\begin{align*}
-\text{LTMP} = \text{RC} \cdot \frac{A_H}{A_R},
-\end{align*}
+\\begin{align*}
+\\text{LTMP} = \\text{RC} \\cdot \\frac{A_H}{A_R},
+\\end{align*}
 ```
 
 where LTMP, RC, ``A_H`` and ``A_R`` represent LTMP cover, relative cover,
@@ -86,10 +87,11 @@ function ltmp_cover_to_relative_cover!(
     location_dim::Int64,
     out_relative_cover::Array{T,N}
 )::Nothing where {T<:AbstractFloat,N}
-    reshape_idx::Tuple = Tuple(
-        i == location_dim ? -1 : 1 for i in 1:ndims(ltmp_cover)
-    )
-    area_coefficient::AbstractVector{T} = reshape(reef_area_m² ./ habitable_area_m², reshape_idx)
+    dims = ones(Int, ndims(ltmp_cover))
+    dims[location_dim] = length(habitable_area_m²)
+    reshape_dims = Tuple(dims)
+
+    area_coefficient = reshape(reef_area_m² ./ habitable_area_m², reshape_dims)
     out_relative_cover .= ltmp_cover .* area_coefficient
 
     return nothing
@@ -101,9 +103,9 @@ end
 Convert LTMP cover to relative cover. The conversion is given by
 
 ```math
-\begin{align*}
-\text{RC} = \text{LTMP} \cdot \frac{A_R}{A_H},
-\end{align*}
+\\begin{align*}
+\\text{RC} = \\text{LTMP} \\cdot \\frac{A_R}{A_H},
+\\end{align*}
 ```
 
 where LTMP, RC, ``A_H`` and ``A_R`` represent LTMP cover, relative cover,
