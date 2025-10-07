@@ -1,8 +1,8 @@
+"    reef_condition_index!(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
-"""
-    reduced_reef_condition_index!(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+Calculate the Reef Condition Index (RCI).
 
-Calculate the Reduced Reef Condition Index (RRCI).
+This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
 
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
@@ -10,8 +10,8 @@ Calculate the Reduced Reef Condition Index (RRCI).
 - `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
 - `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
-"""
-function reduced_reef_condition_index!(
+"
+function reef_condition_index!(
     relative_cover::AbstractArray{T,2},
     coral_evenness::AbstractArray{T,2},
     relative_shelter_volume::AbstractArray{T,2},
@@ -48,19 +48,15 @@ function reduced_reef_condition_index!(
 end
 
 """
-    reduced_reef_condition_index(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
+    reef_condition_index(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
-Calculate the Reduced Reef Condition Index (RRCI).
+Calculate the Reef Condition Index (RCI).
 
-The RRCI is a categorical index assessing the overall health and condition of a reef location
+This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
+
+The RCI is a categorical index assessing the overall health and condition of a reef location
 based on four key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
 representing categories from "Very Poor" to "Very Good".
-
-The RRCI accepts four inputs
- - Relative Coral Cover
- - Coral Evenness
- - Relative Shelter Volume
- - Relative Juvenile Cover
 
 For each input there are five levels of condition ranging from very poor to very good. Then
 the location is assigned a condition of very poor to very good if that location meets 60%
@@ -82,7 +78,7 @@ based on its categorisation
 # Returns
 Output RCI buffer with dimensions [timesteps ⋅ locations].
 """
-function reduced_reef_condition_index(
+function reef_condition_index(
     relative_cover::AbstractArray{T,2},
     coral_evenness::AbstractArray{T,2},
     relative_shelter_volume::AbstractArray{T,2},
@@ -94,7 +90,7 @@ function reduced_reef_condition_index(
     end
 
     out_rci = zeros(Float64, size(relative_cover))
-    reduced_reef_condition_index!(
+    reef_condition_index!(
         relative_cover,
         coral_evenness,
         relative_shelter_volume,
@@ -110,6 +106,8 @@ end
     reef_condition_index!(relative_cover::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Condition Index (RCI).
+
+This method uses five inputs: relative cover, relative shelter volume, relative juveniles, COTS abundance, and rubble.
 
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
@@ -166,16 +164,11 @@ end
 
 Calculate the Reef Condition Index (RCI).
 
+This method uses five inputs: relative cover, relative shelter volume, relative juveniles, COTS abundance, and rubble.
+
 The RCI is a categorical index assessing the overall health and condition of a reef location
 based on five key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
 representing categories from "Very Poor" to "Very Good".
-
-The RCI accepts five inputs
- - Relative Coral Cover
- - Relative Shelter Volume
- - Relative Juvenile Cover
- - Crown-of-Thorns Starfish (COTS) abundance
- - Rubble cover
 
 For each input there are five levels of condition ranging from very poor to very good. COTS
 and Rubble Cover is inverted, where high values indicate worse condition. Then the location
@@ -275,9 +268,91 @@ function reef_biodiversity_condition_index(
 end
 
 """
+    reef_tourism_index!(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+
+Calculate the Reef Tourism Index (RTI) for a single scenario.
+
+This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
+
+# Arguments
+- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
+- `coral_evenness` : Coral evenness with dimensions [timesteps ⋅ locations].
+- `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
+- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
+- `out_rti` : Output array buffer for the RTI with dimensions [timesteps ⋅ locations].
+"""
+function reef_tourism_index!(
+    relative_cover::AbstractArray{T,2},
+    coral_evenness::AbstractArray{T,2},
+    relative_shelter_volume::AbstractArray{T,2},
+    relative_juveniles::AbstractArray{T,2},
+    out_rti::AbstractArray{T,2}
+)::Nothing where {T<:AbstractFloat}
+    # Intercept and coefficient resulting from regressions.
+    intcp::T = 0.47947
+    rc_coef::T = 0.12764
+    evenness_coef::T = 0.31946
+    sv_coef::T = 0.11676
+    jv_coef::T = -0.0036065
+
+    out_rti .= intcp .+
+        (rc_coef .* relative_cover) .+
+        (evenness_coef .* coral_evenness) .+
+        (sv_coef .* relative_shelter_volume) .+
+        (jv_coef .* relative_juveniles)
+
+    out_rti .= round.(clamp.(out_rti, 0.1, 0.9); digits=2)
+
+    return nothing
+end
+
+"""
+    reef_tourism_index(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
+
+Calculate the Reef Tourism Index (RTI) for a single scenario.
+
+This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
+
+The RTI is a continuous version of the Reef Condition Index, fitted with a linear regression model.
+
+# Arguments
+- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
+- `coral_evenness` : Coral evenness with dimensions [timesteps ⋅ locations].
+- `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
+- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
+
+# Returns
+A 2D array of the Reef Tourism Index with dimensions [timesteps ⋅ locations].
+"""
+function reef_tourism_index(
+    relative_cover::AbstractArray{T,2},
+    coral_evenness::AbstractArray{T,2},
+    relative_shelter_volume::AbstractArray{T,2},
+    relative_juveniles::AbstractArray{T,2}
+)::AbstractArray{T,2} where {T<:AbstractFloat}
+    rc_size = size(relative_cover)
+    if (rc_size != size(coral_evenness)) || (rc_size != size(relative_shelter_volume)) || (rc_size != size(relative_juveniles))
+        throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
+    end
+
+    out_rti = zeros(Float64, rc_size)
+    reef_tourism_index!(
+        relative_cover,
+        coral_evenness,
+        relative_shelter_volume,
+        relative_juveniles,
+        out_rti
+    )
+
+    return out_rti
+end
+
+"""
     reef_tourism_index!(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Tourism Index (RTI) for a single scenario.
+
+This method uses five inputs: relative cover, shelter volume, relative juveniles, COTS abundance, and rubble.
 
 # Arguments
 - `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
@@ -322,8 +397,10 @@ Calculate the Reef Tourism Index (RTI) for a single scenario. The RTI is the Ree
 Condition Index made continuous by fitting a linear regression model using relative cover,
 shelter volume, relative juveniles, cots abundance and rubble to underpin it.
 
+This method uses five inputs: relative cover, shelter volume, relative juveniles, COTS abundance, and rubble.
+
 # Arguments
-- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
+- `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
 - `shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
 - `cots` : COTS abundance with dimensions [timesteps ⋅ locations].
@@ -347,82 +424,6 @@ function reef_tourism_index(
     out_rti = zeros(Float64, rc_size)
     reef_tourism_index!(
         relative_cover, shelter_volume, relative_juveniles, cots, rubble, out_rti
-    )
-
-    return out_rti
-end
-
-"""
-    reduced_reef_tourism_index!(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
-
-Calculate the Reduced Reef Tourism Index (RRTI) for a single scenario.
-
-# Arguments
-- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
-- `coral_evenness` : Coral evenness with dimensions [timesteps ⋅ locations].
-- `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
-- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
-- `out_rti` : Output array buffer for the RTI with dimensions [timesteps ⋅ locations].
-"""
-function reduced_reef_tourism_index!(
-    relative_cover::AbstractArray{T,2},
-    coral_evenness::AbstractArray{T,2},
-    relative_shelter_volume::AbstractArray{T,2},
-    relative_juveniles::AbstractArray{T,2},
-    out_rti::AbstractArray{T,2}
-)::Nothing where {T<:AbstractFloat}
-    # Intercept and coefficient resulting from regressions.
-    intcp::T = 0.47947
-    rc_coef::T = 0.12764
-    evenness_coef::T = 0.31946
-    sv_coef::T = 0.11676
-    jv_coef::T = -0.0036065
-
-    out_rti .= intcp .+
-        (rc_coef .* relative_cover) .+
-        (evenness_coef .* coral_evenness) .+
-        (sv_coef .* relative_shelter_volume) .+
-        (jv_coef .* relative_juveniles)
-
-    out_rti .= round.(clamp.(out_rti, 0.1, 0.9); digits=2)
-
-    return nothing
-end
-
-"""
-    reduced_reef_tourism_index(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
-
-Calculate the Reduced Reef Tourism Index (RRTI) for a single scenario. The RRTI is a
-continuous version of the Reduced Reef Condition Index, fitted with a linear regression
-model.
-
-# Arguments
-- `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
-- `coral_evenness` : Coral evenness with dimensions [timesteps ⋅ locations].
-- `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
-- `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
-
-# Returns
-A 2D array of the Reduced Reef Tourism Index with dimensions [timesteps ⋅ locations].
-"""
-function reduced_reef_tourism_index(
-    relative_cover::AbstractArray{T,2},
-    coral_evenness::AbstractArray{T,2},
-    relative_shelter_volume::AbstractArray{T,2},
-    relative_juveniles::AbstractArray{T,2}
-)::AbstractArray{T,2} where {T<:AbstractFloat}
-    rc_size = size(relative_cover)
-    if (rc_size != size(coral_evenness)) || (rc_size != size(relative_shelter_volume)) || (rc_size != size(relative_juveniles))
-        throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
-    end
-
-    out_rti = zeros(Float64, rc_size)
-    reduced_reef_tourism_index!(
-        relative_cover,
-        coral_evenness,
-        relative_shelter_volume,
-        relative_juveniles,
-        out_rti
     )
 
     return out_rti
