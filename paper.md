@@ -9,6 +9,9 @@ authors:
   - name: Daniel Tan
     orcid: 0009-0004-8696-0631
     affiliation: 1
+  - name: Takuya Iwanaga
+    orcid: 0000-0001-8173-0870
+    affiliation: 1
 affiliations:
  - name: Australian Institute of Marine Science
    index: 1
@@ -26,11 +29,11 @@ wide range of functions, from simple aggregations and unit conversions to more c
 indices and estimators derived from regression models. These tools help the
 assessment of species diversity, juvenile abundance, shelter volume, fish biomass, and
 overall reef condition, enabling consistent and comparable analysis across different coral
-ecology models such as CoralBlox, C-Scape, and ReefMod [@ReefMod; @CScape].
+ecology models such as CoralBlox, C-Scape [@CScape], and ReefMod [@ReefMod].
 
 # Statement of Need
 
-Ecological models of coral reefs are complex and produce large amounts of data. There is a
+Ecological models of coral reefs produce large amounts of high-dimensional data. There is a
 need for standardized tools to summarize and analyze these model outputs to facilitate
 comparison between different models and scenarios. ADRIAIndicators.jl provides a set of
 standard metrics that can be used to summarize the state of reef ecological model outputs
@@ -49,27 +52,25 @@ transformations between different units or representations of coral cover.
 Metrics are functions that derive higher-level, interpretable indicators from the raw model
 data, such as coral diversity, shelter volume, and composite indices for reef health.
 
-| **Type**        | **Metric Name**                                  | **Reference**   |
-|-----------------|--------------------------------------------------|-----------------|
-| Metric            | Absolute Shelter Volume                          | [@URBINABARRETO2021107151; @ASTON_STRUCTURAL]|
-| Metric            | Relative Shelter Volume                          | -               |
-| Metric            | Coral Diversity                                  | [@CoralDiversity]|
-| Metric            | Coral Evenness                                   | -               |
-| Metric            | Reef Condition Index                             |[Citation Needed]|
-| Metric            | Reduced Reef Condition Index                     | -               |
-| Metric            | Reef Tourism Index                               | -              |
-| Metric            | Reduced Reef Tourism Index                       | -              |
-| Metric            | Reef Biodiversity Condition Index                | -              |
-| Metric            | Reef Fish Index                                  | [@ReefFishIndex]               |
-| Aggregation       | Relative Cover                                   |                 |
-| Aggregation       | Relative Location Taxonomy Cover                 |                 |
-| Aggregation       | Relative Taxonomy Cover                          |                 |
-| Aggregation       | Relative Juveniles                               |                 |
-| Aggregation       | Relative Location Taxonomy Juveniles             |                 |
-| Aggregation       | Relative Taxonomy Juveniles                      |                 |
-| Conversion       | Relative Habitable Cover to Reef Cover           |                 |
-| Conversion       | Reef Cover to Relative Habitable Cover           |                 |
-
+| **Metric Name**                                  | **Type**          | **Reference**   |
+|--------------------------------------------------|-------------------|-----------------|
+| Absolute Shelter Volume                          | Metric            | [@URBINABARRETO2021107151; @ASTON_STRUCTURAL]|
+| Relative Shelter Volume                          | Metric            | -               |
+| Coral Diversity                                  | Metric            | [@CoralDiversity]|
+| Coral Evenness                                   | Metric            | -               |
+| Reef Condition Index                             | Metric            |[@ReefConditionIndex]|
+| Reef Tourism Index                               | Metric            |               |
+| Reef Biodiversity Condition Index                | Metric            |               |
+| Reef Fish Index                                  | Metric            | [@ReefFishIndex]               |
+| Relative Cover                                   | Aggregation       |                 |
+| Relative Location Taxonomy Cover                 | Aggregation       |                 |
+| Relative Taxonomy Cover                          | Aggregation       |                 |
+| Relative Juveniles                               | Aggregation       |                 |
+| Relative Location Taxonomy Juveniles             | Aggregation       |                 |
+| Relative Taxonomy Juveniles                      | Aggregation       |                 |
+| Relative Habitable Cover to Reef Cover           | Conversion        |                 |
+| Reef Cover to Relative Habitable Cover           | Conversion        |                 |
+                                                   
 
 ## Usage
 
