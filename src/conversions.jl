@@ -1,142 +1,140 @@
 """
-    _rhc_to_rrc!(relative_habitable_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_rrc::Array{T,N})::Nothing where {T<:AbstractFloat}
+    relative_cover_to_ltmp_cover!(relative_cover::Array{T,N}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_ltmp_cover::Array{T,N})::Nothing where {T<:AbstractFloat,N}
 
-Convert relative habitable cover to relative reef cover.
+Convert relative cover to LTMP cover.
 
 # Arguments
-- `relative_reef_cover` : Relative reef cover with value in [0, 1]
-- `habitable_area_m²` : Habitable area of reef.
-- `reef_area_m²` : Area of entire reef.
-- `location_dim` : Index of the location dimensions. For example location_dim=3 if the 
-third dimension in `relative_reef_cover` is the location dimensions.
-- `out_rrc` : Array buffer of the same shape as relative_reef_cover
+- `relative_cover` : Relative cover (relative to habitable area) with value in [0, 1].
+- `habitable_area_m²` : Habitable area of reef in m².
+- `reef_area_m²` : Area of entire reef in m².
+- `location_dim` : Index of the location dimensions.
+- `out_ltmp_cover` : Array buffer of the same shape as relative_cover.
 """
-function rhc_to_rrc!(
-    relative_habitable_cover::Array{T,N},
+function relative_cover_to_ltmp_cover!(
+    relative_cover::Array{T,N},
     habitable_area_m²::AbstractVector{T},
     reef_area_m²::AbstractVector{T},
     location_dim::Int64,
-    out_rrc::Array{T,N}
+    out_ltmp_cover::Array{T,N}
 )::Nothing where {T<:AbstractFloat,N}
-    reshape_idx::Tuple = Tuple(
-        i == location_dim ? -1 : 1 for i in 1:ndims(relative_habitable_cover)
-    )
-    area_coefficient::Array{T} = reshape(habitable_area_m² ./ reef_area_m², reshape_idx)
-    out_rrc .= relative_habitable_cover .* area_coefficient
+    dims = ones(Int, ndims(relative_cover))
+    dims[location_dim] = length(habitable_area_m²)
+    reshape_dims = Tuple(dims)
+
+    area_coefficient = reshape(habitable_area_m² ./ reef_area_m², reshape_dims)
+    out_ltmp_cover .= relative_cover .* area_coefficient
 
     return nothing
 end
 
 """
-    rhc_to_rrc(relative_habitable_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
+    relative_cover_to_ltmp_cover(relative_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
 
-Convert relative habitable cover to relative reef cover. The conversion is given by
+Convert relative cover to LTMP cover. The conversion is given by
 
 ```math
 \\begin{align*}
-\\text{RRC} = \\text{RHC} \\cdot \\frac{A_H}{A_R},
+\\text{LTMP} = \\text{RC} \\cdot \\frac{A_H}{A_R},
 \\end{align*}
 ```
 
-where RRC, RHC, ``A_H`` and ``A_R`` represent relative reef cover, relative habitable cover
+where LTMP, RC, ``A_H`` and ``A_R`` represent LTMP cover, relative cover,
 habitable area and reef area respectively.
 
 # Arguments
-- `relative_reef_cover` : Relative reef cover with value in [0, 1]
-- `habitable_area_m²` : Habitable area of reef.
-- `reef_area_m²` : Area of entire reef.
-- `location_dim` : Index of the location dimensions. For example location_dim=3 if the 
-third dimension in `relative_reef_cover` is the location dimsnions.
+- `relative_cover` : Relative cover (relative to habitable area) with value in [0, 1].
+- `habitable_area_m²` : Habitable area of reef in m².
+- `reef_area_m²` : Area of entire reef in m².
+- `location_dim` : Index of the location dimensions.
 
 # Returns
-Relative reef cover with same array shape as the input `relative_reef_cover`.
+LTMP cover with same array shape as the input `relative_cover`.
 """
-function rhc_to_rrc(
-    relative_habitable_cover::Array{T},
+function relative_cover_to_ltmp_cover(
+    relative_cover::Array{T},
     habitable_area_m²::AbstractVector{T},
     reef_area_m²::AbstractVector{T},
     location_dim::Int64
 )::Array{T} where {T<:AbstractFloat}
-    out_rrc::Array{T} = zeros(T, size(relative_habitable_cover)...)
-    rhc_to_rrc!(
-        relative_habitable_cover,
+    out_ltmp_cover::Array{T} = zeros(T, size(relative_cover)...)
+    relative_cover_to_ltmp_cover!(
+        relative_cover,
         habitable_area_m²,
         reef_area_m²,
         location_dim,
-        out_rrc
+        out_ltmp_cover
     )
 
-    return out_rrc
+    return out_ltmp_cover
 end
 
 """
-    rrc_to_rhc!(relative_reef_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_rhc::Array{T,N})::Nothing where {T<:AbstractFloat}
+    ltmp_cover_to_relative_cover!(ltmp_cover::Array{T,N}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_relative_cover::Array{T,N})::Nothing where {T<:AbstractFloat,N}
 
-Convert relative reef cover to relative habitable cover.
+Convert LTMP cover to relative cover.
 
 # Arguments
-- `relative_reef_cover` : Relative reef cover with value in [0, 1]
-- `habitable_area_m²` : Habitable area of reef.
-- `reef_area_m²` : Area of entire reef.
-- `location_dim` : Index of the location dimensions. For example location_dim=3 if the 
-third dimension in `relative_reef_cover` is the location dimsnions.
-- `out_rhc` : Array buffer of the same shape as relative_reef_cover
+- `ltmp_cover` : LTMP cover with value in [0, 1].
+- `habitable_area_m²` : Habitable area of reef in m².
+- `reef_area_m²` : Area of entire reef in m².
+- `location_dim` : Index of the location dimensions.
+- `out_relative_cover` : Array buffer of the same shape as ltmp_cover.
 """
-function rrc_to_rhc!(
-    relative_reef_cover::Array{T,N},
+function ltmp_cover_to_relative_cover!(
+    ltmp_cover::Array{T,N},
     habitable_area_m²::AbstractVector{T},
     reef_area_m²::AbstractVector{T},
     location_dim::Int64,
-    out_rhc::Array{T,N}
-)::Array{T} where {T<:AbstractFloat,N}
-    reshape_idx::Tuple = Tuple(
-        i == location_dim ? -1 : 1 for i in 1:ndims(relative_reef_cover)
-    )
-    area_coefficient::AbstractVector{T} = reshape(reef_area_m² ./ habitable_area_m², reshape_idx)
-    out_rhc .= relative_reef_cover .* area_coefficient
+    out_relative_cover::Array{T,N}
+)::Nothing where {T<:AbstractFloat,N}
+    dims = ones(Int, ndims(ltmp_cover))
+    dims[location_dim] = length(habitable_area_m²)
+    reshape_dims = Tuple(dims)
+
+    area_coefficient = reshape(reef_area_m² ./ habitable_area_m², reshape_dims)
+    out_relative_cover .= ltmp_cover .* area_coefficient
 
     return nothing
 end
 
 """
-    rrc_to_rhc(relative_reef_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
+    ltmp_cover_to_relative_cover(ltmp_cover::Array{T}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64)::Array{T} where {T<:AbstractFloat}
 
-Convert relative reef cover to relative habitable cover. The conversion is given by
+Convert LTMP cover to relative cover. The conversion is given by
 
 ```math
 \\begin{align*}
-\\text{RHC} = \\text{RRC} \\cdot \\frac{A_R}{A_H},
+\\text{RC} = \\text{LTMP} \\cdot \\frac{A_R}{A_H},
 \\end{align*}
 ```
 
-where RRC, RHC, ``A_H`` and ``A_R`` represenht relative reef cover, relative habitable cover
+where LTMP, RC, ``A_H`` and ``A_R`` represent LTMP cover, relative cover,
 habitable area and reef area respectively.
 
 
 # Arguments
-- `relative_reef_cover` : Relative reef cover with value in [0, 1]
-- `habitable_area_m²` : Habitable area of reef.
-- `reef_area_m²` : Area of entire reef.
-- `location_dim` : Index of the location dimensions. For example location_dim=3 if the 
-third dimension in `relative_reef_cover` is the location dimsnions.
+- `ltmp_cover` : LTMP cover with value in [0, 1].
+- `habitable_area_m²` : Habitable area of reef in m².
+- `reef_area_m²` : Area of entire reef in m².
+- `location_dim` : Index of the location dimensions.
 
 # Returns
-Relative habitable cover with same array shape as the input `relative_reef_cover`.
+Relative cover with same array shape as the input `ltmp_cover`.
 """
-function rrc_to_rhc(
-    relative_reef_cover::Array{T},
+function ltmp_cover_to_relative_cover(
+    ltmp_cover::Array{T},
     habitable_area_m²::AbstractVector{T},
     reef_area_m²::AbstractVector{T},
     location_dim::Int64
 )::Array{T} where {T<:AbstractFloat}
-    out_rhc::Array{T,N} = zeros(T, size(relative_reef_cover)...)
-    rrc_to_rhc!(
-        relative_reef_cover,
+    out_relative_cover::Array{T} = zeros(T, size(ltmp_cover)...)
+    ltmp_cover_to_relative_cover!(
+        ltmp_cover,
         habitable_area_m²,
         reef_area_m²,
         location_dim,
-        out_rhc
+        out_relative_cover
     )
 
-    return out_rhc
+    return out_relative_cover
 end
