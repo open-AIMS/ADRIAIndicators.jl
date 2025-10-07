@@ -93,7 +93,7 @@ You can also find the citation information in the `CITATION.cff` file.
 
 ## Building Documentation
 
-The documentation is not currently hosted online but can be built as follows.
+To build documentation locally:
 
 ```bash
 cd docs
@@ -101,4 +101,4 @@ cd docs
 julia --project=. make.jl
 ```
 
-Finally, open `index.html` in the `docs/build` directory.
+Then open `index.html` in the `docs/build` directory.
