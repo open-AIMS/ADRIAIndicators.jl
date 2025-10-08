@@ -22,7 +22,7 @@ julia> ]test
 
 ## Usage
 
-Each metric has an option to perform the computation in place. The in-place version of a function is denoted by a `!` at the end of the function name.
+Each metric has an option to write the metric into a provided buffer, this version of the function is denoted by a `!` at the end of the function name.
 
 ```julia
 using ADRIAIndicators
@@ -42,31 +42,23 @@ is_juvenile = [true, true, false, false, false, false];
 # Calculate and allocate new array for metric
 rel_juveniles = relative_juveniles(raw_model_cover, is_juvenile);
 
-# Perform the computation inplace.
+# Perform the computation and write the metric into a provided buffer.
 rel_juveniles_out = zeros(Float64, n_timesteps, n_locations);
 relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out);
 ```
 
 ## Available Metrics
 
-- Relative/Absolute Cover
+- Relative/Absolute/LTMP Cover
 - Relative/Absolute Shelter Volume
 - Relative/Absolute Juveniles
 - Juvenile Indicator
 - Coral Diversity
 - Coral Evenness
-
-## Reef Indices
-
-The repository also provides implementations of the following indices:
-
 - Reef Condition Index
 - Reef Biodiversity Condition Index
 - Reef Tourism Index
 - Reef Fish Index
-
-They are described in:
-*TODO: Add reference to the paper describing the indices.*
 
 ## Contributing
 
@@ -75,21 +67,6 @@ Contributions are welcome! Please see the [contributing guidelines](CONTRIBUTING
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Citation
-
-If you use ADRIAIndicators.jl in your research, please cite it as follows:
-```bibtex
-@misc{Tan_2025,
-  author = {Daniel Tan},
-  title = {ADRIAIndicators.jl},
-  year = {2025},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/open-AIMS/ADRIAIndicators.jl}},
-}
-```
-You can also find the citation information in the `CITATION.cff` file.
 
 ## Building Documentation
 

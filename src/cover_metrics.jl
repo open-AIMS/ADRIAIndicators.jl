@@ -130,27 +130,27 @@ function relative_loc_taxa_cover(
 end
 
 """
-    ltmp_cover!(relative_cover_input::AbstractArray{T,4}, habitable_area::AbstractVector{T}, reef_area::AbstractVector{T}, out_ltmp_cover::AbstractArray{T,2})::Nothing where {T<:Real}
+    ltmp_cover!(relative_cover::AbstractArray{T,4}, habitable_area::AbstractVector{T}, reef_area::AbstractVector{T}, out_ltmp_cover::AbstractArray{T,2})::Nothing where {T<:Real}
 
 Calculate the LTMP cover for each location. LTMP cover is the proportion of the reef area
 occupied by coral relative to the area of the reef, which may include non-habitable area.
-The `relative_cover_input` is relative to habitable area.
+The `relative_cover` input is relative to habitable area.
 
 # Arguments
-- `relative_cover_input` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `habitable_area` : The habitable area for each location in m².
 - `reef_area` : The total area for each location in m².
 - `out_ltmp_cover` : Output array buffer for LTMP cover with dimensions [timesteps ⋅ locations].
 """
 function ltmp_cover!(
-    relative_cover_input::AbstractArray{T,4},
+    relative_cover::AbstractArray{T,4},
     habitable_area::AbstractVector{T},
     reef_area::AbstractVector{T},
     out_ltmp_cover::AbstractArray{T,2}
 )::Nothing where {T<:Real}
     # First, calculate cover relative to habitable area by summing over groups and sizes
     rel_cover = zeros(T, size(out_ltmp_cover)...)
-    relative_cover!(relative_cover_input, rel_cover)
+    relative_cover!(relative_cover, rel_cover)
 
     # Convert relative cover to LTMP cover
     # Note: The location dimension for the 2D rel_cover array is 2
@@ -160,14 +160,14 @@ function ltmp_cover!(
 end
 
 """
-    ltmp_cover(relative_cover_input::AbstractArray{T,4}, habitable_area::AbstractVector{T}, reef_area::AbstractVector{T})::AbstractArray{T,2} where {T<:Real}
+    ltmp_cover(relative_cover::AbstractArray{T,4}, habitable_area::AbstractVector{T}, reef_area::AbstractVector{T})::AbstractArray{T,2} where {T<:Real}
 
 Calculate the LTMP cover for each location. LTMP cover is the proportion of the reef area
 occupied by coral relative to the area of the reef, which may include non-habitable area.
-The `relative_cover_input` is relative to habitable area.
+The `relative_cover` input is relative to habitable area.
 
 # Arguments
-- `relative_cover_input` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `habitable_area` : The habitable area for each location in m².
 - `reef_area` : The total area for each location in m².
 
@@ -175,21 +175,21 @@ The `relative_cover_input` is relative to habitable area.
 A 2D array of LTMP cover with dimensions [timesteps ⋅ locations].
 """
 function ltmp_cover(
-    relative_cover_input::AbstractArray{T,4},
+    relative_cover::AbstractArray{T,4},
     habitable_area::AbstractVector{T},
     reef_area::AbstractVector{T}
 )::AbstractArray{T,2} where {T<:Real}
-    n_timesteps, _, _, n_locations = size(relative_cover_input)
+    n_timesteps, _, _, n_locations = size(relative_cover)
     if length(habitable_area) != n_locations || length(reef_area) != n_locations
         throw(
             DimensionMismatch(
-                "The number of locations in relative_cover_input, habitable_area, and reef_area must match."
+                "The number of locations in relative_cover, habitable_area, and reef_area must match."
             )
         )
     end
 
     out_ltmp_cover = zeros(T, n_timesteps, n_locations)
-    ltmp_cover!(relative_cover_input, habitable_area, reef_area, out_ltmp_cover)
+    ltmp_cover!(relative_cover, habitable_area, reef_area, out_ltmp_cover)
 
     return out_ltmp_cover
 end

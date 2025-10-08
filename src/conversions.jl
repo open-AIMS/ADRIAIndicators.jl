@@ -4,7 +4,7 @@ const AF = AbstractFloat
     relative_cover_to_ltmp_cover!(relative_cover::Array{T,N}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_ltmp_cover::Array{T,N})::Nothing where {T<:AbstractFloat,N}
 
 Convert relative cover to LTMP cover. If location dimension is -1, then assume the location
-dimension has already been aggregated and multiple by the ratio of total reef area to total
+dimension has already been aggregated and multiply by the ratio of total reef area to total
 habitable area.
 
 # Arguments
@@ -50,7 +50,7 @@ where LTMP, RC, ``A_H`` and ``A_R`` represent LTMP cover, relative cover,
 habitable area and reef area respectively. 
 
 If location dimension is -1, then assume the location
-dimension has already been aggregated and multiple by the ratio of total reef area to total
+dimension has already been aggregated and multiply by the ratio of total reef area to total
 habitable area.
 
 # Arguments
@@ -84,7 +84,7 @@ end
     ltmp_cover_to_relative_cover!(ltmp_cover::Array{T,N}, habitable_area_m²::AbstractVector{T}, reef_area_m²::AbstractVector{T}, location_dim::Int64, out_relative_cover::Array{T,N})::Nothing where {T<:AbstractFloat,N}
 
 Convert LTMP cover to relative cover. If location dimension is -1, then assume the location
-dimension has already been aggregated and multiple by the ratio of total reef area to total
+dimension has already been aggregated and multiply by the ratio of total reef area to total
 habitable area.
 
 # Arguments
@@ -130,7 +130,7 @@ where LTMP, RC, ``A_H`` and ``A_R`` represent LTMP cover, relative cover,
 habitable area and reef area respectively. 
 
 If location dimension is -1, then assume the location
-dimension has already been aggregated and multiple by the ratio of total reef area to total
+dimension has already been aggregated and multiply by the ratio of total reef area to total
 habitable area.
 
 

@@ -27,15 +27,13 @@ relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out)
 
 ## Available Metrics
 
-- [Relative/Absolute Cover](@ref "Cover Metrics")
+- [Relative/Absolute/LTMP Cover](@ref "Cover Metrics")
 - [Relative/Absolute Shelter Volume](@ref "Metrics")
 - [Relative/Absolute Juveniles](@ref "Juvenile Metrics")
 - [Juvenile Indicator](@ref "Juvenile Metrics")
 - [Coral Diversity](@ref "Metrics")
 - [Coral Evenness](@ref "Metrics")
 - [Reef Indices](@ref "Reef Indices")
-
-*To Do: Reef Condition Index*
 
 ## Building Documentation
 

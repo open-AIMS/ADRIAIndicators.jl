@@ -11,13 +11,19 @@ indicator.
 - `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `juvenile_indicator`: Juvenile Indicator with dimensions [timesteps ⋅ locations].
 - `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
+
+# Reference
+1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
+    economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
+    2025, PREPRINT (Version 1) available at Research Square
+    [https://doi.org/10.21203/rs.3.rs-7644150/v1]
 """
 function reef_condition_index!(
     ltmp_cover::AbstractArray{<:AbstractFloat,2},
     relative_shelter_volume::AbstractArray{<:AbstractFloat,2},
     juvenile_indicator::AbstractArray{<:AbstractFloat,2},
     out_rci::AbstractArray{<:AbstractFloat,2};
-)::Nothing 
+)::Nothing
     RCI_CRIT = eltype(ltmp_cover)[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
         0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
@@ -56,15 +62,9 @@ based on three key ecological metrics. The index assigns a discrete score (0.1, 
 representing categories from "Very Poor" to "Very Good".
 
 For each input there are five levels of condition ranging from very poor to very good. Then
-the location is assigned a condition of very poor to very good if that location meets 60%
-of the metrics condition criteria. The condition level is then assigned a numerical value
-based on its categorisation.
-
-0.9: Very Good
-0.7: Good
-0.5: Fair
-0.3: Poor
-0.1: Very Poor
+the location is assigned a condition of very poor to very good if that location meets at
+least two of the metrics condition criteria. The condition level is then assigned a
+numerical value based on its categorisation.
 
 # Arguments
 - `ltmp_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
@@ -73,6 +73,12 @@ based on its categorisation.
 
 # Returns
 Output RCI buffer with dimensions [timesteps ⋅ locations].
+
+# Reference
+1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
+    economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
+    2025, PREPRINT (Version 1) available at Research Square
+    [https://doi.org/10.21203/rs.3.rs-7644150/v1]
 """
 function reef_condition_index(
     ltmp_cover::AbstractArray{<:AbstractFloat,2},
@@ -110,6 +116,12 @@ rubble.
 - `juvenile_indicator`: Juvenile Indicator with dimensions [timesteps ⋅ locations].
 - `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
 - `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
+
+# Reference
+1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
+    economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
+    2025, PREPRINT (Version 1) available at Research Square
+    [https://doi.org/10.21203/rs.3.rs-7644150/v1]
 """
 function reef_condition_index!(
     ltmp_cover::AbstractArray{<:AbstractFloat,2},
@@ -117,7 +129,7 @@ function reef_condition_index!(
     juvenile_indicator::AbstractArray{<:AbstractFloat,2},
     rubble::AbstractArray{<:AbstractFloat,2},
     out_rci::AbstractArray{<:AbstractFloat,2};
-)::Nothing 
+)::Nothing
     RCI_CRIT = eltype(ltmp_cover)[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
         0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
@@ -159,15 +171,9 @@ representing categories from "Very Poor" to "Very Good".
 
 For each input there are five levels of condition ranging from very poor to very good. COTS
 and Rubble Cover is inverted, where high values indicate worse condition. Then the location
-is assigned a condition of very poor to very good if that location meets 60% of the metrics
-condition criteria. The condition level is then assigned a numerical value based on its
-categorisation
-
-0.9: Very Good
-0.7: Good
-0.5: Fair
-0.3: Poor
-0.1: Very Poor
+is assigned a condition of very poor to very good if that location meets at least 2 of the
+metrics condition criteria. The condition level is then assigned a numerical value based on
+its categorisation.
 
 # Arguments
 - `ltmp_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
@@ -177,6 +183,12 @@ categorisation
 
 # Returns
 Output RCI buffer with dimensions [timesteps ⋅ locations].
+
+# Reference
+1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
+    economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
+    2025, PREPRINT (Version 1) available at Research Square
+    [https://doi.org/10.21203/rs.3.rs-7644150/v1]
 """
 function reef_condition_index(
     relative_cover::AbstractArray{<:AbstractFloat,2},

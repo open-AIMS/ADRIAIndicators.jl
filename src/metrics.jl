@@ -97,9 +97,9 @@ Inverse Simpsons diversity indicator.
 
 # References
 1. Hill, M. O. (1973).
-Diversity and Evenness: A Unifying Notation and Its Consequences.
-Ecology, 54(2), 427-432.
-https://doi.org/10.2307/1934352
+    Diversity and Evenness: A Unifying Notation and Its Consequences.
+    Ecology, 54(2), 427-432.
+    https://doi.org/10.2307/1934352
 """
 function coral_evenness!(
     rel_cover::AbstractArray{T,3},
@@ -144,9 +144,9 @@ Matrix containing coral evenness metric of dimensions [timesteps ⋅ locations]
 
 # References
 1. Hill, M. O. (1973).
-Diversity and Evenness: A Unifying Notation and Its Consequences.
-Ecology, 54(2), 427-432.
-https://doi.org/10.2307/1934352
+    Diversity and Evenness: A Unifying Notation and Its Consequences.
+    Ecology, 54(2), 427-432.
+    https://doi.org/10.2307/1934352
 """
 function coral_evenness(rel_cover::Array{T,3})::Array{T,2} where {T<:Real}
     n_steps, _, n_locs = size(rel_cover)
