@@ -6,39 +6,34 @@ This method uses four inputs: relative cover, coral evenness, relative shelter v
 
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
-- `coral_evenness` : Coral evenness with dimensions [timesteps ⋅ locations].
 - `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
 - `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
 "
 function reef_condition_index!(
     relative_cover::AbstractArray{T,2},
-    coral_evenness::AbstractArray{T,2},
     relative_shelter_volume::AbstractArray{T,2},
     relative_juveniles::AbstractArray{T,2},
     out_rci::AbstractArray{T,2};
-    n_metrics::Int64=4
 )::Nothing where {T<:AbstractFloat}
     RCI_CRIT = T[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
-        0.15 0.25 0.25 0.35 0.45;  # coral evenness thresholds
-        0.175 0.30 0.30 0.35 0.45;  # shelter volume thresholds
-        0.15 0.25 0.25 0.25 0.35   # coral juveniles thresholds
+        0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
+        0.15 0.20 0.25 0.30 0.35   # coral juveniles thresholds
     ]
 
     CRIT_VAL = T[0.1, 0.3, 0.5, 0.7, 0.9]
 
-    CRITERIA_THRESHOLD = 0.6
+    CRITERIA_THRESHOLD = 2
 
     out_rci .= 0.1
     metrics_met = zeros(T, size(relative_cover)...)
     pass_mask = falses(size(relative_cover)...)
     for i in 1:size(CRIT_VAL, 1)
         @. metrics_met = (relative_cover >= RCI_CRIT[1, i]) +
-                         (coral_evenness >= RCI_CRIT[2, i]) +
-                         (relative_shelter_volume >= RCI_CRIT[3, i]) +
-                         (relative_juveniles >= RCI_CRIT[4, i])
-        @. pass_mask = (metrics_met / n_metrics) >= CRITERIA_THRESHOLD
+                         (relative_shelter_volume >= RCI_CRIT[2, i]) +
+                         (relative_juveniles >= RCI_CRIT[3, i])
+        @. pass_mask = metrics_met >= CRITERIA_THRESHOLD
 
         out_rci[pass_mask] .= CRIT_VAL[i]
     end
@@ -71,7 +66,6 @@ based on its categorisation
 
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
-- `coral_evenness` : Coral evenness with dimensions [timesteps ⋅ locations].
 - `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
 
@@ -80,7 +74,6 @@ Output RCI buffer with dimensions [timesteps ⋅ locations].
 """
 function reef_condition_index(
     relative_cover::AbstractArray{T,2},
-    coral_evenness::AbstractArray{T,2},
     relative_shelter_volume::AbstractArray{T,2},
     relative_juveniles::AbstractArray{T,2}
 )::AbstractArray{T,2} where {T<:AbstractFloat}
@@ -92,7 +85,6 @@ function reef_condition_index(
     out_rci = zeros(Float64, size(relative_cover))
     reef_condition_index!(
         relative_cover,
-        coral_evenness,
         relative_shelter_volume,
         relative_juveniles,
         out_rci
@@ -113,7 +105,6 @@ This method uses five inputs: relative cover, relative shelter volume, relative 
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
 - `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
-- `cots` : Abundance of crown of the starfish with dimensions [timesteps ⋅ locations].
 - `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
 - `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
 """
@@ -121,25 +112,19 @@ function reef_condition_index!(
     relative_cover::AbstractArray{T,2},
     relative_shelter_volume::AbstractArray{T,2},
     relative_juveniles::AbstractArray{T,2},
-    cots::AbstractArray{T,2},
     rubble::AbstractArray{T,2},
     out_rci::AbstractArray{T,2};
-    n_metrics::Int64=5
 )::Nothing where {T<:AbstractFloat}
     RCI_CRIT = T[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
-        # 0.15 0.20 0.25 0.35 0.45;  # coral evenness thresholds
         0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
         0.15 0.20 0.25 0.30 0.35;  # coral juveniles thresholds
-        # 0.15 0.15 0.15 0.15 0.25;  # ccas thresholds?
-        0.65 0.70 0.75 0.85 0.95;  # cots outbreak threshold
-        # 0.65 0.85 0.85 0.85 0.95;  # macro algae thresholds
-        0.15 0.70 0.75 0.80 0.85   # rubble thresholds
+        0.70 0.75 0.80 0.85 0.90  # rubble thresholds
     ]
 
     CRIT_VAL = T[0.1, 0.3, 0.5, 0.7, 0.9]
 
-    CRITERIA_THRESHOLD = 0.6
+    CRITERIA_THRESHOLD = 2
 
     out_rci .= 0.1
     metrics_met = zeros(T, size(relative_cover)...)
@@ -148,9 +133,8 @@ function reef_condition_index!(
         @. metrics_met = (relative_cover >= RCI_CRIT[1, i]) +
                          (relative_shelter_volume >= RCI_CRIT[2, i]) +
                          (relative_juveniles >= RCI_CRIT[3, i]) +
-                         ((1.0 .- cots) >= RCI_CRIT[4, i]) +
-                         ((1.0 .- rubble) >= RCI_CRIT[5, i])
-        @. pass_mask = (metrics_met / n_metrics) >= CRITERIA_THRESHOLD
+                         ((1.0 .- rubble) >= RCI_CRIT[4, i])
+        @. pass_mask = metrics_met >= CRITERIA_THRESHOLD
 
         out_rci[pass_mask] .= CRIT_VAL[i]
     end
@@ -186,7 +170,6 @@ categorisation
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
 - `relative_shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles`: Relative juvenile cover with dimensions [timesteps ⋅ locations].
-- `cots` : Abundance of crown of the starfish with dimensions [timesteps ⋅ locations].
 - `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
 
 # Returns
@@ -196,12 +179,11 @@ function reef_condition_index(
     relative_cover::AbstractArray{T,2},
     shelter_volume::AbstractArray{T,2},
     relative_juveniles::AbstractArray{T,2},
-    cots::AbstractArray{T,2},
     rubble::AbstractArray{T,2}
 )::AbstractArray{T,2} where {T<:AbstractFloat}
     out_rci::Array{T,2} = zeros(T, size(relative_cover)...)
     reef_condition_index!(
-        relative_cover, shelter_volume, relative_juveniles, cots, rubble, out_rci
+        relative_cover, shelter_volume, relative_juveniles, rubble, out_rci
     )
 
     return out_rci
