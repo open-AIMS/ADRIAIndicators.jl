@@ -1,4 +1,7 @@
 name = "ADRIAIndicators"
 uuid = "05ad51df-066f-4748-8c47-f6b67db83211"
 authors = ["Daniel Tan"]
-version = "0.1.0"
+version = "0.1.1"
+
+[compat]
+julia = "1.11"
