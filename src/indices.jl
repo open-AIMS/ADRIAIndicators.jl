@@ -2,7 +2,7 @@
 
 Calculate the Reef Condition Index (RCI).
 
-This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
+This method uses three inputs: relative cover, relative shelter volume, and relative juveniles.
 
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
@@ -43,20 +43,20 @@ function reef_condition_index!(
 end
 
 """
-    reef_condition_index(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
+    reef_condition_index(relative_cover::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Calculate the Reef Condition Index (RCI).
 
-This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
+This method uses three inputs: relative cover, relative shelter volume, and relative juveniles.
 
 The RCI is a categorical index assessing the overall health and condition of a reef location
-based on four key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
+based on three key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
 representing categories from "Very Poor" to "Very Good".
 
 For each input there are five levels of condition ranging from very poor to very good. Then
 the location is assigned a condition of very poor to very good if that location meets 60%
 of the metrics condition criteria. The condition level is then assigned a numerical value
-based on its categorisation
+based on its categorisation.
 
 0.9: Very Good
 0.7: Good
@@ -78,7 +78,7 @@ function reef_condition_index(
     relative_juveniles::AbstractArray{T,2}
 )::AbstractArray{T,2} where {T<:AbstractFloat}
     rc_size = size(relative_cover)
-    if (rc_size != size(coral_evenness)) || (rc_size != size(relative_shelter_volume)) || (rc_size != size(relative_juveniles))
+    if (rc_size != size(relative_shelter_volume)) || (rc_size != size(relative_juveniles))
         throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
     end
 
@@ -95,11 +95,11 @@ end
 
 
 """
-    reef_condition_index!(relative_cover::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    reef_condition_index!(relative_cover::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Condition Index (RCI).
 
-This method uses five inputs: relative cover, relative shelter volume, relative juveniles, COTS abundance, and rubble.
+This method uses four inputs: relative cover, relative shelter volume, relative juveniles, and rubble.
 
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
@@ -144,11 +144,11 @@ function reef_condition_index!(
 end
 
 """
-    reef_condition_index(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
+    reef_condition_index(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, rubble::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Calculate the Reef Condition Index (RCI).
 
-This method uses five inputs: relative cover, relative shelter volume, relative juveniles, COTS abundance, and rubble.
+This method uses four inputs: relative cover, relative shelter volume, relative juveniles, and rubble.
 
 The RCI is a categorical index assessing the overall health and condition of a reef location
 based on five key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
