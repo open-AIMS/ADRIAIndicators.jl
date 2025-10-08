@@ -65,6 +65,9 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 | Relative Cover                                   | Aggregation       |                 |
 | Relative Location Taxonomy Cover                 | Aggregation       |                 |
 | Relative Taxonomy Cover                          | Aggregation       |                 |
+| LTMP Cover                                       | Aggregation       |                 |
+| LTMP Location Taxonomy Cover                     | Aggregation       |                 |
+| LTMP Taxonomy Cover                              | Aggregation       |                 |
 | Relative Juveniles                               | Aggregation       |                 |
 | Relative Location Taxonomy Juveniles             | Aggregation       |                 |
 | Relative Taxonomy Juveniles                      | Aggregation       |                 |
