@@ -1,5 +1,5 @@
 ---
-title: 'ADRIAIndicators: a Julia package for summarizing reef ecological model outputs'
+title: 'ADRIAIndicators.jl: a Julia package for summarizing reef ecological model outputs'
 tags:
   - Julia
   - ecology
