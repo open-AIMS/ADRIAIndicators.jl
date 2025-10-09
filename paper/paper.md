@@ -21,7 +21,7 @@ authors:
   - name: Ken Anthony
     orcid:
     affiliation: 2
-  - name: Arne Adam
+  - name: Arne A. S. Adam
     orcid: 0000-0002-2960-7880
     affiliation: 3
   - name: Ryan F. Heneghan
