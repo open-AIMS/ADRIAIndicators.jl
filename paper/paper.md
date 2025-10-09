@@ -103,8 +103,8 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 | Coral Evenness                                   | Metric            | -               |
 | Reef Condition Index                             | Metric            |[@ReefConditionIndex]|
 | Reef Tourism Index                               | Metric            |               |
-| Reef Biodiversity Condition Index                | Metric            |               |
-| Reef Fish Index                                  | Metric            | [@ReefFishIndex]               |
+| Reef Biodiversity Condition Index                | Metric            | *[citation MW paper]* |
+| Reef Fish Index                                  | Metric            | [@ReefFishIndex] |
 | Relative Cover                                   | Aggregation       |                 |
 | Relative Location Taxonomy Cover                 | Aggregation       |                 |
 | Relative Taxonomy Cover                          | Aggregation       |                 |
