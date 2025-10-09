@@ -17,7 +17,7 @@ authors:
     affiliation: 1
   - name: Ken Anthony
     orcid: 
-    affiliation:
+    affiliation: 3
   - name: Pedro Ribeiro de Almeida
     orcid: 0009-0007-4814-3261
     affiliation: 1
@@ -26,13 +26,13 @@ authors:
     affiliation: 2
   - name: Ryan F. Heneghan
     orcid: 0000-0001-7626-1248
-    affiliation: 3
+    affiliation: 4
   - name: Michael McWilliam
     orcid: 0000-0001-5748-0859
-    affiliation: 4
+    affiliation: 5
   - name: Morgan Pratchett
     orcid: 0000-0002-1862-8459
-    affiliation: 4
+    affiliation: 5
   - name: Vanessa Haller-Bull
     orcid: 0000-0002-3919-7053
     affiliation: 1
@@ -50,10 +50,12 @@ affiliations:
    index: 1
  - name: The University of Queensland
    index: 2
- - name: Griffith University
+ - name: Nature Assets Consulting
    index: 3
- - name: James Cook University
+ - name: Griffith University
    index: 4
+ - name: James Cook University
+   index: 5
 date: 29 September 2025
 bibliography: paper.bib
 ---
