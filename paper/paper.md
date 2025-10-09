@@ -46,15 +46,15 @@ authors:
     orcid:
     affiliation: 1
 affiliations:
- - name: Australian Institute of Marine Science
+ - name: Australian Institute of Marine Science, Townsville, Queensland, Australia
    index: 1
- - name: The University of Queensland
+ - name: School of the Environment, University of Queensland, St Lucia, Queensland, Australia
    index: 2
  - name: Nature Assets Consulting
    index: 3
- - name: Griffith University
+ - name: School of Environment and Science, Griffith University, Nathan 4111, QLD Australia
    index: 4
- - name: James Cook University
+ - name: College of Science and Engineering, James Cook University, Townsville, QLD 4811, Australia
    index: 5
 date: 29 September 2025
 bibliography: paper.bib
