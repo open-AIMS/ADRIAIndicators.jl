@@ -71,7 +71,7 @@ indices and estimators derived from regression models. These tools help the
 assessment of species diversity, juvenile abundance, shelter volume, fish biomass, and
 overall reef condition, enabling consistent and comparable analysis across different coral
 ecology models such as CoralBlox [@CoralBlox], C-Scape [@CScape], ReefMod [@ReefMod], and
-CoCoNet *[citation]*.
+CoCoNet *[@CoCoNet]*.
 
 # Statement of Need
 
@@ -80,8 +80,8 @@ is a need for standardized tools to summarize and analyze these model outputs to
 inter-model comparison of environmental projections and implications of intervention
 activities. ADRIAIndicators.jl provides a set of standard indicator metrics that can be used
 to summarize the state of reef ecological model outputs that previously existed within the
-ADRIA.jl Decision Support package *[citation]* but was being reproduced for other coral
-ecology models. ADRIAIndicators.jl is written in Julia *[citation to https://doi.org/10.1137/141000671]*,
+ADRIA.jl Decision Support package [@ADRIA] but was being reproduced for other coral
+ecology models. ADRIAIndicators.jl is written in Julia [@Julia],
 a high-level, high-performance programming language for technical computing. This package
 is designed to be easy to use, and provides an in-place option for all metrics for any
 eventual wrappers that may be implemented in other languages such as Python and R.
