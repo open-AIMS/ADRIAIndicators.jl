@@ -88,11 +88,11 @@ eventual wrappers that may be implemented in other languages such as Python and 
 
 ## Available Metrics
 
-The functions implemented in ADRIAIndicators.jl are classified into three categories:
-Metrics, Aggregations, and Conversions. Aggregations are convenience functions for
+The indicators implemented in ADRIAIndicators.jl are classified into three categories:
+Metrics, Aggregations, and Conversions. Aggregations are convenience methods for
 reducing the dimensionality of data by summarizing arrays. Conversions handle
 transformations between different units or representations of coral cover.
-Metrics are functions that derive higher-level, interpretable indicators from the raw model
+Metrics derive higher-level, interpretable indicators from the raw model
 data, such as coral diversity, shelter volume, and composite indices for reef health.
 
 | **Metric Name**                                  | **Type**          | **Reference**   |
