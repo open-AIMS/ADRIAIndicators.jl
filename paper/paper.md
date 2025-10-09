@@ -12,9 +12,48 @@ authors:
   - name: Takuya Iwanaga
     orcid: 0000-0001-8173-0870
     affiliation: 1
+  - name: Rose Crocker
+    orcid: 0009-0007-3586-705X
+    affiliation: 1
+  - name: Ken Anthony
+    orcid: 
+    affiliation:
+  - name: Pedro Ribeiro de Almeida
+    orcid: 0009-0007-4814-3261
+    affiliation: 1
+  - name: Arne Adam
+    orcid: 0000-0002-2960-7880
+    affiliation: 2
+  - name: Ryan F. Heneghan
+    orcid: 0000-0001-7626-1248
+    affiliation: 3
+  - name: Michael McWilliam
+    orcid: 0000-0001-5748-0859
+    affiliation: 4
+  - name: Morgan Pratchett
+    orcid: 0000-0002-1862-8459
+    affiliation: 4
+  - name: Vanessa Haller-Bull
+    orcid: 0000-0002-3919-7053
+    affiliation: 1
+  - name: Yves-Marie Bozec
+    orcid: 0000-0002-7190-5187
+    affiliation: 2
+  - name: Anna K. Cresswell
+    orcid: 0000-0001-6740-9052
+    affiliation: 1
+  - name: Juan Carlos Ortiz
+    orcid: 
+    affiliation: 1
 affiliations:
  - name: Australian Institute of Marine Science
    index: 1
+ - name: The University of Queensland
+   index: 2
+ - name: Griffith University
+   index: 3
+ - name: James Cook University
+   index: 4
 date: 29 September 2025
 bibliography: paper.bib
 ---
