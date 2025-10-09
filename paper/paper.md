@@ -15,15 +15,15 @@ authors:
   - name: Rose Crocker
     orcid: 0009-0007-3586-705X
     affiliation: 1
-  - name: Ken Anthony
-    orcid:
-    affiliation: 3
   - name: Pedro Ribeiro de Almeida
     orcid: 0009-0007-4814-3261
     affiliation: 1
+  - name: Ken Anthony
+    orcid:
+    affiliation: 2
   - name: Arne Adam
     orcid: 0000-0002-2960-7880
-    affiliation: 2
+    affiliation: 3
   - name: Ryan F. Heneghan
     orcid: 0000-0001-7626-1248
     affiliation: 4
@@ -38,7 +38,7 @@ authors:
     affiliation: 1
   - name: Yves-Marie Bozec
     orcid: 0000-0002-7190-5187
-    affiliation: 2
+    affiliation: 3
   - name: Anna K. Cresswell
     orcid: 0000-0001-6740-9052
     affiliation: 1
@@ -48,9 +48,9 @@ authors:
 affiliations:
  - name: Australian Institute of Marine Science, Townsville, Queensland, Australia
    index: 1
- - name: School of the Environment, University of Queensland, St Lucia, Queensland, Australia
-   index: 2
  - name: Nature Assets Consulting
+   index: 2
+ - name: School of the Environment, University of Queensland, St Lucia, Queensland, Australia
    index: 3
  - name: School of Environment and Science, Griffith University, Nathan 4111, QLD Australia
    index: 4
