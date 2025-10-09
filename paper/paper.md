@@ -160,7 +160,11 @@ relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out);
 
 # Acknowledgements
 
-This package originally existed as a module of the ADRIA.jl platform and is managed by the
-Australian Institute of Marine Science (AIMS) Decision Support team.
+AIMS acknowledges the Traditional Owners of the Land and Sea Country on which these
+indicators were developed. This package originally existed as a module of the ADRIA.jl
+platform and is maintained by the Australian Institute of Marine Science (AIMS) Decision
+Support team. Work was conducted and funded as part of the Reef Restoration and Adaptation
+Program (RRAP) and includes additional work funded by the Great Barrier Reef Foundation
+(GBRF).
 
 # References
