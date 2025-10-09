@@ -67,8 +67,8 @@ models. Its primary purpose is to provide a standardized and dependency-free too
 transforming high-dimensional model outputs such as coral abundance by reef, time,
 species, and size class into lower-dimensional, interpretable metrics. The package offers a
 wide range of functions, from simple aggregations and unit conversions to more complex
-indices and estimators derived from regression models. These tools help the
-assessment of functional diversity, juvenile abundance, shelter volume, fish biomass, and
+indices and estimators derived from regression models. These tools help with the
+estimation of functional diversity, juvenile abundance, shelter volume, fish biomass, and
 overall reef condition, enabling consistent and comparable analysis across different coral
 ecology models such as CoralBlox [@CoralBlox], C~Scape [@CScape], ReefMod [@ReefMod], and
 CoCoNet *[@CoCoNet]*.
@@ -79,7 +79,7 @@ Models of coral reef ecosystems often produce large volumes of high-dimensional 
 is a need for standardized tools to summarize and analyze these model outputs to facilitate
 inter-model comparison of environmental projections and communicate results to managers and
 stakeholders. ADRIAIndicators.jl provides a set of standard indicator metrics that can be
-used to summarize the state of reef ecological model outputs that previously existed within
+used to summarize reef state in ecological model outputs that previously existed within
 the ADRIA.jl Decision Support package [@ADRIA] but was being reproduced in many workflows 
 that didn't use ADRIA.jl. ADRIAIndicators.jl is written in Julia [@Julia],
 a high-level, high-performance programming language for technical computing. This package
