@@ -114,7 +114,7 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 | Relative Taxonomy Juveniles                      | Aggregation       |                 |
 | Relative Habitable Cover to Reef Cover           | Conversion        |                 |
 | Reef Cover to Relative Habitable Cover           | Conversion        |                 |
-                                                   
+
 
 ## Usage
 
