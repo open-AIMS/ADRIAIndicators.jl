@@ -74,15 +74,15 @@ ecology models such as CoralBlox [@CoralBlox], C-Scape [@CScape], and ReefMod [@
 
 # Statement of Need
 
-Ecological models of coral reefs produce large amounts of high-dimensional data. There is a
-need for standardized tools to summarize and analyze these model outputs to facilitate
-comparison between different models and scenarios. ADRIAIndicators.jl provides a set of
-standard metrics that can be used to summarize the state of reef ecological model outputs
-that previously existed within the ADRIA.jl package but was being reproduced for other coral
-ecology models. The package is written in Julia, a high-level, high-performance programming language for
-technical computing. The package is designed to be easy to use, and
-provides an in-place option for all metrics for any eventual wrappers that may be
-implemented in python and R.
+Models of coral reef ecosystems can produce large volumes of high-dimensional data. There
+is a need for standardized tools to summarize and analyze these model outputs to facilitate
+inter-model comparison of environmental projections and implications of intervention
+activities. ADRIAIndicators.jl provides a set of standard metrics that can be used to
+summarize the state of reef ecological model outputs that previously existed within the
+ADRIA.jl package but was being reproduced for other coral ecology models. The package is
+written in Julia, a high-level, high-performance programming language for technical
+computing. The package is designed to be easy to use, and provides an in-place option for
+all metrics for any eventual wrappers that may be implemented in Python and R.
 
 ## Available Metrics
 
