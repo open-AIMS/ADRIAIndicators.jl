@@ -16,7 +16,7 @@ authors:
     orcid: 0009-0007-3586-705X
     affiliation: 1
   - name: Ken Anthony
-    orcid: 
+    orcid:
     affiliation: 3
   - name: Pedro Ribeiro de Almeida
     orcid: 0009-0007-4814-3261
@@ -43,7 +43,7 @@ authors:
     orcid: 0000-0001-6740-9052
     affiliation: 1
   - name: Juan Carlos Ortiz
-    orcid: 
+    orcid:
     affiliation: 1
 affiliations:
  - name: Australian Institute of Marine Science
