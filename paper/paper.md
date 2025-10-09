@@ -70,7 +70,8 @@ wide range of functions, from simple aggregations and unit conversions to more c
 indices and estimators derived from regression models. These tools help the
 assessment of species diversity, juvenile abundance, shelter volume, fish biomass, and
 overall reef condition, enabling consistent and comparable analysis across different coral
-ecology models such as CoralBlox [@CoralBlox], C-Scape [@CScape], and ReefMod [@ReefMod].
+ecology models such as CoralBlox [@CoralBlox], C-Scape [@CScape], ReefMod [@ReefMod], and
+CoCoNet *[citation]*.
 
 # Statement of Need
 
