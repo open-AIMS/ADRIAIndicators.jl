@@ -68,28 +68,28 @@ transforming high-dimensional model outputs such as coral abundance by reef, tim
 species, and size class into lower-dimensional, interpretable metrics. The package offers a
 wide range of functions, from simple aggregations and unit conversions to more complex
 indices and estimators derived from regression models. These tools help the
-assessment of species diversity, juvenile abundance, shelter volume, fish biomass, and
+assessment of functional diversity, juvenile abundance, shelter volume, fish biomass, and
 overall reef condition, enabling consistent and comparable analysis across different coral
-ecology models such as CoralBlox [@CoralBlox], C-Scape [@CScape], ReefMod [@ReefMod], and
+ecology models such as CoralBlox [@CoralBlox], C~Scape [@CScape], ReefMod [@ReefMod], and
 CoCoNet *[@CoCoNet]*.
 
 # Statement of Need
 
-Models of coral reef ecosystems can produce large volumes of high-dimensional data. There
+Models of coral reef ecosystems often produce large volumes of high-dimensional data. There
 is a need for standardized tools to summarize and analyze these model outputs to facilitate
-inter-model comparison of environmental projections and implications of intervention
-activities. ADRIAIndicators.jl provides a set of standard indicator metrics that can be used
-to summarize the state of reef ecological model outputs that previously existed within the
-ADRIA.jl Decision Support package [@ADRIA] but was being reproduced for other coral
-ecology models. ADRIAIndicators.jl is written in Julia [@Julia],
+inter-model comparison of environmental projections and communicate results to managers and
+stakeholders. ADRIAIndicators.jl provides a set of standard indicator metrics that can be
+used to summarize the state of reef ecological model outputs that previously existed within
+the ADRIA.jl Decision Support package [@ADRIA] but was being reproduced in many workflows 
+that didn't use ADRIA.jl. ADRIAIndicators.jl is written in Julia [@Julia],
 a high-level, high-performance programming language for technical computing. This package
 is designed to be easy to use, and provides an in-place option for all metrics for any
 eventual wrappers that may be implemented in other languages such as Python and R.
 
-## Available Metrics
+## Available Indicators
 
 The indicators implemented in ADRIAIndicators.jl are classified into three categories:
-Metrics, Aggregations, and Conversions. Aggregations are convenience methods for
+Aggregations, Conversions, and Metrics. Aggregations are convenience methods for
 reducing the dimensionality of data by summarizing arrays. Conversions handle
 transformations between different units or representations of coral cover.
 Metrics derive higher-level, interpretable indicators from the raw model
@@ -97,14 +97,6 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 
 | **Metric Name**                                  | **Type**          | **Reference**   |
 |--------------------------------------------------|-------------------|-----------------|
-| Absolute Shelter Volume                          | Metric            | [@URBINABARRETO2021107151; @ASTON_STRUCTURAL]|
-| Relative Shelter Volume                          | Metric            | -               |
-| Coral Diversity                                  | Metric            | [@CoralDiversity]|
-| Coral Evenness                                   | Metric            | -               |
-| Reef Condition Index                             | Metric            |[@ReefConditionIndex]|
-| Reef Tourism Index                               | Metric            |               |
-| Reef Biodiversity Condition Index                | Metric            | *[citation MW paper]* |
-| Reef Fish Index                                  | Metric            | [@ReefFishIndex] |
 | Relative Cover                                   | Aggregation       |                 |
 | Relative Location Taxonomy Cover                 | Aggregation       |                 |
 | Relative Taxonomy Cover                          | Aggregation       |                 |
@@ -116,6 +108,14 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 | Relative Taxonomy Juveniles                      | Aggregation       |                 |
 | Relative Habitable Cover to Reef Cover           | Conversion        |                 |
 | Reef Cover to Relative Habitable Cover           | Conversion        |                 |
+| Absolute Shelter Volume                          | Metric            | [@URBINABARRETO2021107151; @ASTON_STRUCTURAL]|
+| Relative Shelter Volume                          | Metric            | -               |
+| Coral Diversity                                  | Metric            | [@CoralDiversity]|
+| Coral Evenness                                   | Metric            | -               |
+| Reef Condition Index                             | Metric            |[@ReefConditionIndex]|
+| Reef Tourism Index                               | Metric            |               |
+| Reef Biodiversity Condition Index                | Metric            | *[citation MW paper]* |
+| Reef Fish Index                                  | Metric            | [@ReefFishIndex] |
 
 
 ## Usage
@@ -128,7 +128,7 @@ The order of dimensions is always the same in ADRIAIndicators.jl,
 4. Locations
 5. Scenarios
 
-If a dimension is missing then the order remains the same however the missing dimensions is
+If a dimension is missing then the order remains the same however the missing dimensions are
 excluded. Furthermore, all metrics have an option to provide a buffer as input in the cases
 where one wants to write the metric into an existing array or sub-array. This implementation
 is relied upon by functions that allocate the returned array as-well and was chosen to
