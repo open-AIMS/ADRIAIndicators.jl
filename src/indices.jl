@@ -3,8 +3,9 @@
 
 Calculate the Reef Condition Index (RCI).
 
-This method uses three inputs: LTMP cover, relative shelter volume, and juvenile
-indicator.
+This method uses three inputs: LTMP coral cover, relative shelter volume, and juvenile
+indicator. This is implementation is limited to using outputs that can be provided by
+ecological models that only model corals.
 
 # Arguments
 - `ltmp_cover` : LTMP Coral Cover with dimensions [timesteps ⋅ locations].
@@ -108,7 +109,8 @@ end
 Calculate the Reef Condition Index (RCI).
 
 This method uses four inputs: LTMP cover, relative shelter volume, juvenile indicator, and
-rubble.
+rubble. This is implementation is limited to using outputs that can be provided by
+ecological models that only model corals.
 
 # Arguments
 - `ltmp_cover` : LTMP Coral Cover with dimensions [timesteps ⋅ locations].
@@ -209,7 +211,8 @@ end
 """
     reef_biodiversity_condition_index!(rc::AbstractArray{T,2}, cd::AbstractArray{T,2}, sv::AbstractArray{T,2}, out_rbci::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
-Calculate the Reef Biodiversity Condition Index (RBCI).
+Calculate the Reef Biodiversity Condition Index (RBCI). This is implementation is limited to
+using outputs that can be provided by coral ecology models.
 
 # Arguments
 - `rc` : Relative coral cover.
@@ -239,6 +242,8 @@ relative cover (RC), coral diversity (CD), and shelter volume (SV). Given as
 \\text{RBCI} = \\frac{\\text{RC} + \\text{CD} + \\text{SV}}{3}.
 \\end{align*}
 ```
+This is implementation is limited to using outputs that can be provided by coral ecology
+models.
 
 # Arguments
 - `relative_cover` : Relative coral cover.
