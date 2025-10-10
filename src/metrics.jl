@@ -285,7 +285,7 @@ Relative shelter volume (RSV) is given by
 
 ```math
 \\begin{align*}
-    \\text{RSV}(x) = \frac{ASV(x)}{MSV(x)},
+    \\text{RSV}(x) = \\frac{ASV(x)}{MSV(x)},
 \\end{align*}
 ```
 

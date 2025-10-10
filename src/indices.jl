@@ -13,7 +13,7 @@ ecological models that only model corals.
 - `juvenile_indicator`: Juvenile Indicator with dimensions [timesteps ⋅ locations].
 - `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
 
-# Reference
+# References
 1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
     economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
     2025, PREPRINT (Version 1) available at Research Square
@@ -75,7 +75,7 @@ numerical value based on its categorisation.
 # Returns
 Output RCI buffer with dimensions [timesteps ⋅ locations].
 
-# Reference
+# References
 1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
     economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
     2025, PREPRINT (Version 1) available at Research Square
@@ -119,7 +119,7 @@ ecological models that only model corals.
 - `rubble` : Relative rubble cover with dimensions [timesteps ⋅ locations].
 - `out_rci` : Output RCI buffer with dimensions [timesteps ⋅ locations].
 
-# Reference
+# References
 1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
     economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
     2025, PREPRINT (Version 1) available at Research Square
@@ -186,7 +186,7 @@ its categorisation.
 # Returns
 Output RCI buffer with dimensions [timesteps ⋅ locations].
 
-# Reference
+# References
 1. Ryan F. Heneghan, Gabriela Scheufele, Yves-Marie Bozec et al. A framework to inform
     economic valuation of non-use benefits from coral-reef intervention efforts, 02 October
     2025, PREPRINT (Version 1) available at Research Square
