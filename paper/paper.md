@@ -84,9 +84,10 @@ Models of coral reef ecosystems often produce large volumes of high-dimensional 
 is a need for standardized tools to summarize and analyze these model outputs to facilitate
 inter-model comparison of environmental projections and communicate results to managers and
 stakeholders. ADRIAIndicators.jl provides a set of standard indicator metrics that can be
-used to summarize reef state in ecological model outputs that previously existed within
-the ADRIA.jl Decision Support package [@ADRIA] but were being reproduced in many workflows
-that did not use ADRIA.jl.
+used to summarize reef state in ecological model outputs. These were originally implemented
+within the ADRIA.jl Decision Support package [@ADRIA] but were being reproduced in many
+workflows that did not use ADRIA.jl. Separating these indicators from ADRIA.jl is part of
+efforts to better compartmentalize code in a more reusable and interoperable manner.
 
 ADRIAIndicators.jl is written in Julia [@Julia], a high-level, high-performance programming
 language for technical computing. This package is designed to be easy to use, and provides
