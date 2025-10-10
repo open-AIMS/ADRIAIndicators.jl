@@ -45,6 +45,9 @@ authors:
   - name: Juan Carlos Ortiz
     orcid:
     affiliation: 1
+  - name: Scott Condie
+    orcid: 0000-0002-5943-014X
+    affiliation: 6
 affiliations:
  - name: Australian Institute of Marine Science, Townsville, Queensland, Australia
    index: 1
@@ -56,6 +59,8 @@ affiliations:
    index: 4
  - name: College of Science and Engineering, James Cook University, Townsville, QLD 4811, Australia
    index: 5
+ - name: CSIRO Environment
+   index: 6
 date: 29 September 2025
 bibliography: paper.bib
 ---
@@ -71,7 +76,7 @@ indices and estimators derived from regression models. These tools help with the
 estimation of functional diversity, juvenile abundance, shelter volume, fish biomass, and
 overall reef condition, enabling consistent and comparable analysis across different coral
 ecology models such as CoralBlox [@CoralBlox], C~Scape [@CScape], ReefMod [@ReefMod], and
-CoCoNet *[@CoCoNet]*.
+CoCoNet [@CoCoNet].
 
 # Statement of Need
 
@@ -80,7 +85,7 @@ is a need for standardized tools to summarize and analyze these model outputs to
 inter-model comparison of environmental projections and communicate results to managers and
 stakeholders. ADRIAIndicators.jl provides a set of standard indicator metrics that can be
 used to summarize reef state in ecological model outputs that previously existed within
-the ADRIA.jl Decision Support package [@ADRIA] but was being reproduced in many workflows 
+the ADRIA.jl Decision Support package [@ADRIA] but was being reproduced in many workflows
 that didn't use ADRIA.jl. ADRIAIndicators.jl is written in Julia [@Julia],
 a high-level, high-performance programming language for technical computing. This package
 is designed to be easy to use, and provides an in-place option for all metrics for any
@@ -117,6 +122,29 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 | Reef Biodiversity Condition Index                | Metric            | *[citation MW paper]* |
 | Reef Fish Index                                  | Metric            | [@ReefFishIndex] |
 
+*A dash (-) in the 'Reference' column indicates the reference is the same as the entry directly above it.*
+
+### Indicator Summaries
+
+-   **Relative Cover**: Calculates the relative cover per location by summing over functional groups and size classes.
+-   **Relative Location Taxonomy Cover**: Calculates the relative cover for each location and functional group by aggregating size classes.
+-   **Relative Taxonomy Cover**: Calculates the relative cover for each functional group, summed up across all locations.
+-   **LTMP Cover**: Calculates the coral cover for each location relative to total reef area. More comparable to Long Term Monitoring Program (LTMP) results the relative cover.
+-   **LTMP Location Taxonomy Cover**: Calculates the coral cover for each location and functional group relative to total reef area. More comparable to LTMP results the relative cover.
+-   **LTMP Taxonomy Cover**: Calculates the coral cover for each functional groups relative to total reef area. More comparable to LTMP results the relative cover.
+-   **Relative Juveniles**: Calculates the relative coral cover composed of juvenile corals.
+-   **Relative Location Taxonomy Juveniles**: Calculates the relative cover of juvenile corals for each location and functional group.
+-   **Relative Taxonomy Juveniles**: Calculates the relative cover of juvenile corals for each functional group, summed up across all locations.
+-   **Relative Habitable Cover to Reef Cover**: Converts relative coral cover (as a proportion of habitable area) to LTMP cover (as a proportion of total reef area).
+-   **Reef Cover to Relative Habitable Cover**: Converts LTMP cover to relative coral cover.
+-   **Absolute Shelter Volume**: Calculates the absolute shelter volume (in m³) provided by corals.
+-   **Relative Shelter Volume**: Calculates the relative shelter volume, expressed as a proportion of the theoretical maximum shelter volume for a given area.
+-   **Coral Diversity**: Calculates coral diversity at each location using the Simpson's Diversity Index, which accounts for the number and relative abundance of coral functional groups.
+-   **Coral Evenness**: Calculates the evenness of coral functional groups at each location using the Inverse Simpson's Index, indicating how similar in abundance the different functional groups are.
+-   **Reef Condition Index**: A categorical index (from 'Very Poor' to 'Very Good') that assesses overall reef health based on coral cover, shelter volume, juvenile abundance, and rubble cover.
+-   **Reef Tourism Index**: A continuous index fitted with a linear regression model to assess reef health for tourism purposes, based on metrics like coral cover, evenness, shelter volume, and juvenile abundance.
+-   **Reef Biodiversity Condition Index**: An index calculated as the average of relative coral cover, coral diversity, and relative shelter volume to represent the state of reef biodiversity.
+-   **Reef Fish Index**: An index that estimates fish biomass based on a relationship between coral cover and structural complexity.
 
 ## Usage
 
