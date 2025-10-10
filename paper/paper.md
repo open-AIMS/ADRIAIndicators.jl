@@ -126,25 +126,77 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 
 ### Indicator Summaries
 
--   **Relative Cover**: Calculates the relative cover per location by summing over functional groups and size classes.
+Each indicator is briefly summarized below. Full implementation details are found in the
+documentation, including descriptions of their mathematical formulations where appropriate.
+
+#### Coral Cover
+
+Estimates of coral cover are provided in both **Relative** and **Absolute** forms and
+estimated for each location by summing over functional groups and their size classes. As
+the indicators are agnostic to the spatial scale being assessed, the term "location" is used
+to convey an arbitrary unit of analysis. For example, a location could be a representative
+reef, site within a reef, a transect, or patch/plot of reef.
+
+Relative cover is calculated to be *relative* to the location's coral habitable area. The
+meaning of "habitable" area is subject to much debate, however it can be construed as being
+representative of the area of hard substrate or a location's carrying capacity. The term
+*LTMP cover* is used to convey that cover estimates are made relative to estimates of the
+total reef area, inclusive of reef areas where corals are unable to settle. As such,
+LTMP cover estimates may never reach 100%. This approach is more in line with the values
+reported by the Long-Term Monitoring Program (LTMP). The *Absolute* form provides estimates
+of the area of coral cover expressed in SI units (typically m²).
+
+Relevant indicators:
+
+-   **Relative Cover**: Calculates the total relative cover per location by summing over functional groups and size classes.
 -   **Relative Location Taxonomy Cover**: Calculates the relative cover for each location and functional group by aggregating size classes.
--   **Relative Taxonomy Cover**: Calculates the relative cover for each functional group, summed up across all locations.
--   **LTMP Cover**: Calculates the coral cover for each location relative to total reef area. More comparable to Long Term Monitoring Program (LTMP) results than the relative cover metrics.
--   **LTMP Location Taxonomy Cover**: Calculates the coral cover for each location and functional group relative to total reef area. More comparable to LTMP results than the relative cover metrics.
--   **LTMP Taxonomy Cover**: Calculates the coral cover for each functional groups relative to total reef area. More comparable to LTMP results than the relative cover metrics.
--   **Relative Juveniles**: Calculates the relative coral cover composed of juvenile corals.
--   **Relative Location Taxonomy Juveniles**: Calculates the relative cover of juvenile corals for each location and functional group.
--   **Relative Taxonomy Juveniles**: Calculates the relative cover of juvenile corals for each functional group, summed up across all locations.
--   **Relative Habitable Cover to Reef Cover**: Converts relative coral cover (as a proportion of habitable area) to LTMP cover (as a proportion of total reef area).
--   **Reef Cover to Relative Habitable Cover**: Converts LTMP cover to relative coral cover.
+-   **Relative Taxonomy Cover**: Provides an indication of the coral cover decomposed by functional group by aggregating their size classes for all locations.
+-   **LTMP Cover**: Calculates the coral cover for each location relative to estimated total reef area. More comparable to the values reported by the Long Term Monitoring Program (LTMP).
+-   **LTMP Location Taxonomy Cover**: As above, but decomposes the coral cover estimates to each functional group by location.
+-   **LTMP Taxonomy Cover**: As above, but providing total values per functional group.
+-   **Relative Juveniles**: Calculates the relative coral cover provided by juvenile corals. User indicates which size classes are construed to be "juvenile".
+-   **Relative Location Taxonomy Juveniles**: As above, but for each location and functional group.
+-   **Relative Taxonomy Juveniles**: As above, but summed across all locations.
+
+#### Shelter Volume
+
+Calculates the volume of shelter provided by the given coral cover. In typical use, values
+are indicative of the modelled *live* coral population, however it is noted that non-living
+substrate may also provide some form of shelter.
+
+Relevant indicators:
+
 -   **Absolute Shelter Volume**: Calculates the absolute shelter volume (in m³) provided by corals.
 -   **Relative Shelter Volume**: Calculates the relative shelter volume, expressed as a proportion of the theoretical maximum shelter volume for a given area.
+
+#### Diversity and Evenness
+
+These indicators provide estimates of the diversity and evenness of coral functional groups.
+
+Relevant indicators:
+
 -   **Coral Diversity**: Calculates coral diversity at each location using the Simpson's Diversity Index, which accounts for the number and relative abundance of coral functional groups.
 -   **Coral Evenness**: Calculates the evenness of coral functional groups at each location using the Inverse Simpson's Index, indicating how similar in abundance the different functional groups are.
+
+#### Condition Indices
+
+Composite indices (or meta-metrics; metrics of metrics) that provide a single value
+indication of reef condition(s).
+
 -   **Reef Condition Index**: A categorical index (from 'Very Poor' to 'Very Good') that assesses overall reef health based on coral cover, shelter volume, juvenile abundance, and rubble cover.
 -   **Reef Tourism Index**: A continuous index fitted with a linear regression model to assess reef health for tourism purposes, based on metrics like coral cover, evenness, shelter volume, and juvenile abundance.
--   **Reef Biodiversity Condition Index**: An index calculated as the average of relative coral cover, coral diversity, and relative shelter volume to represent the state of reef biodiversity.
 -   **Reef Fish Index**: An index that estimates fish biomass based on a relationship between coral cover and structural complexity.
+-   **Reef Biodiversity Condition Index**: An index calculated as the average of relative coral cover, coral diversity, and relative shelter volume to represent the state of reef biodiversity.
+
+#### Conversions
+
+These are convenience/helper methods to aid in data transformations to various forms.
+
+Relevant methods:
+
+-   **Relative Habitable Cover to Reef Cover**: Converts relative coral cover (proportion of habitable area) to LTMP cover (proportion of total reef area).
+-   **Reef Cover to Relative Habitable Cover**: Converts LTMP cover to relative coral cover.
+
 
 ## Usage
 
