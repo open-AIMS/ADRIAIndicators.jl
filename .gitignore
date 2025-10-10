@@ -6,3 +6,5 @@ build/*.dll
 *.crossref
 *.latex
 *.pdf
+
+.vscode/
