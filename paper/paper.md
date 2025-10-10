@@ -85,7 +85,7 @@ is a need for standardized tools to summarize and analyze these model outputs to
 inter-model comparison of environmental projections and communicate results to managers and
 stakeholders. ADRIAIndicators.jl provides a set of standard indicator metrics that can be
 used to summarize reef state in ecological model outputs that previously existed within
-the ADRIA.jl Decision Support package [@ADRIA] but was being reproduced in many workflows
+the ADRIA.jl Decision Support package [@ADRIA] but were being reproduced in many workflows
 that didn't use ADRIA.jl. ADRIAIndicators.jl is written in Julia [@Julia],
 a high-level, high-performance programming language for technical computing. This package
 is designed to be easy to use, and provides an in-place option for all metrics for any
@@ -129,9 +129,9 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 -   **Relative Cover**: Calculates the relative cover per location by summing over functional groups and size classes.
 -   **Relative Location Taxonomy Cover**: Calculates the relative cover for each location and functional group by aggregating size classes.
 -   **Relative Taxonomy Cover**: Calculates the relative cover for each functional group, summed up across all locations.
--   **LTMP Cover**: Calculates the coral cover for each location relative to total reef area. More comparable to Long Term Monitoring Program (LTMP) results the relative cover.
--   **LTMP Location Taxonomy Cover**: Calculates the coral cover for each location and functional group relative to total reef area. More comparable to LTMP results the relative cover.
--   **LTMP Taxonomy Cover**: Calculates the coral cover for each functional groups relative to total reef area. More comparable to LTMP results the relative cover.
+-   **LTMP Cover**: Calculates the coral cover for each location relative to total reef area. More comparable to Long Term Monitoring Program (LTMP) results than the relative cover metrics.
+-   **LTMP Location Taxonomy Cover**: Calculates the coral cover for each location and functional group relative to total reef area. More comparable to LTMP results than the relative cover metrics.
+-   **LTMP Taxonomy Cover**: Calculates the coral cover for each functional groups relative to total reef area. More comparable to LTMP results than the relative cover metrics.
 -   **Relative Juveniles**: Calculates the relative coral cover composed of juvenile corals.
 -   **Relative Location Taxonomy Juveniles**: Calculates the relative cover of juvenile corals for each location and functional group.
 -   **Relative Taxonomy Juveniles**: Calculates the relative cover of juvenile corals for each functional group, summed up across all locations.
