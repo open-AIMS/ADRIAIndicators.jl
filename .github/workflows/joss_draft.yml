@@ -1,0 +1,37 @@
+ name: Compile JOSS Paper
+
+ # This workflow runs on every push to the main branch
+ on:
+   push:
+     branches:
+       - main
+
+ jobs:
+   paper:
+     runs-on: ubuntu-latest
+     name: Compile JOSS Paper PDF
+
+     steps:
+       # 1. Check out the repository code so the workflow can access it
+       - name: Check out repository
+         uses: actions/checkout@v4
+
+       # 2. Compile the paper using the official openjournals/inara Docker image
+       - name: Compile paper.md
+         run: |
+           # The --rm flag removes the container after use
+           # The --volume flag mounts the current directory into the container's /data directory
+           # The --user flag ensures the output PDF has the correct permissions
+           # The final lines are the command to the Inara compiler
+           docker run --rm \
+             --volume ${{ github.workspace }}:/data \
+             --user $(id -u):$(id -g) \
+             openjournals/inara \
+             -o paper.pdf -i paper.md
+
+       # 3. Upload the generated PDF as a workflow artifact
+       - name: Upload PDF artifact
+         uses: actions/upload-artifact@v4
+         with:
+           name: paper
+           path: paper.pdf
