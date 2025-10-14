@@ -27,11 +27,11 @@
              --volume ${{ github.workspace }}:/data \
              --user $(id -u):$(id -g) \
              openjournals/inara \
-             -o paper.pdf -i paper.md
+             -o paper/paper.pdf paper/paper.md
 
        # 3. Upload the generated PDF as a workflow artifact
        - name: Upload PDF artifact
          uses: actions/upload-artifact@v4
          with:
            name: paper
-           path: paper.pdf
+           path: paper/paper.pdf
