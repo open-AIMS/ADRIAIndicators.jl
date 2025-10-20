@@ -123,7 +123,6 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 | Coral Diversity                                  | Metric            | [@CoralDiversity]|
 | Coral Evenness                                   | Metric            | -               |
 | Reef Condition Index                             | Metric            |[@ReefConditionIndex]|
-| Reef Tourism Index                               | Metric            |               |
 | Reef Fish Index                                  | Metric            | [@ReefFishIndex] |
 
 *A dash (-) in the 'Reference' column indicates the reference is the same as the entry directly above it.*
@@ -188,7 +187,6 @@ Composite indices (or meta-metrics; metrics of metrics) that provide a single va
 indication of reef condition(s).
 
 -   **Reef Condition Index**: A categorical index (from 'Very Poor' to 'Very Good') that assesses overall reef health based on coral cover, shelter volume, juvenile abundance, and rubble cover.
--   **Reef Tourism Index**: A continuous version of the reef condition index, fitted with a linear regression model to assess reef health for tourism purposes, based on metrics like coral cover, evenness, shelter volume, and juvenile abundance.
 -   **Reef Fish Index**: An index that estimates fish biomass based on a relationship between coral cover and structural complexity.
 
 #### Conversions
