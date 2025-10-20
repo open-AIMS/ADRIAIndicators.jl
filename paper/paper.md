@@ -45,9 +45,6 @@ authors:
   - name: Juan Carlos Ortiz
     orcid:
     affiliation: 1
-  - name: Scott Condie
-    orcid: 0000-0002-5943-014X
-    affiliation: 6
 affiliations:
  - name: Australian Institute of Marine Science, Townsville, Queensland, Australia
    index: 1
@@ -59,8 +56,6 @@ affiliations:
    index: 4
  - name: College of Science and Engineering, James Cook University, Townsville, QLD 4811, Australia
    index: 5
- - name: CSIRO Environment, Hobart, TAS, Australia
-   index: 6
 date: 29 September 2025
 bibliography: paper.bib
 ---

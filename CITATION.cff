@@ -40,9 +40,6 @@ authors:
   - family-names: "Ortiz"
     given-names: "Juan Carlos"
     orcid:
-  - family-names: "Condie"
-    given-names: "Scott"
-    orcid: "https://orcid.org/0000-0002-5943-014X"
 title: "ADRIAIndicators: a Julia package for summarizing reef ecological model outputs"
 version: 0.1.0
 doi: https://doi.org/10.5281/zenodo.17032474
