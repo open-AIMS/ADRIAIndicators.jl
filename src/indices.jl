@@ -272,9 +272,10 @@ function reef_biodiversity_condition_index(
 end
 
 """
-    reef_tourism_index!(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    reef_tourism_index_no_rubble!(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
-Calculate the Reef Tourism Index (RTI) for a single scenario.
+Calculate the Reef Tourism Index (RTI) for a single scenario without rubble as input. This
+version of the RTI is for ecological models that do not model rubble.
 
 This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
 
@@ -285,7 +286,7 @@ This method uses four inputs: relative cover, coral evenness, relative shelter v
 - `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
 - `out_rti` : Output array buffer for the RTI with dimensions [timesteps ⋅ locations].
 """
-function reef_tourism_index!(
+function reef_tourism_index_no_rubble!(
     relative_cover::AbstractArray{<:AbstractFloat,2},
     coral_evenness::AbstractArray{<:AbstractFloat,2},
     relative_shelter_volume::AbstractArray{<:AbstractFloat,2},
@@ -311,9 +312,10 @@ function reef_tourism_index!(
 end
 
 """
-    reef_tourism_index(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
+    reef_tourism_index_no_rubble(relative_cover::AbstractArray{T,2}, coral_evenness::AbstractArray{T,2}, relative_shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
-Calculate the Reef Tourism Index (RTI) for a single scenario.
+Calculate the Reef Tourism Index (RTI) for a single scenario, without rubble as input. This
+version of the RTI is for ecological models that do not model rubble.
 
 This method uses four inputs: relative cover, coral evenness, relative shelter volume, and relative juveniles.
 
@@ -328,7 +330,7 @@ The RTI is a continuous version of the Reef Condition Index, fitted with a linea
 # Returns
 A 2D array of the Reef Tourism Index with dimensions [timesteps ⋅ locations].
 """
-function reef_tourism_index(
+function reef_tourism_index_no_rubble(
     relative_cover::AbstractArray{<:AbstractFloat,2},
     coral_evenness::AbstractArray{<:AbstractFloat,2},
     relative_shelter_volume::AbstractArray{<:AbstractFloat,2},
@@ -352,17 +354,16 @@ function reef_tourism_index(
 end
 
 """
-    reef_tourism_index!(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    reef_tourism_index!(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, rubble::AbstractArray{T,2}, out_rti::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the Reef Tourism Index (RTI) for a single scenario.
 
-This method uses five inputs: relative cover, shelter volume, relative juveniles, COTS abundance, and rubble.
+This method uses four inputs: relative cover, shelter volume, relative juveniles, and rubble.
 
 # Arguments
 - `relative_cover` : Relative coral cover with dimensions [timesteps ⋅ locations].
 - `shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
-- `cots` : COTS abundance as a count with dimensions [timesteps ⋅ locations].
 - `rubble` : Rubble as a proportion of location area with dimensions [timesteps ⋅ locations].
 - `out_rti` : Output array buffer for the RTI with dimensions [timesteps ⋅ locations].
 """
@@ -370,24 +371,21 @@ function reef_tourism_index!(
     relative_cover::AbstractArray{<:AbstractFloat,2},
     shelter_volume::AbstractArray{<:AbstractFloat,2},
     relative_juveniles::AbstractArray{<:AbstractFloat,2},
-    cots::AbstractArray{<:AbstractFloat,2},
     rubble::AbstractArray{<:AbstractFloat,2},
     out_rti::AbstractArray{<:AbstractFloat,2}
 )::Nothing
     # Intercept and coefficient resulting from regressions.
-    intcp = 0.47947
+    intcp = -0.871
     rc_coef = 0.7678
     sv_coef = 0.2945
     jv_coef = 0.8371
-    cots_coef = 0.2822
     rubble_coef = 0.7764
 
     out_rti .= intcp .+
         (rc_coef .* relative_cover) .+
         (sv_coef .* shelter_volume) .+
         (jv_coef .* relative_juveniles) .+
-        (cots_coef .* cots) .+
-        (rubble_coef .* rubble)
+        (rubble_coef .* ( 1 .- rubble))
 
     out_rti .= round.(clamp.(out_rti, 0.1, 0.9); digits=2)
 
@@ -395,19 +393,18 @@ function reef_tourism_index!(
 end
 
 """
-    reef_tourism_index(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, cots::AbstractArray{T,2}, rubble::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
+    reef_tourism_index(relative_cover::AbstractArray{T,2}, shelter_volume::AbstractArray{T,2}, relative_juveniles::AbstractArray{T,2}, rubble::AbstractArray{T,2})::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Calculate the Reef Tourism Index (RTI) for a single scenario. The RTI is the Reef
 Condition Index made continuous by fitting a linear regression model using relative cover,
-shelter volume, relative juveniles, cots abundance and rubble to underpin it.
+shelter volume, relative juveniles, and rubble to underpin it.
 
-This method uses five inputs: relative cover, shelter volume, relative juveniles, COTS abundance, and rubble.
+This method uses four inputs: relative cover, shelter volume, relative juveniles, and rubble.
 
 # Arguments
 - `relative_cover` : Relative Coral Cover with dimensions [timesteps ⋅ locations].
 - `shelter_volume` : Relative shelter volume with dimensions [timesteps ⋅ locations].
 - `relative_juveniles` : Relative juvenile cover with dimensions [timesteps ⋅ locations].
-- `cots` : COTS abundance with dimensions [timesteps ⋅ locations].
 - `rubble` : Rubble as proportion of location area with dimensions [timesteps ⋅ locations].
 
 # Returns
@@ -417,17 +414,16 @@ function reef_tourism_index(
     relative_cover::AbstractArray{<:AbstractFloat,2},
     shelter_volume::AbstractArray{<:AbstractFloat,2},
     relative_juveniles::AbstractArray{<:AbstractFloat,2},
-    cots::AbstractArray{<:AbstractFloat,2},
     rubble::AbstractArray{<:AbstractFloat,2}
 )::AbstractArray{<:AbstractFloat,2}
     rc_size = size(relative_cover)
-    if (rc_size != size(shelter_volume)) || (rc_size != size(relative_juveniles)) || (rc_size != size(cots)) || (rc_size != size(cots)) || (rc_size != size(rubble))
+    if (rc_size != size(shelter_volume)) || (rc_size != size(relative_juveniles)) || (rc_size != size(rubble))
         throw(DimensionMismatch("All input metric arrays must have the same dimensions."))
     end
 
     out_rti = zeros(eltype(relative_cover), rc_size)
     reef_tourism_index!(
-        relative_cover, shelter_volume, relative_juveniles, cots, rubble, out_rti
+        relative_cover, shelter_volume, relative_juveniles, rubble, out_rti
     )
 
     return out_rti
