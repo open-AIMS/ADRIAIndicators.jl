@@ -1,37 +1,29 @@
- name: Compile JOSS Paper
+name: Draft PDF
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - paper/**
+      - .github/workflows/draft-pdf.yml
 
- # This workflow runs on every push to the main branch
- on:
-   push:
-     branches:
-       - main
-
- jobs:
-   paper:
-     runs-on: ubuntu-latest
-     name: Compile JOSS Paper PDF
-
-     steps:
-       # 1. Check out the repository code so the workflow can access it
-       - name: Check out repository
-         uses: actions/checkout@v4
-
-       # 2. Compile the paper using the official openjournals/inara Docker image
-       - name: Compile paper.md
-         run: |
-           # The --rm flag removes the container after use
-           # The --volume flag mounts the current directory into the container's /data directory
-           # The --user flag ensures the output PDF has the correct permissions
-           # The final lines are the command to the Inara compiler
-           docker run --rm \
-             --volume ${{ github.workspace }}:/data \
-             --user $(id -u):$(id -g) \
-             openjournals/inara \
-             -o pdf paper/paper.md
-
-       # 3. Upload the generated PDF as a workflow artifact
-       - name: Upload PDF artifact
-         uses: actions/upload-artifact@v4
-         with:
-           name: paper
-           path: paper/paper.pdf
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    name: Paper Draft
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build draft PDF
+        uses: openjournals/openjournals-draft-action@master
+        with:
+          journal: joss
+          # This should be the path to the paper within your repo.
+          paper-path: paper/paper.md
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          # This is the output path where Pandoc will write the compiled
+          # PDF. Note, this should be the same directory as the input
+          # paper.md
+          path: paper/paper.pdf
