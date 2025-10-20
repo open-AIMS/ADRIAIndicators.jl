@@ -342,7 +342,7 @@ function reef_tourism_index_no_rubble(
     end
 
     out_rti = zeros(Float64, rc_size)
-    reef_tourism_index!(
+    reef_tourism_index_no_rubble!(
         relative_cover,
         coral_evenness,
         relative_shelter_volume,
