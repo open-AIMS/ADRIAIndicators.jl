@@ -123,66 +123,6 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 
 *A dash (-) in the 'Reference' column indicates the reference is the same as the entry directly above it.*
 
-### Indicator Summaries
-
-#### Coral Cover
-
-The package supports aggregating relative cover over varying dimensions and calculating
-slightly different forms. Relative cover is calculated to be *relative* to the location's
-coral habitable area. The term *LTMP cover* is used to convey that cover
-estimates are made relative to estimates of the
-total reef area, inclusive of reef areas where corals are unable to settle. As such,
-LTMP cover estimates may never reach 100%. This form is more in line with the values
-reported by the Long-Term Monitoring Program (LTMP).
-
-Relevant indicators:
-
--   **Relative Cover**
--   **Relative Location Taxonomy Cover**
--   **Relative Taxonomy Cover**
--   **LTMP Cover**
--   **LTMP Location Taxonomy Cover**
--   **LTMP Taxonomy Cover**
--   **Relative Juveniles**
--   **Relative Location Taxonomy Juveniles**
--   **Relative Taxonomy Juveniles**
-
-#### Shelter Volume
-
-Calculates the volume of shelter provided by the given coral cover.
-
-Relevant indicators:
-
--   **Absolute Shelter Volume**
--   **Relative Shelter Volume**
-
-#### Diversity and Evenness
-
-These indicators provide estimates of the diversity and evenness of coral functional groups.
-
-Relevant indicators:
-
--   **Coral Diversity**
--   **Coral Evenness**
-
-#### Condition Indices
-
-Composite indices (or meta-metrics; metrics of metrics) that provide a single value
-indication of reef condition(s).
-
--   **Reef Condition Index**
--   **Reef Fish Index**
-
-#### Conversions
-
-These are convenience/helper methods to aid in data transformations to various forms.
-
-Relevant methods:
-
--   **Relative Habitable Cover to Reef Cover**
--   **Reef Cover to Relative Habitable Cover**
-
-
 ## Usage
 
 The order of dimensions is always the same in ADRIAIndicators.jl,
