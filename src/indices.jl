@@ -168,12 +168,12 @@ Calculate the Reef Condition Index (RCI).
 This method uses four inputs: LTMP cover, relative shelter volume, juvenile indicator, and rubble.
 
 The RCI is a categorical index assessing the overall health and condition of a reef location
-based on five key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
+based on four key ecological metrics. The index assigns a discrete score (0.1, 0.3, 0.5, 0.7, or 0.9)
 representing categories from "Very Poor" to "Very Good".
 
-For each input there are five levels of condition ranging from very poor to very good. COTS
-and Rubble Cover is inverted, where high values indicate worse condition. Then the location
-is assigned a condition of very poor to very good if that location meets at least 2 of the
+For each input there are five levels of condition ranging from very poor to very good. Rubble
+cover is inverted, where high values indicate worse condition. Then the location is
+assigned a condition of very poor to very good if that location meets at least 2 of the
 metrics condition criteria. The condition level is then assigned a numerical value based on
 its categorisation.
 

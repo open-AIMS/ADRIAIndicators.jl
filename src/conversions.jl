@@ -102,7 +102,7 @@ function ltmp_cover_to_relative_cover!(
     out_relative_cover::Array{<:AF,N}
 )::Nothing where {N}
     if location_dim == -1
-        out_relative_cover .= relative_cover .* sum(reef_area_m²) ./ sum(habitable_area_m²)
+        out_relative_cover .= ltmp_cover .* sum(reef_area_m²) ./ sum(habitable_area_m²)
         return nothing
     end
     dims = ones(Int, ndims(ltmp_cover))

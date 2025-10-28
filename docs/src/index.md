@@ -14,26 +14,75 @@ comparable analysis across different coral ecology models.
 
 ## Usage
 
+The following example demonstrates a typical workflow for calculating the Reef Condition Index (RCI) from raw model outputs.
+
 ```julia
-using ADRIAIndicators: relative_juveniles, relative_juveniles!
+using ADRIAIndicators
 
-# Raw model coral cover outputs with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
-raw_model_cover::Array{T,4} = ...
-# Juveniles mask with dimensions [sizes]
-is_juvenile::Vector{Bool} = ...
-n_timesteps, _, _, n_locations = size(raw_model_cover)
+# 1. Define model outputs and parameters.
+# These are assumed to be pre-loaded or defined externally.
 
-# Calculate and allocate new array for metric
-rel_juveniles = relative_juveniles(raw_model_cover, is_juvenile)
+# Main model output: 4D array of relative coral cover.
+# Dimensions: [timesteps, groups, sizes, locations]
+relative_cover::Array{Float64, 4} = ...
 
-# Write the result into provided buffer.
-rel_juveniles_out = zeros(Float64, n_timesteps, n_locations)
-relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out)
+# Vector of habitable area in m² for each location.
+# Dimensions: [locations]
+habitable_area::Vector{Float64} = ...
+
+# Vector of total reef area in m² for each location.
+# Dimensions: [locations]
+reef_area::Vector{Float64} = ...
+
+# Boolean vector indicating which size classes are considered juvenile.
+# Length must match the number of size classes.
+is_juvenile::Vector{Bool} = [true, true, false, ...]
+
+# Matrix of mean colony diameters in cm for each functional group and size class.
+# Dimensions: [groups, sizes]
+mean_colony_diameters::Matrix{Float64} = [
+    5.0, 10.0, ...;
+    4.0, 11.0, ...;
+    ...
+]
+
+# 3D array of parameters (intercept, coefficient) for the log-log planar area model.
+# Dimensions: [groups, sizes, 2]
+planar_area_params::Array{Float64, 3} = ...
+# The planar area parameterisation used for Tabular Acropora in CoralBlox.jl is
+# intercept = -8.95 and slope = 2.8 derived from [Aston et al., 2022]
+
+
+# A scalar representing the maximum possible density of juveniles (individuals/m²).
+max_juv_density::Float64 = 15.0
 ```
 
-Each metric has the option to write the result into an already provided array. This was done
-with the intention of writing wrappers in python or R, where memory that is not managed by
-the Julia runtime can be written to.
+```julia
+
+# 2. Calculate intermediate metrics required for the RCI.
+
+# (a) LTMP Cover
+ltmp_cover = ADRIAIndicators.ltmp_cover(relative_cover, habitable_area, reef_area)
+
+# (b) Relative Shelter Volume
+# First, calculate 4D shelter volume, then aggregate to 2D [timesteps, locations].
+sv_4d = ADRIAIndicators.relative_shelter_volume(relative_cover, mean_colony_diameters, planar_area_params, habitable_area)
+relative_shelter_volume = dropdims(sum(sv_4d, dims=(2, 3)), dims=(2, 3))
+
+# (c) Juvenile Indicator
+juvenile_indicator = ADRIAIndicators.juvenile_indicator(relative_cover, is_juvenile, habitable_area, mean_colony_diameters ./ 100, max_juv_density)
+
+# 3. Calculate the final Reef Condition Index.
+rci = ADRIAIndicators.reef_condition_index(ltmp_cover, relative_shelter_volume, juvenile_indicator)
+```
+
+Each metric also has an in-place version (ending in `!`) that accepts a pre-allocated output array. This is useful for performance-critical code or for integrating with other languages like Python or R where memory may not be managed by the Julia runtime.
+
+## Example Plot
+
+The following is an example plot generated from the metrics, showing the mean trend of several key indicators over time against the variation of all locations. They are the model results of `CoralBlox.jl` with no environmental disturbances and toy parameters.
+
+![Example RCI Plots](assets/rci_plots_makie.png)
 
 ## Available Metrics
 

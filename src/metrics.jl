@@ -221,7 +221,7 @@ function absolute_shelter_volume!(
 end
 
 """
-    absolute_shelter_volume(rel_cover::AbstractArray{T,4}, colony_mean_area_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area::AbstractVector{T})::AbstractArray{T,4} where {T<:AbstractFloat}
+    absolute_shelter_volume(rel_cover::AbstractArray{T,4}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area::AbstractVector{T})::AbstractArray{T,4} where {T<:AbstractFloat}
 
 Calculate the volume of shelter provided by the given coral cover. This function uses
 log-log linear models to predict the volume of shelter provided from a given planar area.
@@ -246,7 +246,7 @@ respectively.
 
 # Arguments
 - `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
-- `colony_mean_area_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
+- `colony_mean_diam_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
 - `planar_area_params` : 3-D array of planar area params with dimensions [groups ⋅ size ⋅ (intercept, coefficient)]
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
 
@@ -264,13 +264,13 @@ respectively.
 """
 function absolute_shelter_volume(
     rel_cover::AbstractArray{T,4},
-    colony_mean_area_cm::AbstractArray{T,2},
+    colony_mean_diam_cm::AbstractArray{T,2},
     planar_area_params::AbstractArray{T,3},
     habitable_area::AbstractVector{T}
 )::Array{T,4} where {T<:AbstractFloat}
     out_ASV::Array{T,4} = zeros(T, size(rel_cover)...)
     absolute_shelter_volume!(
-        rel_cover, colony_mean_area_cm, planar_area_params, habitable_area, out_ASV
+        rel_cover, colony_mean_diam_cm, planar_area_params, habitable_area, out_ASV
     )
 
     return out_ASV
@@ -374,7 +374,7 @@ function relative_shelter_volume(
             DimensionMismatch(
                 _dimension_mismatch_message(
                     "relative_cover",
-                    "colony_mean_area_cm",
+                    "colony_mean_diam_cm",
                     size(relative_cover),
                     size(colony_mean_diam_cm)
                 )

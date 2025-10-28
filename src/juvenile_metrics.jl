@@ -373,8 +373,8 @@ function absolute_taxa_juveniles(
     is_juvenile::AbstractVector{Bool},
     location_area::AbstractVector{T}
 )::Array{T,2} where {T<:AbstractFloat}
-    n_locs, n_groups, _, _ = size(relative_cover)
-    out_absolute_taxa_juveniles::Array{T,2} = zeros(T, n_locs, n_groups)
+    n_tsteps, n_groups, _, _ = size(relative_cover)
+    out_absolute_taxa_juveniles::Array{T,2} = zeros(T, n_tsteps, n_groups)
     absolute_taxa_juveniles!(
         relative_cover, is_juvenile, location_area, out_absolute_taxa_juveniles
     )
