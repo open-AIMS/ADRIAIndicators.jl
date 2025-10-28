@@ -1,7 +1,8 @@
 # Juvenile Metrics
 
-This section provides metrics related to juvenile corals. These metrics are used to assess
-the state of juvenile coral populations from different perspectives.
+This section provides aggregation methods for summarizing juvenile coral abundance across
+different model output dimensions. These functions help reduce high-dimensional data
+on juvenile corals into simpler, more interpretable summary metrics.
 
 ```@autodocs
 Modules = [ADRIAIndicators]

@@ -1,12 +1,18 @@
 # ADRIAIndicators.jl
 
-ADRIAIndicators provides a set of standard metrics for summarizing the state of reef ecological
-model outputs.
+ADRIAIndicators.jl is a Julia package for summarizing outputs from coral reef ecological
+models. Its primary purpose is to provide a standardized and dependency-free package for
+transforming high-dimensional model outputs such as coral abundance by reef, time,
+species, and size class into lower-dimensional, interpretable metrics.
+
+The package offers a wide range of functions, from simple aggregations and unit
+conversions to more complex indices and estimators derived from regression models.
+These tools help with the estimation of functional diversity, juvenile abundance,
+shelter volume, fish biomass, and overall reef condition, enabling consistent and
+comparable analysis across different coral ecology models.
+
 
 ## Usage
-
-Each metric has an option to perform the computation in place for efficiency. The in-place
-version of a function is denoted by a `!` at the end of the function name.
 
 ```julia
 using ADRIAIndicators: relative_juveniles, relative_juveniles!
@@ -20,10 +26,14 @@ n_timesteps, _, _, n_locations = size(raw_model_cover)
 # Calculate and allocate new array for metric
 rel_juveniles = relative_juveniles(raw_model_cover, is_juvenile)
 
-# Perform the computation inplace.
+# Write the result into provided buffer.
 rel_juveniles_out = zeros(Float64, n_timesteps, n_locations)
 relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out)
 ```
+
+Each metric has the option to write the result into an already provided array. This was done
+with the intention of writing wrappers in python or R, where memory that is not managed by
+the Julia runtime can be written to.
 
 ## Available Metrics
 
@@ -37,7 +47,7 @@ relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out)
 
 ## Building Documentation
 
-The documentation is not currently hosted online but can be built locally.
+The documentation is hosted online but can also be built locally for offline use or development purposes.
 
 First, ensure you have the project dependencies installed:
 ```bash
