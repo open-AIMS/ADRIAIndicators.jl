@@ -225,7 +225,11 @@ end
 
 Calculate the volume of shelter provided by the given coral cover. This function uses
 log-log linear models to predict the volume of shelter provided from a given planar area.
-The parametrisation of this log-log linear model must be provided by the user. The log-log
+The parametrisation of this log-log linear model must be provided by the user. For
+possible parametrisations of the log-log linear model used to
+predict shelter volume from planar area, see Urbina-Barreto et al. (2021), [1].
+
+The log-log
 linear model is given by
 
 ```math
@@ -341,7 +345,8 @@ where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respect
 Previously, the maximum shelter volume has been defined by assuming the maximum theoretical
 shelter volume produced by the largest size class of Tabular Acropora. This function defines
 it by calculating the shelter volume for each functional group and size class and picking
-the maximum.
+the maximum. For possible parametrisations of the log-log linear model used to
+predict shelter volume from planar area, see Urbina-Barreto et al., [1].
 
 # Arguments
 - `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].

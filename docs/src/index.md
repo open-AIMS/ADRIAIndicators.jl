@@ -48,9 +48,9 @@ mean_colony_diameters::Matrix{Float64} = [
 
 # 3D array of parameters (intercept, coefficient) for the log-log planar area model.
 # Dimensions: [groups, sizes, 2]
+# Note: Planar area parameters are based on the log-log model described in [Urbina-Barreto et al. 2021].
+
 planar_area_params::Array{Float64, 3} = ...
-# The planar area parameterisation used for Tabular Acropora in CoralBlox.jl is
-# intercept = -8.95 and slope = 2.8 derived from [Aston et al., 2022]
 
 
 # A scalar representing the maximum possible density of juveniles (individuals/m²).
@@ -76,11 +76,11 @@ juvenile_indicator = ADRIAIndicators.juvenile_indicator(relative_cover, is_juven
 rci = ADRIAIndicators.reef_condition_index(ltmp_cover, relative_shelter_volume, juvenile_indicator)
 ```
 
-Each metric also has an in-place version (ending in `!`) that accepts a pre-allocated output array. This is useful for performance-critical code or for integrating with other languages like Python or R where memory may not be managed by the Julia runtime.
+Each metric also has an in-place version (ending in `!`) that accepts a pre-allocated output array. This is useful for integrating with other languages like Python or R where memory may not be managed by the Julia runtime.
 
 ## Example Plot
 
-The following is an example plot generated from the metrics, showing the mean trend of several key indicators over time against the variation of all locations. They are the model results of `CoralBlox.jl` with no environmental disturbances and toy parameters.
+The following is an example plot generated from the metrics, showing the mean trend of several key indicators over time against the variation of all locations. They are the model results of [`CoralBlox.jl`](https://github.com/open-AIMS/CoralBlox.jl) with no environmental disturbances and toy parameters.
 
 ![Example RCI Plots](assets/rci_plots_makie.png)
 
