@@ -11,8 +11,9 @@ function relative_cover!(
     relative_cover::AbstractArray{T,4},
     out_relative_cover::AbstractArray{T,2}
 )::Nothing where {T<:Real}
-    # Sum over groups and sizes
-    out_relative_cover .= dropdims(sum(relative_cover; dims=(2, 3)); dims=(2, 3))
+    # Sum over groups and sizes (dimensions 2 and 3)
+    n_timesteps, _, _, n_locations = size(relative_cover)
+    sum!(reshape(out_relative_cover, (n_timesteps, 1, 1, n_locations)), relative_cover)
 
     return nothing
 end
@@ -51,12 +52,23 @@ function relative_taxa_cover!(
     location_area::AbstractVector{T},
     out_relative_taxa_cover::AbstractArray{T,2}
 )::Nothing where {T<:Real}
-    # Sum over sizes
-    group_cover = dropdims(sum(relative_cover; dims=3); dims=3)  # [timesteps, groups, locations]
-    absolute_group_cover = group_cover .* reshape(location_area, (1, 1, :))
-    total_location_area = sum(location_area)
-    out_relative_taxa_cover .= 
-        dropdims(sum(absolute_group_cover; dims=3); dims=3) ./ total_location_area
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+    total_area = sum(location_area)
+
+    fill!(out_relative_taxa_cover, zero(T))
+
+    for l in 1:n_locations
+        area = location_area[l]
+        for s in 1:n_sizes
+            for g in 1:n_groups
+                for t in 1:n_timesteps
+                    out_relative_taxa_cover[t, g] += relative_cover[t, g, s, l] * area
+                end
+            end
+        end
+    end
+
+    out_relative_taxa_cover ./= total_area
 
     return nothing
 end
@@ -103,7 +115,8 @@ function relative_loc_taxa_cover!(
     relative_cover::AbstractArray{T,4},
     out_relative_loc_taxa_cover::AbstractArray{T,3}
 )::Nothing where {T<:Real}
-    out_relative_loc_taxa_cover .= dropdims(sum(relative_cover; dims=3); dims=3)
+    n_timesteps, n_groups, _, n_locations = size(relative_cover)
+    sum!(reshape(out_relative_loc_taxa_cover, (n_timesteps, n_groups, 1, n_locations)), relative_cover)
 
     return nothing
 end
@@ -148,13 +161,16 @@ function ltmp_cover!(
     reef_area::AbstractVector{T},
     out_ltmp_cover::AbstractArray{T,2}
 )::Nothing where {T<:Real}
-    # First, calculate cover relative to habitable area by summing over groups and sizes
-    rel_cover = zeros(T, size(out_ltmp_cover)...)
-    relative_cover!(relative_cover, rel_cover)
+    # Calculate cover relative to habitable area by summing over groups and sizes
+    # directly into out_ltmp_cover
+    n_timesteps, _, _, n_locations = size(relative_cover)
+    sum!(reshape(out_ltmp_cover, (n_timesteps, 1, 1, n_locations)), relative_cover)
 
-    # Convert relative cover to LTMP cover
-    # Note: The location dimension for the 2D rel_cover array is 2
-    relative_cover_to_ltmp_cover!(rel_cover, habitable_area, reef_area, 2, out_ltmp_cover)
+    # Convert relative cover to LTMP cover in-place
+    # LTMP = RC * (Habitable Area / Reef Area)
+    # The location dimension is the 2nd dimension of out_ltmp_cover
+    area_coeff = reshape(habitable_area ./ reef_area, (1, :))
+    out_ltmp_cover .*= area_coeff
 
     return nothing
 end
@@ -211,20 +227,23 @@ function ltmp_taxa_cover!(
     reef_area::AbstractVector{T},
     out_ltmp_taxa_cover::AbstractArray{T,2}
 )::Nothing where {T<:Real}
-    # Get group cover relative to habitable area for each location
-    group_cover = dropdims(sum(relative_cover; dims=3); dims=3)  # [timesteps, groups, locations]
-
-    # Convert to absolute cover in m²
-    absolute_group_cover = group_cover .* reshape(habitable_area, (1, 1, :))
-
-    # Sum absolute cover over all locations for each group
-    total_absolute_group_cover = dropdims(sum(absolute_group_cover; dims=3); dims=3) # [timesteps, groups]
-
-    # Get total reef area
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
     total_reef_area = sum(reef_area)
 
-    # Divide by total reef area to get LTMP taxa cover
-    out_ltmp_taxa_cover .= total_absolute_group_cover ./ total_reef_area
+    fill!(out_ltmp_taxa_cover, zero(T))
+
+    for l in 1:n_locations
+        h_area = habitable_area[l]
+        for s in 1:n_sizes
+            for g in 1:n_groups
+                for t in 1:n_timesteps
+                    out_ltmp_taxa_cover[t, g] += relative_cover[t, g, s, l] * h_area
+                end
+            end
+        end
+    end
+
+    out_ltmp_taxa_cover ./= total_reef_area
 
     return nothing
 end
@@ -279,7 +298,8 @@ function ltmp_loc_taxa_cover!(
     out_ltmp_loc_taxa_cover::AbstractArray{T,3}
 )::Nothing where {T<:Real}
     # Get taxa cover relative to habitable area
-    relative_loc_taxa_cover!(relative_cover, out_ltmp_loc_taxa_cover)
+    n_timesteps, n_groups, _, n_locations = size(relative_cover)
+    sum!(reshape(out_ltmp_loc_taxa_cover, (n_timesteps, n_groups, 1, n_locations)), relative_cover)
 
     # Convert to be relative to reef area for each location
     area_coefficient = reshape(habitable_area ./ reef_area, (1, 1, :))

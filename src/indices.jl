@@ -25,28 +25,34 @@ function reef_condition_index!(
     juvenile_indicator::AbstractArray{<:AbstractFloat,2},
     out_rci::AbstractArray{<:AbstractFloat,2};
 )::Nothing
-    RCI_CRIT = eltype(ltmp_cover)[
+    T = eltype(ltmp_cover)
+    RCI_CRIT = T[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
         0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
         0.15 0.20 0.25 0.30 0.35   # coral juveniles thresholds
     ]
 
-    CRIT_VAL = eltype(ltmp_cover)[0.1, 0.3, 0.5, 0.7, 0.9]
-
+    CRIT_VAL = T[0.1, 0.3, 0.5, 0.7, 0.9]
     CRITERIA_THRESHOLD = 2
 
-    out_rci .= 0.1
-    metrics_met = zeros(eltype(ltmp_cover), size(ltmp_cover)...)
-    pass_mask = falses(size(ltmp_cover)...)
-    for i in 1:size(CRIT_VAL, 1)
-        @. metrics_met = (ltmp_cover >= RCI_CRIT[1, i]) +
-                         (relative_shelter_volume >= RCI_CRIT[2, i]) +
-                         (juvenile_indicator >= RCI_CRIT[3, i])
-        @. pass_mask = metrics_met >= CRITERIA_THRESHOLD
+    for l in axes(ltmp_cover, 2)
+        for t in axes(ltmp_cover, 1)
+            lc = ltmp_cover[t, l]
+            sv = relative_shelter_volume[t, l]
+            ji = juvenile_indicator[t, l]
 
-        out_rci[pass_mask] .= CRIT_VAL[i]
+            val = T(0.1)
+            for i in 1:5
+                met = (lc >= RCI_CRIT[1, i]) +
+                      (sv >= RCI_CRIT[2, i]) +
+                      (ji >= RCI_CRIT[3, i])
+                if met >= CRITERIA_THRESHOLD
+                    val = CRIT_VAL[i]
+                end
+            end
+            out_rci[t, l] = val
+        end
     end
-
 
     return nothing
 end
@@ -132,30 +138,37 @@ function reef_condition_index!(
     rubble::AbstractArray{<:AbstractFloat,2},
     out_rci::AbstractArray{<:AbstractFloat,2};
 )::Nothing
-    RCI_CRIT = eltype(ltmp_cover)[
+    T = eltype(ltmp_cover)
+    RCI_CRIT = T[
         0.05 0.15 0.25 0.35 0.45;  # relative cover thresholds
         0.15 0.25 0.30 0.35 0.45;  # shelter volume thresholds
         0.15 0.20 0.25 0.30 0.35;  # coral juveniles thresholds
-        0.70 0.75 0.80 0.85 0.90  # rubble thresholds
+        0.70 0.75 0.80 0.85 0.90   # rubble thresholds
     ]
 
-    CRIT_VAL = eltype(ltmp_cover)[0.1, 0.3, 0.5, 0.7, 0.9]
-
+    CRIT_VAL = T[0.1, 0.3, 0.5, 0.7, 0.9]
     CRITERIA_THRESHOLD = 2
 
-    out_rci .= 0.1
-    metrics_met = zeros(eltype(ltmp_cover), size(ltmp_cover)...)
-    pass_mask = falses(size(ltmp_cover)...)
-    for i in 1:size(CRIT_VAL, 1)
-        @. metrics_met = (ltmp_cover >= RCI_CRIT[1, i]) +
-                         (relative_shelter_volume >= RCI_CRIT[2, i]) +
-                         (juvenile_indicator >= RCI_CRIT[3, i]) +
-                         ((1.0 .- rubble) >= RCI_CRIT[4, i])
-        @. pass_mask = metrics_met >= CRITERIA_THRESHOLD
+    for l in axes(ltmp_cover, 2)
+        for t in axes(ltmp_cover, 1)
+            lc = ltmp_cover[t, l]
+            sv = relative_shelter_volume[t, l]
+            ji = juvenile_indicator[t, l]
+            rb = rubble[t, l]
 
-        out_rci[pass_mask] .= CRIT_VAL[i]
+            val = T(0.1)
+            for i in 1:5
+                met = (lc >= RCI_CRIT[1, i]) +
+                      (sv >= RCI_CRIT[2, i]) +
+                      (ji >= RCI_CRIT[3, i]) +
+                      ((1.0 - rb) >= RCI_CRIT[4, i])
+                if met >= CRITERIA_THRESHOLD
+                    val = CRIT_VAL[i]
+                end
+            end
+            out_rci[t, l] = val
+        end
     end
-
 
     return nothing
 end
@@ -226,7 +239,7 @@ function reef_biodiversity_condition_index!(
     sv::AbstractArray{<:AbstractFloat,2},
     out_rbci::AbstractArray{<:AbstractFloat,2}
 )::Nothing
-    out_rbci .= clamp.((rc .+ cd .+ sv) ./ 3.0, 0.0, 1.0)
+    @. out_rbci = clamp((rc + cd + sv) / 3.0, 0.0, 1.0)
 
     return nothing
 end
@@ -300,13 +313,13 @@ function reef_tourism_index_no_rubble!(
     sv_coef = 0.11676
     jv_coef = -0.0036065
 
-    out_rti .= intcp .+
-        (rc_coef .* relative_cover) .+
-        (evenness_coef .* coral_evenness) .+
-        (sv_coef .* relative_shelter_volume) .+
-        (jv_coef .* relative_juveniles)
+    @. out_rti = intcp +
+        (rc_coef * relative_cover) +
+        (evenness_coef * coral_evenness) +
+        (sv_coef * relative_shelter_volume) +
+        (jv_coef * relative_juveniles)
 
-    out_rti .= round.(clamp.(out_rti, 0.1, 0.9); digits=2)
+    @. out_rti = round(clamp(out_rti, 0.1, 0.9); digits=2)
 
     return nothing
 end
@@ -381,13 +394,13 @@ function reef_tourism_index!(
     jv_coef = 0.8371
     rubble_coef = 0.7764
 
-    out_rti .= intcp .+
-        (rc_coef .* relative_cover) .+
-        (sv_coef .* shelter_volume) .+
-        (jv_coef .* relative_juveniles) .+
-        (rubble_coef .* ( 1 .- rubble))
+    @. out_rti = intcp +
+        (rc_coef * relative_cover) +
+        (sv_coef * shelter_volume) +
+        (jv_coef * relative_juveniles) +
+        (rubble_coef * ( 1 - rubble))
 
-    out_rti .= round.(clamp.(out_rti, 0.1, 0.9); digits=2)
+    @. out_rti = round(clamp(out_rti, 0.1, 0.9); digits=2)
 
     return nothing
 end
@@ -442,8 +455,8 @@ function reef_fish_index!(
     rc::AbstractArray{<:AbstractFloat,2},
     out_rfi::AbstractArray{<:AbstractFloat,2}
 )::Nothing
-    out_rfi .= 0.01 .* (-1623.6 .+ 1883.3 .* (1.232 .+ 0.007476 .* (rc .* 100.0)))
-    out_rfi .= round.(out_rfi; digits=2)
+    @. out_rfi = 0.01 * (-1623.6 + 1883.3 * (1.232 + 0.007476 * (rc * 100.0)))
+    @. out_rfi = round(out_rfi; digits=2)
 
     return nothing
 end
@@ -453,7 +466,7 @@ end
 
 Calculate the Reef Fish Index (RFI) for a single scenario. The RFI is composed
 of two linear regressions mapping relative coral cover to structural complexity and finally,
-structural complexity to fish biomass. The index is based off figure 4a and 6b in
+structural complexity to fish biomass. Initial linear regression based off figure 4a and 6b in
 Graham et al., 2013 [1]. RFI (kg/km²) as a functional of relative cover (``x``) is given as
 
 ```math
