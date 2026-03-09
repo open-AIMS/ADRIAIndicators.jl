@@ -35,19 +35,29 @@ Calculates coral taxa diversity as a dimensionless metric.
 - `out_coral_diversity` : Output array buffer [timesteps ⋅ locations]
 """
 function coral_diversity!(
-    r_taxa_cover::Array{T,3},
+    r_taxa_cover::AbstractArray{T,3},
     out_coral_diversity::Array{T,2}
 )::Nothing where {T<:Real}
-    loc_cover = dropdims(sum(r_taxa_cover; dims=2); dims=2)
+    n_tsteps, n_groups, n_locs = size(r_taxa_cover)
 
-    for loc in axes(loc_cover, 2)
-        out_coral_diversity[:, loc] =
-            1 .- sum((r_taxa_cover[:, :, loc] ./ loc_cover[:, loc]) .^ 2; dims=2)
+    for l in 1:n_locs
+        for t in 1:n_tsteps
+            loc_cover = zero(T)
+            for g in 1:n_groups
+                loc_cover += r_taxa_cover[t, g, l]
+            end
+
+            if loc_cover > 0.0
+                sum_sq = zero(T)
+                for g in 1:n_groups
+                    sum_sq += (r_taxa_cover[t, g, l] / loc_cover)^2
+                end
+                out_coral_diversity[t, l] = 1.0 - sum_sq
+            else
+                out_coral_diversity[t, l] = 0.0
+            end
+        end
     end
-
-    replace!(
-        out_coral_diversity, NaN => 0.0, Inf => 0.0
-    )
 
     return nothing
 end
@@ -78,7 +88,7 @@ total relative coral cover at the given location and timestep.
 Matrix containing coral diversity metric of dimension [timesteps ⋅ locations]
 """
 function coral_diversity(rel_cover::Array{T,3})::Array{T,2} where {T<:Real}
-    n_tsteps, n_groups, n_locs = size(rel_cover)
+    n_tsteps, _, n_locs = size(rel_cover)
     coral_div::Array{T,2} = zeros(T, n_tsteps, n_locs)
     coral_diversity!(rel_cover, coral_div)
 
@@ -105,19 +115,26 @@ function coral_evenness!(
     rel_cover::AbstractArray{T,3},
     out_coral_evenness::Array{T,2}
 )::Nothing where {T<:Real}
-    _, n_grps, _ = size(rel_cover)
+    n_tsteps, n_groups, n_locs = size(rel_cover)
 
-    # Sum across groups represents functional diversity
-    # Group evenness (Hill 1973, Ecology 54:427-432)
-    loc_cover = dropdims(sum(rel_cover; dims=2); dims=2)
-    for loc in axes(loc_cover, 2)
-        out_coral_evenness[:, loc] =
-            1.0 ./ sum((rel_cover[:, :, loc] ./ loc_cover[:, loc]) .^ 2; dims=2)
+    for l in 1:n_locs
+        for t in 1:n_tsteps
+            loc_cover = zero(T)
+            for g in 1:n_groups
+                loc_cover += rel_cover[t, g, l]
+            end
+
+            if loc_cover > 0.0
+                sum_sq = zero(T)
+                for g in 1:n_groups
+                    sum_sq += (rel_cover[t, g, l] / loc_cover)^2
+                end
+                out_coral_evenness[t, l] = 1.0 / sum_sq
+            else
+                out_coral_evenness[t, l] = 0.0
+            end
+        end
     end
-
-    out_coral_evenness = replace!(
-        out_coral_evenness, NaN => 0.0, Inf => 0.0
-    ) ./ n_grps
 
     return nothing
 end
@@ -207,15 +224,24 @@ function absolute_shelter_volume!(
     habitable_area::AbstractVector{T},
     out_ASV::AbstractArray{T,4}
 )::Nothing where {T<:AbstractFloat}
-    colony_vol_m3_per_m2 = _colony_Lcm2_to_m3m2.(
-        colony_mean_diam_cm,
-        view(planar_area_params,:,:,1),
-        view(planar_area_params,:,:,2)
-    )
     n_groups, n_sizes = size(colony_mean_diam_cm)
+    n_timesteps, _, _, n_locations = size(rel_cover)
 
-    abs_cover = rel_cover .* reshape(habitable_area, (1, 1, 1, :))
-    out_ASV .= abs_cover .* reshape(colony_vol_m3_per_m2, (1, n_groups, n_sizes, 1))
+    for l in 1:n_locations
+        h_area = habitable_area[l]
+        for s in 1:n_sizes
+            for g in 1:n_groups
+                colony_vol = _colony_Lcm2_to_m3m2(
+                    colony_mean_diam_cm[g, s],
+                    planar_area_params[g, s, 1],
+                    planar_area_params[g, s, 2]
+                )
+                for t in 1:n_timesteps
+                    out_ASV[t, g, s, l] = rel_cover[t, g, s, l] * h_area * colony_vol
+                end
+            end
+        end
+    end
 
     return nothing
 end
@@ -309,22 +335,44 @@ function relative_shelter_volume!(
     habitable_area_m²::AbstractVector{T},
     out_RSV::AbstractArray{T,4}
 )::Nothing where {T<:AbstractFloat}
-    colony_vol_m³_per_m² = _colony_Lcm2_to_m3m2.(
-        colony_mean_diam_cm,
-        view(planar_area_params,:,:,1),
-        view(planar_area_params,:,:,2)
-    )
+    n_groups, n_sizes = size(colony_mean_diam_cm)
+    n_timesteps, _, _, n_locations = size(rel_cover)
 
-    n_groups::Int64, n_sizes::Int64 = size(colony_mean_diam_cm)
-    n_locations::Int64 = length(habitable_area_m²)
+    # Calculate max colony volume per m²
+    max_colony_vol::T = zero(T)
+    for s in 1:n_sizes
+        for g in 1:n_groups
+            v = _colony_Lcm2_to_m3m2(
+                colony_mean_diam_cm[g, s],
+                planar_area_params[g, s, 1],
+                planar_area_params[g, s, 2]
+            )
+            if v > max_colony_vol
+                max_colony_vol = v
+            end
+        end
+    end
 
-    abs_cover_m²::Array{T,4} = rel_cover .* reshape(habitable_area_m², (1, 1, 1, :))
-    ASV_m³ = abs_cover_m² .* reshape(colony_vol_m³_per_m², (1, n_groups, n_sizes, 1))
-
-    max_colony_vol_m³::T = maximum(colony_vol_m³_per_m²)
-    # Calculate maximum shelter volume m³ [group ⋅ location]
-    MSV_m³::AbstractVector{T} = habitable_area_m² .* max_colony_vol_m³ .* 0.5
-    out_RSV .= ASV_m³ ./ reshape(MSV_m³, (1, 1, 1, n_locations))
+    for l in 1:n_locations
+        # Maximum shelter volume m³ = habitable_area * max_colony_vol * 0.5
+        # Since we want relative shelter volume:
+        # RSV = (rel_cover * habitable_area * colony_vol) / (habitable_area * max_colony_vol * 0.5)
+        # RSV = (rel_cover * colony_vol) / (max_colony_vol * 0.5)
+        msv_factor = max_colony_vol * 0.5
+        for s in 1:n_sizes
+            for g in 1:n_groups
+                colony_vol = _colony_Lcm2_to_m3m2(
+                    colony_mean_diam_cm[g, s],
+                    planar_area_params[g, s, 1],
+                    planar_area_params[g, s, 2]
+                )
+                factor = colony_vol / msv_factor
+                for t in 1:n_timesteps
+                    out_RSV[t, g, s, l] = rel_cover[t, g, s, l] * factor
+                end
+            end
+        end
+    end
 
     return nothing
 end

@@ -13,8 +13,8 @@ function relative_juveniles!(
     is_juvenile::AbstractVector{Bool},
     out_relative_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:Real}
-    juvenile_cover = relative_cover[:, :, is_juvenile, :]
-    out_relative_juveniles .= dropdims(sum(juvenile_cover; dims=(2, 3)); dims=(2, 3))
+    n_timesteps, _, _, n_locations = size(relative_cover)
+    sum!(reshape(out_relative_juveniles, (n_timesteps, 1, 1, n_locations)), view(relative_cover, :, :, is_juvenile, :))
 
     return nothing
 end
@@ -121,16 +121,29 @@ Returns the output into a preallocated buffer.
 """
 function relative_taxa_juveniles!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractArray{Bool},
+    is_juvenile::AbstractVector{Bool},
     location_area::AbstractVector{T},
     out_relative_taxa_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
-    _is_juveniles = reshape(is_juvenile, (1, 1, :, 1))
-    _location_area = reshape(location_area, (1, 1, 1, :))
-    out_relative_taxa_juveniles .=
-        dropdims(sum(
-                relative_cover .* _location_area .* _is_juveniles; dims=(3, 4)
-            ); dims=(3, 4)) ./ sum(location_area)
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+    total_area = sum(location_area)
+
+    fill!(out_relative_taxa_juveniles, zero(T))
+
+    for l in 1:n_locations
+        area = location_area[l]
+        for s in 1:n_sizes
+            if is_juvenile[s]
+                for g in 1:n_groups
+                    for t in 1:n_timesteps
+                        out_relative_taxa_juveniles[t, g] += relative_cover[t, g, s, l] * area
+                    end
+                end
+            end
+        end
+    end
+
+    out_relative_taxa_juveniles ./= total_area
 
     return nothing
 end
@@ -176,11 +189,8 @@ function relative_loc_taxa_juveniles!(
     is_juvenile::AbstractVector{Bool},
     out_relative_loc_taxa_juveniles::AbstractArray{T,3}
 )::Nothing where {T<:AbstractFloat}
-    _is_juveniles = reshape(is_juvenile, (1, 1, :, 1))
-    out_relative_loc_taxa_juveniles .=
-        dropdims(sum(
-                relative_cover .* _is_juveniles; dims=(3,)
-    ); dims=(3,))
+    n_timesteps, n_groups, _, n_locations = size(relative_cover)
+    sum!(reshape(out_relative_loc_taxa_juveniles, (n_timesteps, n_groups, 1, n_locations)), view(relative_cover, :, :, is_juvenile, :))
 
     return nothing
 end
@@ -344,12 +354,22 @@ function absolute_taxa_juveniles!(
     location_area::AbstractVector{T},
     out_absolute_taxa_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
-    _is_juveniles = reshape(is_juvenile, (1, 1, :, 1))
-    _location_area = reshape(location_area, (1, 1, 1, :))
-    out_absolute_taxa_juveniles .=
-        dropdims(sum(
-                relative_cover .* _location_area .* _is_juveniles; dims=(3, 4)
-            ); dims=(3, 4))
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+
+    fill!(out_absolute_taxa_juveniles, zero(T))
+
+    for l in 1:n_locations
+        area = location_area[l]
+        for s in 1:n_sizes
+            if is_juvenile[s]
+                for g in 1:n_groups
+                    for t in 1:n_timesteps
+                        out_absolute_taxa_juveniles[t, g] += relative_cover[t, g, s, l] * area
+                    end
+                end
+            end
+        end
+    end
 
     return nothing
 end
@@ -400,12 +420,22 @@ function absolute_loc_taxa_juveniles!(
     location_area::AbstractVector{T},
     out_absolute_loc_taxa_juveniles::AbstractArray{T,3}
 )::Nothing where {T<:AbstractFloat}
-    _is_juveniles = reshape(is_juvenile, (1, 1, :, 1))
-    _location_area = reshape(location_area, (1, 1, 1, :))
-    out_absolute_loc_taxa_juveniles .=
-        dropdims(sum(
-                relative_cover .* _location_area .* _is_juveniles; dims=(3,)
-            ); dims=(3,))
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+
+    fill!(out_absolute_loc_taxa_juveniles, zero(T))
+
+    for l in 1:n_locations
+        area = location_area[l]
+        for s in 1:n_sizes
+            if is_juvenile[s]
+                for g in 1:n_groups
+                    for t in 1:n_timesteps
+                        out_absolute_loc_taxa_juveniles[t, g, l] += relative_cover[t, g, s, l] * area
+                    end
+                end
+            end
+        end
+    end
 
     return nothing
 end
@@ -490,11 +520,20 @@ function juvenile_indicator!(
         return nothing
     end
 
-    # Explicit allocation here
     max_col_area::T = _maximum_colony_area(view(mean_colony_diameters, :, is_juvenile))
-    abs_juv = absolute_juveniles(relative_cover, is_juvenile, habitable_area)
     max_juv_area::T = _max_juvenile_area(max_col_area, max_juv_density)
-    out_juvenile_indicator .= abs_juv ./ (max_juv_area .* habitable_area')
+
+    # absolute_juveniles! fills out_juvenile_indicator with absolute cover
+    absolute_juveniles!(relative_cover, is_juvenile, habitable_area, out_juvenile_indicator)
+
+    # Now divide by max possible juvenile area in-place
+    # out = (abs_cover) / (max_juv_area * habitable_area)
+    for l in eachindex(habitable_area)
+        denom = max_juv_area * habitable_area[l]
+        for t in axes(out_juvenile_indicator, 1)
+            out_juvenile_indicator[t, l] /= denom
+        end
+    end
 
     return nothing
 end
