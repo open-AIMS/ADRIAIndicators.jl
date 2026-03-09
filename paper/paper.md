@@ -168,7 +168,7 @@ If a dimension is missing then the order remains the same however the missing di
 excluded. Furthermore, all metrics have an option to provide a buffer as input in the cases
 where one wants to write the metric into an existing array or sub-array. This implementation
 is relied upon by functions that allocate the returned array as-well and was chosen to
-account for any any decisions in the future where another language may wrap this library and
+account for any decisions in the future where another language may wrap this library and
 need to pass memory that is not managed by Julia.
 
 ```julia
