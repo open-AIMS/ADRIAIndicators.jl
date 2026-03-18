@@ -93,34 +93,33 @@ by JuliaC.jl).
 
 # State of the Field
 
-In the field of coral reef ecology, models such as ReefMod [@ReefMod], C~Scape [@CScape], and 
-CoCoNet [@CoCoNet] have historically employed internal, custom-coded implementations for 
-calculating ecological indicators. This lack of modularity often leads to redundant 
-development efforts for common metrics (e.g., Simpson’s Diversity or unit conversions) 
-and can introduce subtle inconsistencies in the calculation of more complex indicators 
-like Shelter Volume [@URBINABARRETO2021107151] or the Reef Condition Index 
-[@ReefConditionIndex]. 
+In the field of coral reef ecology, models such as ReefMod [@ReefMod], C~Scape [@CScape],
+and CoCoNet [@CoCoNet] have historically employed internal, custom-coded implementations for
+calculating ecological indicators. This lack of modularity often leads to redundant
+development efforts for common metrics (e.g., Simpson’s Diversity or unit conversions) and
+can introduce subtle inconsistencies in the calculation of more complex indicators like
+Shelter Volume [@URBINABARRETO2021107151] or the Reef Condition Index [@ReefConditionIndex].
 
-ADRIAIndicators.jl addresses these challenges by providing a standalone, model-agnostic 
-library that decouples ecological indicators from specific ecological models. This 
-approach allows researchers to apply identical analytical pipelines to outputs from 
-diverse modeling platforms, facilitating rigorous cross-model benchmarking and ensuring 
-that management decisions are based on comparable ecological signals.
+ADRIAIndicators.jl addresses these challenges by providing a standalone, model-agnostic
+library that decouples ecological indicators from specific ecological models. This approach
+allows researchers to apply identical analytical pipelines to outputs from diverse modeling
+platforms, facilitating rigorous cross-model benchmarking and ensuring that management
+decisions are based on comparable ecological signals.
 
 # Software Design
 
-ADRIAIndicators.jl is designed for high performance and minimal overhead, leveraging Julia's 
-[@Julia] strengths in numerical computing. The package uses multiple dispatch to handle 
-different output dimensionalities (e.g., 4D arrays for single scenarios vs. 5D arrays for 
+ADRIAIndicators.jl is designed for high performance and minimal overhead, leveraging Julia's
+[@Julia] strengths in numerical computing. The package uses multiple dispatch to handle
+different output dimensions (e.g., 4D arrays for single scenarios vs. 5D arrays for
 ensemble outputs) while maintaining a consistent API. Key design features include:
 
-- **In-place Operations:** All metrics provide mutating versions (appending `!`) to allow 
-  for memory-efficient processing of large-scale reef simulation data without unnecessary 
+- **In-place Operations:** All metrics provide mutating versions (appending `!`) to allow
+  for memory-efficient processing of large-scale reef simulation data without unnecessary
   allocations.
-- **Dependency-Free:** The core library has zero external package dependencies, ensuring long-term 
-  stability and ease of integration into other modeling suites.
-- **Dimensional Consistency:** Functions strictly adhere to the `[Time, Groups, Sizes, Locations, Scenarios]` 
-  dimensional order, simplifying data preparation for end-users.
+- **Dependency-Free:** The core library has zero external package dependencies, ensuring
+  long-term stability and ease of integration into other modeling suites.
+- **Dimensional Consistency:** Functions strictly adhere to the `[Time, Groups, Sizes,
+  Locations, Scenarios]` dimensional order, simplifying data preparation for end-users.
 
 ## Available Indicators
 
@@ -130,7 +129,6 @@ reducing the dimensionality of data by summarizing arrays. Conversions handle
 transformations between different units or representations of coral cover.
 Metrics derive higher-level, interpretable indicators from the raw model
 data, such as coral diversity, shelter volume, and composite indices for reef health.
-
 
 | **Metric Name**                                  | **Type**          | **Reference**   |
 |--------------------------------------------------|-------------------|-----------------|
@@ -145,7 +143,7 @@ data, such as coral diversity, shelter volume, and composite indices for reef he
 | Relative Taxonomy Juveniles                      | Aggregation       |                 |
 | Relative Habitable Cover to Reef Cover           | Conversion        |                 |
 | Reef Cover to Relative Habitable Cover           | Conversion        |                 |
-| Absolute Shelter Volume                          | Metric            | [@URBINABARRETO2021107151; @ASTON_STRUCTURAL]|
+| Absolute Shelter Volume                          | Metric            | [@ASTON_STRUCTURAL; @URBINABARRETO2021107151]|
 | Relative Shelter Volume                          | Metric            | -               |
 | Coral Diversity                                  | Metric            | [@CoralDiversity]|
 | Coral Evenness                                   | Metric            | -               |
@@ -196,17 +194,18 @@ relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out);
 
 # Research Impact
 
-ADRIAIndicators.jl provides a standardized framework for the analysis of reef model outputs, 
-supporting comparative studies and ensemble modeling efforts. By implementing consistent metrics across different simulation platforms, the 
-package enables researchers to integrate outputs from multiple models into shared 
-decision-support workflows. This interoperability is particularly relevant for large 
-research programs where results from different modeling groups must be synthesized to 
-evaluate environmental trajectories and the potential outcomes of conservation 
-strategies.
+ADRIAIndicators.jl provides a standardized framework for the analysis of reef model outputs,
+supporting comparative studies and ensemble modeling efforts. By implementing consistent
+metrics across different simulation platforms, the package enables researchers to integrate
+outputs from multiple models into shared decision-support workflows. This interoperability is
+particularly relevant for large research programs where results from different modeling groups
+must be synthesized to evaluate environmental trajectories and the potential outcomes of
+conservation strategies.
 
 # AI Usage Disclosure
 
-AI tools were used to generate tests for metrics and were reviewed to ensure correctness.
+Gemini 2.5 Pro and Gemini 3 Pro were used in the development of tests for all implemented
+metrics in ADRIAIndicators.jl and were reviewed by the authors to ensure correctness.
 
 # Acknowledgements
 
