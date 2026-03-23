@@ -15,7 +15,6 @@ authors:
     orcid: "https://orcid.org/0009-0007-4814-3261"
   - family-names: "Anthony"
     given-names: "Ken"
-    orcid:
   - family-names: "Adam"
     given-names: "Arne A. S."
     orcid: "https://orcid.org/0000-0002-2960-7880"
@@ -39,7 +38,6 @@ authors:
     orcid: "https://orcid.org/0000-0001-6740-9052"
   - family-names: "Ortiz"
     given-names: "Juan Carlos"
-    orcid:
 title: "ADRIAIndicators: a Julia package for summarizing reef ecological model outputs"
 version: 0.1.4
 doi: https://doi.org/10.5281/zenodo.17032474
