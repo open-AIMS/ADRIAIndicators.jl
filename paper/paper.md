@@ -113,7 +113,7 @@ ADRIAIndicators.jl is designed for high performance and minimal overhead, levera
 different output dimensions (e.g., 4D arrays for single scenarios vs. 5D arrays for
 ensemble outputs) while maintaining a consistent API. Key design features include:
 
-- **In-place Operations:** All metrics provide mutating versions (appending `!`) to allow
+- **In-place Operations:** All metrics provide mutating versions (indicated by appending `!` to the function name) to allow
   for memory-efficient processing of large-scale reef simulation data without unnecessary
   allocations.
 - **Dependency-Free:** The core library has zero external package dependencies, ensuring
