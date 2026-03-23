@@ -43,5 +43,5 @@ authors:
 title: "ADRIAIndicators: a Julia package for summarizing reef ecological model outputs"
 version: 0.1.4
 doi: https://doi.org/10.5281/zenodo.17032474
-date-released: 2025-09-29
+date-released: 2026-03-23
 url: "https://github.com/open-AIMS/ADRIAIndicators.jl"
