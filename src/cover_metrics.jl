@@ -4,7 +4,7 @@
 Calculate the relative cover per location by summing over groups and size classes.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `out_relative_cover` : Output array buffer for relative cover with dimensions [timesteps ⋅ locations].
 """
 function relative_cover!(
@@ -24,7 +24,7 @@ end
 Calculate the relative cover per location by summing over groups and size classes.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 
 # Returns
 A 2D array of relative cover with dimensions [timesteps ⋅ locations].
@@ -43,7 +43,7 @@ end
 Calculate the relative taxa cover, summed up across all locations.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `location_area` : The coral habitable area for each location.
 - `out_relative_taxa_cover` : Output array buffer with dimensions [timesteps ⋅ groups].
 """
@@ -78,7 +78,7 @@ end
 Calculate the relative taxa cover, summed up across all locations.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `location_area` : The coral habitable area for each location.
 
 # Returns
@@ -108,7 +108,7 @@ end
 Calculate the relative taxa cover for each location.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `out_relative_loc_taxa_cover` : Output array buffer with dimensions [timesteps ⋅ groups ⋅ locations].
 """
 function relative_loc_taxa_cover!(
@@ -127,7 +127,7 @@ end
 Calculate the relative taxa cover for each location.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 
 # Returns
 A 3D array of relative taxa cover with dimensions [timesteps ⋅ groups ⋅ locations].

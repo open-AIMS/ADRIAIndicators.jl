@@ -31,7 +31,7 @@ end
 Calculates coral taxa diversity as a dimensionless metric.
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `r_taxa_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 - `out_coral_diversity` : Output array buffer [timesteps ⋅ locations]
 """
 function coral_diversity!(
@@ -82,7 +82,7 @@ where ``x_g`` is the relative coral cover for the functional group, ``g``, and `
 total relative coral cover at the given location and timestep.
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 
 # Returns
 Matrix containing coral diversity metric of dimension [timesteps ⋅ locations]
@@ -102,7 +102,7 @@ Calculates evenness across functional coral groups in ADRIA as a diversity metri
 Inverse Simpsons diversity indicator.
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 - `out_coral_evenness` : Output array buffer [timesteps ⋅ locations]
 
 # References
@@ -154,7 +154,7 @@ E(x) = \\left(\\sum_{g=1}^{G}\\left(\\frac{x_g}{x_T} \\right)^2\\right)^{-1}
 ```
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 
 # Returns
 Matrix containing coral evenness metric of dimensions [timesteps ⋅ locations]
@@ -211,7 +211,7 @@ end
     absolute_shelter_volume!(rel_cover::AbstractArray{T,3}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area::T, ASV::AbstractArray{T,3})::Nothing where {T<:AbstractFloat}
 
 # Arguments
-- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
+- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
 - `planar_area_params` : 3-D array of planar area parameters with dimensions [groups ⋅ size ⋅ (intercept, coefficient)]
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
@@ -275,7 +275,7 @@ where ``ASV`` and ``A_C`` refers to absolute shelter volume and absolute coral c
 respectively.
 
 # Arguments
-- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
+- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
 - `planar_area_params` : 3-D array of planar area params with dimensions [groups ⋅ size ⋅ (intercept, coefficient)]
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
@@ -322,7 +322,7 @@ Relative shelter volume (RSV) is given by
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.
 
 # Arguments
-- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Mean colony diameter per group and size class with dimensions [groups ⋅ sizes].
 - `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
 - `habitable_area_m²` : Habitable area in m² with dimensions [locations].
@@ -397,7 +397,7 @@ the maximum. For possible parametrisations of the log-log linear model used to
 predict shelter volume from planar area, see Urbina-Barreto et al., [1].
 
 # Arguments
-- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
 - `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
 - `habitable_area_m²` : Habitable area in m² with dimensions [locations].
