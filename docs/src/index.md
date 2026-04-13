@@ -66,7 +66,9 @@ ltmp_cover = ADRIAIndicators.ltmp_cover(relative_cover, habitable_area, reef_are
 
 # (b) Relative Shelter Volume
 # First, calculate 4D shelter volume, then aggregate to 2D [timesteps, locations].
-sv_4d = ADRIAIndicators.relative_shelter_volume(relative_cover, mean_colony_diameters, planar_area_params, habitable_area)
+# For the relative shelter volume, we provide a reference parameterisation.
+reference = (25.0, -8.31, 2.47) # (diam, intercept, coefficient)
+sv_4d = ADRIAIndicators.relative_shelter_volume(relative_cover, mean_colony_diameters, planar_area_params, habitable_area, reference)
 relative_shelter_volume = dropdims(sum(sv_4d, dims=(2, 3)), dims=(2, 3))
 
 # (c) Juvenile Indicator

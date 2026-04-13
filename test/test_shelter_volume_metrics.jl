@@ -91,7 +91,11 @@ end
     planar_area_params[:, :, 2] .= 1.0 # coefficient
 
     rsv = relative_shelter_volume(
-        relative_cover, colony_mean_diam_cm, planar_area_params, habitable_area
+        relative_cover,
+        colony_mean_diam_cm,
+        planar_area_params,
+        habitable_area,
+        (100.0, 0.0, 1.0)
     )
     agg_cover = sum(relative_cover, dims=(2, 3))
 
@@ -123,7 +127,11 @@ end
 
     msv = sv[1, 3] .* habitable_area .* 0.5
     rsv = relative_shelter_volume(
-        relative_cover, colony_mean_diam_cm, planar_area_params, habitable_area
+        relative_cover,
+        colony_mean_diam_cm,
+        planar_area_params,
+        habitable_area,
+        (25.0, -8.31, 2.47)
     )
     @test size(rsv) == (n_tsteps, n_groups, n_sizes, n_locs)
     @test all(
