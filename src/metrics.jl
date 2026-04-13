@@ -31,7 +31,7 @@ end
 Calculates coral taxa diversity as a dimensionless metric.
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `r_taxa_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 - `out_coral_diversity` : Output array buffer [timesteps ⋅ locations]
 """
 function coral_diversity!(
@@ -82,7 +82,7 @@ where ``x_g`` is the relative coral cover for the functional group, ``g``, and `
 total relative coral cover at the given location and timestep.
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 
 # Returns
 Matrix containing coral diversity metric of dimension [timesteps ⋅ locations]
@@ -102,7 +102,7 @@ Calculates evenness across functional coral groups in ADRIA as a diversity metri
 Inverse Simpsons diversity indicator.
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 - `out_coral_evenness` : Output array buffer [timesteps ⋅ locations]
 
 # References
@@ -154,7 +154,7 @@ E(x) = \\left(\\sum_{g=1}^{G}\\left(\\frac{x_g}{x_T} \\right)^2\\right)^{-1}
 ```
 
 # Arguments
-- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations]
+- `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
 
 # Returns
 Matrix containing coral evenness metric of dimensions [timesteps ⋅ locations]
@@ -208,10 +208,47 @@ function _colony_Lcm2_to_m3m2(
 end
 
 """
+    maximum_colony_volume(colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3})::T where {T<:AbstractFloat}
+
+Find the maximum colony volume per m² among all provided species and size classes.
+"""
+function maximum_colony_volume(
+    colony_mean_diam_cm::AbstractArray{T,2},
+    planar_area_params::AbstractArray{T,3}
+)::T where {T<:AbstractFloat}
+    max_vol::T = zero(T)
+    for idx in CartesianIndices(colony_mean_diam_cm)
+        v = _colony_Lcm2_to_m3m2(
+            colony_mean_diam_cm[idx],
+            planar_area_params[idx, 1],
+            planar_area_params[idx, 2]
+        )
+        if v > max_vol
+            max_vol = v
+        end
+    end
+
+    return max_vol
+end
+
+"""
+    maximum_colony_volume(diam::T, intercept::T, coefficient::T)::T where {T<:AbstractFloat}
+
+Calculate colony volume per m² for a specific parameterization.
+"""
+function maximum_colony_volume(
+    diam::T,
+    intercept::T,
+    coefficient::T
+)::T where {T<:AbstractFloat}
+    return _colony_Lcm2_to_m3m2(diam, intercept, coefficient)
+end
+
+"""
     absolute_shelter_volume!(rel_cover::AbstractArray{T,3}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area::T, ASV::AbstractArray{T,3})::Nothing where {T<:AbstractFloat}
 
 # Arguments
-- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
+- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
 - `planar_area_params` : 3-D array of planar area parameters with dimensions [groups ⋅ size ⋅ (intercept, coefficient)]
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
@@ -275,7 +312,7 @@ where ``ASV`` and ``A_C`` refers to absolute shelter volume and absolute coral c
 respectively.
 
 # Arguments
-- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations]
+- `rel_cover` : 4-D Array of relative coral cover with dimensions [timesteps ⋅ groups ⋅ size ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Matrix of mean colony diameter with dimensions [groups ⋅ size]
 - `planar_area_params` : 3-D array of planar area params with dimensions [groups ⋅ size ⋅ (intercept, coefficient)]
 - `habitable_area_m2` : Vector of habitable area for each location [locations]
@@ -307,10 +344,10 @@ function absolute_shelter_volume(
 end
 
 """
-    relative_shelter_volume!(rel_cover::AbstractArray{T,4}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area_m²::AbstractVector{T}, out_RSV::AbstractArray{T,4})::Nothing where {T<:AbstractFloat}
+    relative_shelter_volume!(rel_cover::AbstractArray{T,4}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area_m²::AbstractVector{T}, out_RSV::AbstractArray{T,4}, reference::Tuple{T, T, T})::Nothing where {T<:AbstractFloat}
 
 Calculate the relative shelter volume for a range of covers. Relative to the theoretical
-maximum of 50% cover of a coral species with the largest colony volume.
+maximum of 50% cover of a coral species with the specified reference parameterisation.
 Relative shelter volume (RSV) is given by
 
 ```math
@@ -322,36 +359,26 @@ Relative shelter volume (RSV) is given by
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.
 
 # Arguments
-- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Mean colony diameter per group and size class with dimensions [groups ⋅ sizes].
 - `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
 - `habitable_area_m²` : Habitable area in m² with dimensions [locations].
 - `out_RSV` : Output Relative shelter volume array buffer with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `reference` : Parameterisation to use as reference (mean diameter, intercept, coefficient).
 """
 function relative_shelter_volume!(
     rel_cover::AbstractArray{T,4},
     colony_mean_diam_cm::AbstractArray{T,2},
     planar_area_params::AbstractArray{T,3},
     habitable_area_m²::AbstractVector{T},
-    out_RSV::AbstractArray{T,4}
+    out_RSV::AbstractArray{T,4},
+    reference::Tuple{T, T, T}
 )::Nothing where {T<:AbstractFloat}
     n_groups, n_sizes = size(colony_mean_diam_cm)
     n_timesteps, _, _, n_locations = size(rel_cover)
 
-    # Calculate max colony volume per m²
-    max_colony_vol::T = zero(T)
-    for s in 1:n_sizes
-        for g in 1:n_groups
-            v = _colony_Lcm2_to_m3m2(
-                colony_mean_diam_cm[g, s],
-                planar_area_params[g, s, 1],
-                planar_area_params[g, s, 2]
-            )
-            if v > max_colony_vol
-                max_colony_vol = v
-            end
-        end
-    end
+    # Calculate max colony volume per m² from reference
+    max_colony_vol::T = _colony_Lcm2_to_m3m2(reference...)
 
     for l in 1:n_locations
         # Maximum shelter volume m³ = habitable_area * max_colony_vol * 0.5
@@ -378,7 +405,7 @@ function relative_shelter_volume!(
 end
 
 """
-    relative_shelter_volume(relative_cover::AbstractArray{T,4}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area_m²::AbstractVector{T})::AbstractArray{T,4} where {T<:Real}
+    relative_shelter_volume(relative_cover::AbstractArray{T,4}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area_m²::AbstractVector{T}, reference::Tuple{T, T, T})::AbstractArray{T,4} where {T<:Real}
 
 Calculate the relative shelter volume for a range of covers. Relative shelter volume (RSV) is
 given by
@@ -390,17 +417,17 @@ given by
 ```
 
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.
-Previously, the maximum shelter volume has been defined by assuming the maximum theoretical
-shelter volume produced by the largest size class of Tabular Acropora. This function defines
-it by calculating the shelter volume for each functional group and size class and picking
-the maximum. For possible parametrisations of the log-log linear model used to
-predict shelter volume from planar area, see Urbina-Barreto et al., [1].
+The maximum shelter volume is defined by assuming the maximum theoretical shelter volume
+produced by a specified reference parameterisation at 50% cover.
+For possible parametrisations of the log-log linear model used to predict shelter volume
+from planar area, see Urbina-Barreto et al., [1].
 
 # Arguments
-- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `colony_mean_diam_cm` : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
 - `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
 - `habitable_area_m²` : Habitable area in m² with dimensions [locations].
+- `reference` : Parameterisation to use as reference (mean diameter, intercept, coefficient).
 
 # Returns
 Relative shelter volume in an array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
@@ -418,7 +445,8 @@ function relative_shelter_volume(
     relative_cover::AbstractArray{T,4},
     colony_mean_diam_cm::AbstractArray{T,2},
     planar_area_params::AbstractArray{T,3},
-    habitable_area_m²::AbstractVector{T}
+    habitable_area_m²::AbstractVector{T},
+    reference::Tuple{T, T, T}
 )::Array{T,4} where {T<:Real}
     n_tsteps::Int64, n_groups::Int64, n_sizes::Int64, n_locs::Int64 = size(relative_cover)
 
@@ -461,7 +489,12 @@ function relative_shelter_volume(
 
     RSV::Array{T,4} = zeros(T, n_tsteps, n_groups, n_sizes, n_locs)
     relative_shelter_volume!(
-        relative_cover, colony_mean_diam_cm, planar_area_params, habitable_area_m², RSV
+        relative_cover,
+        colony_mean_diam_cm,
+        planar_area_params,
+        habitable_area_m²,
+        RSV,
+        reference
     )
 
     return RSV

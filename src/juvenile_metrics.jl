@@ -4,7 +4,7 @@
 Calculate the relative coral cover composed of juveniles.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 - `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
 """
@@ -27,7 +27,7 @@ Calculate the relative coral cover composed of juveniles for a 5-dimensional arr
 cover.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 - `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations ⋅ scenarios].
 """
@@ -52,7 +52,7 @@ end
 Calculate the relative coral cover composed of juveniles.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 
 # Returns
@@ -83,7 +83,7 @@ Calculate the relative coral cover composed of juveniles for a 5-dimensional arr
 cover.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 
 # Returns
@@ -114,7 +114,7 @@ Calculate the relative coral cover composed of juveniles over time and functiona
 Returns the output into a preallocated buffer.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 - `location_area` : Vector containing the area of each location with dimensions [locations].
 - `out_relative_taxa_juveniles` : Output array buffer with dimensions [timesteps ⋅ groups].
@@ -152,7 +152,7 @@ end
 Calculate the relative coral cover composed of juveniles over time and functional group.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 - `location_area` : Vector containing the area of each location with dimensions [locations].
 
@@ -180,7 +180,7 @@ Calculate the relative coral cover copmosed of juveniles over time, functional g
 location. Returns the output into a preallocated buffer
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 - `out_relative_taxa_juveniles` : Output array buffer with dimensions [timesteps ⋅ groups ⋅ locations].
 """
@@ -202,7 +202,7 @@ Calculate the relative coral cover composed of juveniles over time, functional g
 location.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 
 # Returns
@@ -227,7 +227,7 @@ end
 Calculate the absolute coral cover composed of juveniles for each timestep and location.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : A boolean vector indicating which size classes are juvenile.
 - `location_area` : Habitable area for each location.
 - `out_absolute_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
@@ -250,7 +250,7 @@ end
 Calculate the absolute coral cover composed of juveniles for each timestep, location, and scenario.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `location_area` : Habitable area for each location.
 - `out_absolute_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations ⋅ scenarios].
@@ -278,7 +278,7 @@ end
 Calculate the absolute coral cover composed of juveniles for each timestep and location.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `location_area` : Habitable area for each location.
 
@@ -310,7 +310,7 @@ end
 Calculate the absolute coral cover composed of juveniles for each timestep, location, and scenario.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `location_area` : Habitable area for each location.
 
@@ -343,7 +343,7 @@ Calculate the coral cover occupied by juveniles over timesteps and functional gr
 results in a preallocated buffer.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `location_area` : Habitable area for each location.
 - `out_absolute_taxa_juveniles` : Out array buffer with dimensions [timesteps ⋅ groups ⋅ locations]
@@ -381,7 +381,7 @@ Calculate the coral cover occupied by juveniles in absolute units over timesteps
 groups and locations.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `location_area` : Habitable area for each location.
 
@@ -409,7 +409,7 @@ Calculate the coral cover occupied by juveniles in absolute units over timesteps
 groups and locations. Write results into a preallocated buffer.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `location_area` : Habitable area for each location.
 - `out_absolute_loc_taxa_juveniles` : Out array buffer with dimensions [timesteps ⋅ groups ⋅ locations]
@@ -447,7 +447,7 @@ Calculate the coral cover occupied by juveniles in absolute units over timesteps
 groups and locations.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `location_area` : Habitable area for each location.
 
@@ -500,7 +500,7 @@ Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical
 juveniles have been achieved.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating juvenile size classes.
 - `habitable_area` : Available area habitable by coral for each location.
 - `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
@@ -592,7 +592,7 @@ Then Juvenile Indicator (I) is given as,
 where ``H_A`` refers to habitable area and ``A(x; H_A)`` refers to absolute juvenile cover.
 
 # Arguments
-- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
 - `is_juvenile` : Boolean mask indicating which sizes are juveniles.
 - `habitable_area` : Available area habitable by coral for each location.
 - `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
