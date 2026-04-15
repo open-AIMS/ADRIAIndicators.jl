@@ -377,15 +377,16 @@ function relative_shelter_volume!(
     n_groups, n_sizes = size(colony_mean_diam_cm)
     n_timesteps, _, _, n_locations = size(rel_cover)
 
+    # One reference coral per m²
+    prop_cov::Float64 = π * (reference[1] / (100.0 * 2.0))^2
     # Calculate max colony volume per m² from reference
-    max_colony_vol::T = _colony_Lcm2_to_m3m2(reference...)
+    max_colony_vol::T = _colony_Lcm2_to_m3m2(reference...) * prop_cov
 
     for l in 1:n_locations
-        # Maximum shelter volume m³ = habitable_area * max_colony_vol * 0.5
+        # Maximum shelter volume m³ = habitable_area * max_colony_vol
         # Since we want relative shelter volume:
-        # RSV = (rel_cover * habitable_area * colony_vol) / (habitable_area * max_colony_vol * 0.5)
-        # RSV = (rel_cover * colony_vol) / (max_colony_vol * 0.5)
-        msv_factor = max_colony_vol * 0.5
+        # RSV = (rel_cover * habitable_area * colony_vol) / (habitable_area * max_colony_vol)
+        # RSV = (rel_cover * colony_vol) / (max_colony_vol)
         for s in 1:n_sizes
             for g in 1:n_groups
                 colony_vol = _colony_Lcm2_to_m3m2(
@@ -393,7 +394,7 @@ function relative_shelter_volume!(
                     planar_area_params[g, s, 1],
                     planar_area_params[g, s, 2]
                 )
-                factor = colony_vol / msv_factor
+                factor = colony_vol / max_colony_vol
                 for t in 1:n_timesteps
                     out_RSV[t, g, s, l] = rel_cover[t, g, s, l] * factor
                 end
