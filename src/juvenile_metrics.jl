@@ -1,39 +1,46 @@
 """
-    relative_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, out_relative_juveniles::AbstractArray{T,2})::Nothing where {T<:Real}
+    relative_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, out_relative_juveniles::AbstractArray{T,2})::Nothing where {T<:Real}
 
 Calculate the relative coral cover composed of juveniles.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
 """
 function relative_juveniles!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     out_relative_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:Real}
-    n_timesteps, _, _, n_locations = size(relative_cover)
-    sum!(reshape(out_relative_juveniles, (n_timesteps, 1, 1, n_locations)), view(relative_cover, :, :, is_juvenile, :))
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+
+    fill!(out_relative_juveniles, zero(T))
+    for l in 1:n_locations, s in 1:n_sizes, g in 1:n_groups
+        if is_juvenile[g, s]
+            for t in 1:n_timesteps
+                out_relative_juveniles[t, l] += relative_cover[t, g, s, l]
+            end
+        end
+    end
 
     return nothing
 end
 
-
 """
-    relative_juveniles!(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool}, out_relative_juveniles::AbstractArray{T,3})::Nothing where {T<:Real}
+    relative_juveniles!(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractMatrix{Bool}, out_relative_juveniles::AbstractArray{T,3})::Nothing where {T<:Real}
 
 Calculate the relative coral cover composed of juveniles for a 5-dimensional array of relative
 cover.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations ⋅ scenarios].
 """
 function relative_juveniles!(
     relative_cover::AbstractArray{T,5},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     out_relative_juveniles::AbstractArray{T,3}
 )::Nothing where {T<:Real}
     for scenario_idx in 1:size(relative_cover, 5)
@@ -47,26 +54,26 @@ function relative_juveniles!(
 end
 
 """
-    relative_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool})::AbstractArray{T,2} where {T<:Real}
+    relative_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool})::AbstractArray{T,2} where {T<:Real}
 
 Calculate the relative coral cover composed of juveniles.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 
 # Returns
 A 2D array of relative juvenile cover with dimensions [timesteps ⋅ locations].
 """
 function relative_juveniles(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool}
+    is_juvenile::AbstractMatrix{Bool}
 )::AbstractArray{T,2} where {T<:Real}
-    n_timesteps, _, n_sizes, n_locations = size(relative_cover)
-    if length(is_juvenile) != n_sizes
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+    if size(is_juvenile) != (n_groups, n_sizes)
         throw(
             DimensionMismatch(
-                "The length of is_juvenile must match the number of size classes in relative_cover."
+                "The dimensions of is_juvenile must match the number of functional groups and size classes in relative_cover."
             )
         )
     end
@@ -77,27 +84,27 @@ function relative_juveniles(
 end
 
 """
-    relative_juveniles(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool})::AbstractArray{T,3} where {T<:Real}
+    relative_juveniles(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractMatrix{Bool})::AbstractArray{T,3} where {T<:Real}
 
 Calculate the relative coral cover composed of juveniles for a 5-dimensional array of relative
 cover.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 
 # Returns
 A 3D array of relative juvenile cover with dimensions [timesteps ⋅ locations ⋅ scenarios].
 """
 function relative_juveniles(
     relative_cover::AbstractArray{T,5},
-    is_juvenile::AbstractVector{Bool}
+    is_juvenile::AbstractMatrix{Bool}
 )::AbstractArray{T,3} where {T<:Real}
-    n_timesteps, _, n_sizes, n_locations, n_scenarios = size(relative_cover)
-    if length(is_juvenile) != n_sizes
+    n_timesteps, n_groups, n_sizes, n_locations, n_scenarios = size(relative_cover)
+    if size(is_juvenile) != (n_groups, n_sizes)
         throw(
             DimensionMismatch(
-                "The length of is_juvenile must match the number of size classes in relative_cover."
+                "The dimensions of is_juvenile must match the number of functional groups and size classes in relative_cover."
             )
         )
     end
@@ -108,20 +115,20 @@ function relative_juveniles(
 end
 
 """
-    relative_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractArray{Bool}, location_area::AbstractVector{T}, out_relative_taxa_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    relative_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T}, out_relative_taxa_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the relative coral cover composed of juveniles over time and functional group.
 Returns the output into a preallocated buffer.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Vector containing the area of each location with dimensions [locations].
 - `out_relative_taxa_juveniles` : Output array buffer with dimensions [timesteps ⋅ groups].
 """
 function relative_taxa_juveniles!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T},
     out_relative_taxa_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
@@ -133,8 +140,8 @@ function relative_taxa_juveniles!(
     for l in 1:n_locations
         area = location_area[l]
         for s in 1:n_sizes
-            if is_juvenile[s]
-                for g in 1:n_groups
+            for g in 1:n_groups
+                if is_juvenile[g, s]
                     for t in 1:n_timesteps
                         out_relative_taxa_juveniles[t, g] += relative_cover[t, g, s, l] * area
                     end
@@ -149,11 +156,13 @@ function relative_taxa_juveniles!(
 end
 
 """
+    relative_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T})::Array{T,2} where {T<:AbstractFloat}
+
 Calculate the relative coral cover composed of juveniles over time and functional group.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Vector containing the area of each location with dimensions [locations].
 
 # Returns
@@ -161,7 +170,7 @@ Array with dimensions [timesteps ⋅ groups].
 """
 function relative_taxa_juveniles(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T}
 )::Array{T,2} where {T<:AbstractFloat}
     n_tsteps, n_groups, _, _ = size(relative_cover)
@@ -174,43 +183,51 @@ function relative_taxa_juveniles(
 end
 
 """
-    relative_loc_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_relative_loc_taxa_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    relative_loc_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, out_relative_loc_taxa_juveniles::AbstractArray{T,3})::Nothing where {T<:AbstractFloat}
 
-Calculate the relative coral cover copmosed of juveniles over time, functional group and
+Calculate the relative coral cover composed of juveniles over time, functional group and
 location. Returns the output into a preallocated buffer
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
-- `out_relative_taxa_juveniles` : Output array buffer with dimensions [timesteps ⋅ groups ⋅ locations].
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
+- `out_relative_loc_taxa_juveniles` : Output array buffer with dimensions [timesteps ⋅ groups ⋅ locations].
 """
 function relative_loc_taxa_juveniles!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     out_relative_loc_taxa_juveniles::AbstractArray{T,3}
 )::Nothing where {T<:AbstractFloat}
-    n_timesteps, n_groups, _, n_locations = size(relative_cover)
-    sum!(reshape(out_relative_loc_taxa_juveniles, (n_timesteps, n_groups, 1, n_locations)), view(relative_cover, :, :, is_juvenile, :))
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+
+    fill!(out_relative_loc_taxa_juveniles, zero(T))
+    for l in 1:n_locations, s in 1:n_sizes, g in 1:n_groups
+        if is_juvenile[g, s]
+            for t in 1:n_timesteps
+                out_relative_loc_taxa_juveniles[t, g, l] += relative_cover[t, g, s, l]
+            end
+        end
+    end
 
     return nothing
 end
 
 """
-    relative_loc_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool},)::Array{T,3} where {T<:AbstractFloat}
+    relative_loc_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool})::Array{T,3} where {T<:AbstractFloat}
 
 Calculate the relative coral cover composed of juveniles over time, functional group and
 location.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 
 # Returns
 Array with dimensions [timesteps ⋅ groups ⋅ locations].
 """
 function relative_loc_taxa_juveniles(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool}
+    is_juvenile::AbstractMatrix{Bool}
 )::Array{T,3} where {T<:AbstractFloat}
     n_tsteps, n_groups, _, n_locs = size(relative_cover)
     out_relative_loc_taxa_juveniles::Array{T,3} = zeros(T, n_tsteps, n_groups, n_locs)
@@ -222,19 +239,19 @@ function relative_loc_taxa_juveniles(
 end
 
 """
-    absolute_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
+    absolute_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T}, out_absolute_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the absolute coral cover composed of juveniles for each timestep and location.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : A boolean vector indicating which size classes are juvenile.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
 - `out_absolute_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
 """
 function absolute_juveniles!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T},
     out_absolute_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
@@ -245,19 +262,19 @@ function absolute_juveniles!(
 end
 
 """
-    absolute_juveniles!(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_juveniles::AbstractArray{T,3})::Nothing where {T<:AbstractFloat}
+    absolute_juveniles!(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T}, out_absolute_juveniles::AbstractArray{T,3})::Nothing where {T<:AbstractFloat}
 
 Calculate the absolute coral cover composed of juveniles for each timestep, location, and scenario.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
 - `out_absolute_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations ⋅ scenarios].
 """
 function absolute_juveniles!(
     relative_cover::AbstractArray{T,5},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T},
     out_absolute_juveniles::AbstractArray{T,3}
 )::Nothing where {T<:AbstractFloat}
@@ -273,13 +290,13 @@ function absolute_juveniles!(
 end
 
 """
-    absolute_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T})::AbstractArray{T,2} where {T<:AbstractFloat}
+    absolute_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T})::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Calculate the absolute coral cover composed of juveniles for each timestep and location.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
 
 # Returns
@@ -287,7 +304,7 @@ A 2D array of absolute juvenile cover with dimensions [timesteps ⋅ locations].
 """
 function absolute_juveniles(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T}
 )::AbstractArray{T,2} where {T<:AbstractFloat}
     n_timesteps, _, _, n_locations = size(relative_cover)
@@ -305,13 +322,13 @@ function absolute_juveniles(
 end
 
 """
-    absolute_juveniles(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T})::AbstractArray{T,3} where {T<:AbstractFloat}
+    absolute_juveniles(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T})::AbstractArray{T,3} where {T<:AbstractFloat}
 
 Calculate the absolute coral cover composed of juveniles for each timestep, location, and scenario.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
 
 # Returns
@@ -319,7 +336,7 @@ A 3D array of absolute juvenile cover with dimensions [timesteps ⋅ locations �
 """
 function absolute_juveniles(
     relative_cover::AbstractArray{T,5},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T}
 )::AbstractArray{T,3} where {T<:AbstractFloat}
     n_timesteps, _, _, n_locations, n_scenarios = size(relative_cover)
@@ -337,20 +354,20 @@ function absolute_juveniles(
 end
 
 """
-    absolute_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_taxa_juveniles::AbstractArray{T,2})::Nothing
+    absolute_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T}, out_absolute_taxa_juveniles::AbstractArray{T,2})::Nothing
 
 Calculate the coral cover occupied by juveniles over timesteps and functional groups. Write
 results in a preallocated buffer.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
-- `out_absolute_taxa_juveniles` : Out array buffer with dimensions [timesteps ⋅ groups ⋅ locations]
+- `out_absolute_taxa_juveniles` : Out array buffer with dimensions [timesteps ⋅ groups]
 """
 function absolute_taxa_juveniles!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T},
     out_absolute_taxa_juveniles::AbstractArray{T,2}
 )::Nothing where {T<:AbstractFloat}
@@ -361,8 +378,8 @@ function absolute_taxa_juveniles!(
     for l in 1:n_locations
         area = location_area[l]
         for s in 1:n_sizes
-            if is_juvenile[s]
-                for g in 1:n_groups
+            for g in 1:n_groups
+                if is_juvenile[g, s]
                     for t in 1:n_timesteps
                         out_absolute_taxa_juveniles[t, g] += relative_cover[t, g, s, l] * area
                     end
@@ -375,14 +392,14 @@ function absolute_taxa_juveniles!(
 end
 
 """
-    absolute_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T})::Array{T,2} where {T<:AbstractFloat}
+    absolute_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T})::Array{T,2} where {T<:AbstractFloat}
 
 Calculate the coral cover occupied by juveniles in absolute units over timesteps, functional
 groups and locations.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
 
 # Returns
@@ -390,7 +407,7 @@ A 2D array with dimensions [timesteps ⋅ groups]
 """
 function absolute_taxa_juveniles(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T}
 )::Array{T,2} where {T<:AbstractFloat}
     n_tsteps, n_groups, _, _ = size(relative_cover)
@@ -403,20 +420,20 @@ function absolute_taxa_juveniles(
 end
 
 """
-    absolute_loc_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, out_absolute_loc_taxa_juveniles::AbstractArray{T,3})::Nothing
+    absolute_loc_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T}, out_absolute_loc_taxa_juveniles::AbstractArray{T,3})::Nothing
 
 Calculate the coral cover occupied by juveniles in absolute units over timesteps, functional
 groups and locations. Write results into a preallocated buffer.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
 - `out_absolute_loc_taxa_juveniles` : Out array buffer with dimensions [timesteps ⋅ groups ⋅ locations]
 """
 function absolute_loc_taxa_juveniles!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T},
     out_absolute_loc_taxa_juveniles::AbstractArray{T,3}
 )::Nothing where {T<:AbstractFloat}
@@ -427,8 +444,8 @@ function absolute_loc_taxa_juveniles!(
     for l in 1:n_locations
         area = location_area[l]
         for s in 1:n_sizes
-            if is_juvenile[s]
-                for g in 1:n_groups
+            for g in 1:n_groups
+                if is_juvenile[g, s]
                     for t in 1:n_timesteps
                         out_absolute_loc_taxa_juveniles[t, g, l] += relative_cover[t, g, s, l] * area
                     end
@@ -441,22 +458,22 @@ function absolute_loc_taxa_juveniles!(
 end
 
 """
-    absolute_loc_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T})::Array{T,3} where {T<:AbstractFloat}
+    absolute_loc_taxa_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T})::Array{T,3} where {T<:AbstractFloat}
 
 Calculate the coral cover occupied by juveniles in absolute units over timesteps, functional
 groups and locations.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `location_area` : Habitable area for each location.
 
 # Returns
-A 2D array of absolute juvenile cover with dimensions [timesteps ⋅ locations].
+A 3D array of absolute juvenile cover with dimensions [timesteps ⋅ groups ⋅ locations].
 """
 function absolute_loc_taxa_juveniles(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     location_area::AbstractVector{T}
 )::Array{T,3} where {T<:AbstractFloat}
     n_tsteps, n_groups, _, n_locs = size(relative_cover)
@@ -482,26 +499,26 @@ function _max_juvenile_area(max_juv_colony_area::T, max_juv_density::T)::T where
 end
 
 """
-    _maximum_colony_area(size_spec::AbstractArray{T,2})::T where {T<:AbstractFloat}
+    _maximum_colony_area(mean_colony_diams::AbstractArray{T})::T where {T<:AbstractFloat}
 
 Calculate the largest colony size given a range of size classes.
 """
-function _maximum_colony_area(mean_colony_diams::AbstractArray{T,2})::T where {T<:AbstractFloat}
-    max_idx = argmax(mean_colony_diams)
-    mean_colony_size::T = (π / 4) * mean_colony_diams[max_idx]^2
-
-    return mean_colony_size
+function _maximum_colony_area(mean_colony_diams::AbstractArray{T})::T where {T<:AbstractFloat}
+    if isempty(mean_colony_diams)
+        return zero(T)
+    end
+    return (π / 4) * maximum(mean_colony_diams)^2
 end
 
 """
-    juvenile_indicator!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, location_area::AbstractVector{T}, max_juv_colony_area::T, max_juv_density::T)::Nothing
+    juvenile_indicator!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T}, max_juv_colony_area::T, max_juv_density::T)::Nothing
 
 Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical density for
 juveniles have been achieved.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `habitable_area` : Available area habitable by coral for each location.
 - `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
 - `max_juv_density` : Maximum density juveniles can occur in.
@@ -509,7 +526,7 @@ juveniles have been achieved.
 """
 function juvenile_indicator!(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     habitable_area::AbstractVector{T},
     mean_colony_diameters::AbstractArray{T,2},
     max_juv_density::T,
@@ -520,7 +537,7 @@ function juvenile_indicator!(
         return nothing
     end
 
-    max_col_area::T = _maximum_colony_area(view(mean_colony_diameters, :, is_juvenile))
+    max_col_area::T = _maximum_colony_area(mean_colony_diameters[is_juvenile])
     max_juv_area::T = _max_juvenile_area(max_col_area, max_juv_density)
 
     # absolute_juveniles! fills out_juvenile_indicator with absolute cover
@@ -539,14 +556,14 @@ function juvenile_indicator!(
 end
 
 """
-    juvenile_indicator!(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool}, habitable_area::AbstractVector{T}, mean_colony_diameters::AbstractArray{T,2}, max_juv_density::T, out_juvenile_indicator::AbstractArray{T,3})::Nothing where {T<:AbstractFloat}
+    juvenile_indicator!(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractMatrix{Bool}, habitable_area::AbstractVector{T}, mean_colony_diameters::AbstractArray{T,2}, max_juv_density::T, out_juvenile_indicator::AbstractArray{T,3})::Nothing where {T<:AbstractFloat}
 
 Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical density for
 juveniles have been achieved.
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios]
-- `is_juvenile` : Boolean mask indicating juvenile size classes.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `habitable_area` : Available area habitable by coral for each location.
 - `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
 - `max_juv_density` : Maximum density juveniles can occur in.
@@ -554,7 +571,7 @@ juveniles have been achieved.
 """
 function juvenile_indicator!(
     relative_cover::AbstractArray{T,5},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     habitable_area::AbstractVector{T},
     mean_colony_diameters::AbstractArray{T,2},
     max_juv_density::T,
@@ -574,7 +591,7 @@ function juvenile_indicator!(
 end
 
 """
-    juvenile_indicator(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, habitable_area::AbstractVector{T}, mean_colony_diameters::AbstractArray{T,2}, max_juv_density::T)::AbstractArray{T,2} where {T<:AbstractFloat}
+    juvenile_indicator(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, habitable_area::AbstractVector{T}, mean_colony_diameters::AbstractArray{T,2}, max_juv_density::T)::AbstractArray{T,2} where {T<:AbstractFloat}
 
 Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical density for
 juveniles have been achieved. The juvenile indicator is defined as follows.
@@ -593,7 +610,7 @@ where ``H_A`` refers to habitable area and ``A(x; H_A)`` refers to absolute juve
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `is_juvenile` : Boolean mask indicating which sizes are juveniles.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `habitable_area` : Available area habitable by coral for each location.
 - `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
 - `max_juv_density` : Maximum juvenile density for all juvenile size classes and functional groups.
@@ -603,7 +620,7 @@ A 2D array of juvenile indicators with dimensions [timesteps ⋅ locations]
 """
 function juvenile_indicator(
     relative_cover::AbstractArray{T,4},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     habitable_area::AbstractVector{T},
     mean_colony_diameters::AbstractArray{T,2},
     max_juv_density::T
@@ -623,7 +640,7 @@ function juvenile_indicator(
 end
 
 """
-    juvenile_indicator(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool}, habitable_area::AbstractVector{T}, mean_colony_diameters::AbstractArray{T,2}, max_juv_density::T)::AbstractArray{T,3} where {T<:AbstractFloat}
+    juvenile_indicator(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractMatrix{Bool}, habitable_area::AbstractVector{T}, mean_colony_diameters::AbstractArray{T,2}, max_juv_density::T)::AbstractArray{T,3} where {T<:AbstractFloat}
 
 Indicator for juvenile density (0 - 1) where 1 indicates the maximum theoretical density for
 juveniles have been achieved. The juvenile indicator is defined as follows.
@@ -642,7 +659,7 @@ where ``H_A`` refers to habitable area and ``A(x; H_A)`` refers to absolute juve
 
 # Arguments
 - `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios]
-- `is_juvenile` : Boolean mask indicating which sizes are juveniles.
+- `is_juvenile` : A boolean matrix indicating which functional groups and size classes are juvenile [groups ⋅ sizes].
 - `habitable_area` : Available area habitable by coral for each location.
 - `mean_colony_diameters` : Mean colony diameter for each group and size class with dimensions [groups ⋅ size classes]
 - `max_juv_density` : Maximum juvenile density for all juvenile size classes and functional groups.
@@ -652,7 +669,7 @@ A 3D array of juvenile indicators with dimensions [timesteps ⋅ locations ⋅ s
 """
 function juvenile_indicator(
     relative_cover::AbstractArray{T,5},
-    is_juvenile::AbstractVector{Bool},
+    is_juvenile::AbstractMatrix{Bool},
     habitable_area::AbstractVector{T},
     mean_colony_diameters::AbstractArray{T,2},
     max_juv_density::T
