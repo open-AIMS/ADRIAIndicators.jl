@@ -17,7 +17,7 @@ using ADRIAIndicators: juvenile_indicator
     location_area = [100.0, 200.0]
     total_area = sum(location_area)
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     # Timestep 1: Cover is only in location 1
     # Group 1, Loc 1: Juvenile cover = 0.1 + 0.1 = 0.2. Absolute = 0.2 * 100 = 20
@@ -50,13 +50,13 @@ using ADRIAIndicators: juvenile_indicator
 
     @testset "Edge Cases" begin
         # Test with no juvenile classes
-        no_juveniles = [false, false, false, false]
+        no_juveniles = fill(false, n_groups, n_sizes)
         @test all(
             relative_taxa_juveniles(relative_cover, no_juveniles, location_area) .== 0.0
         )
 
         # Test with all classes as juveniles
-        all_juveniles = [true, true, true, true]
+        all_juveniles = fill(true, n_groups, n_sizes)
         rel_taxa_all_juv = relative_taxa_juveniles(
             relative_cover, all_juveniles, location_area
         )
@@ -77,7 +77,7 @@ end
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     relative_cover[1, 1, :, 1] = [0.1, 0.1, 0.05, 0.05]
     relative_cover[1, 2, :, 1] = [0.05, 0.05, 0.2, 0.2]
@@ -97,11 +97,11 @@ end
 
     @testset "Edge Cases" begin
         # Test with no juvenile classes
-        no_juveniles = [false, false, false, false]
+        no_juveniles = fill(false, n_groups, n_sizes)
         @test all(relative_juveniles(relative_cover, no_juveniles) .== 0.0)
 
         # Test with all classes as juveniles
-        all_juveniles = [true, true, true, true]
+        all_juveniles = fill(true, n_groups, n_sizes)
         expected_sum = dropdims(sum(relative_cover, dims=(2, 3)), dims=(2, 3))
         @test relative_juveniles(relative_cover, all_juveniles) ≈ expected_sum
     end
@@ -111,7 +111,7 @@ end
     n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     # Timestep 1, Location 1
     relative_cover[1, 1, :, 1] .= [0.1, 0.1, 0.05, 0.05]  # Group 1
@@ -137,13 +137,13 @@ end
 
     @testset "Edge Cases" begin
         # Test with no juvenile classes
-        no_juveniles = [false, false, false, false]
+        no_juveniles = fill(false, n_groups, n_sizes)
         @test all(
             relative_loc_taxa_juveniles(relative_cover, no_juveniles) .== 0.0
         )
 
         # Test with all classes as juveniles
-        all_juveniles = [true, true, true, true]
+        all_juveniles = fill(true, n_groups, n_sizes)
         rel_juv_all = relative_loc_taxa_juveniles(
             relative_cover, all_juveniles
         )
@@ -158,7 +158,7 @@ end
     location_area = [100.0, 200.0]
     total_area = sum(location_area)
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     # Timestep 1: Cover is only in location 1
     # Group 1, Loc 1: Juvenile cover = 0.1 + 0.1 = 0.2. Absolute = 0.2 * 100 = 20
@@ -184,13 +184,13 @@ end
 
     @testset "Edge Cases" begin
         # Test with no juvenile classes
-        no_juveniles = [false, false, false, false]
+        no_juveniles = fill(false, n_groups, n_sizes)
         @test all(
             absolute_taxa_juveniles(relative_cover, no_juveniles, location_area) .== 0.0
         )
 
         # Test with all classes as juveniles
-        all_juveniles = [true, true, true, true]
+        all_juveniles = fill(true, n_groups, n_sizes)
         rel_taxa_all_juv = absolute_taxa_juveniles(
             relative_cover, all_juveniles, location_area
         )
@@ -212,7 +212,7 @@ end
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
     location_area = [100.0, 200.0]
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     relative_cover[1, 1, :, 1] = [0.1, 0.1, 0.05, 0.05]
     relative_cover[1, 2, :, 1] = [0.05, 0.05, 0.2, 0.2]
@@ -220,7 +220,7 @@ end
     relative_cover[2, 1, :, 2] = [0.0, 0.05, 0.3, 0.3]
     relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
 
-    @testset "Noraml Cases" begin
+    @testset "Normal Cases" begin
         abs_juv = absolute_juveniles(relative_cover, is_juvenile, location_area)
         @test size(abs_juv) == (n_tsteps, n_locs)
 
@@ -231,12 +231,12 @@ end
     end
 
     @testset "Edge Cases" begin
-        no_juveniles = [false, false, false, false]
+        no_juveniles = fill(false, n_groups, n_sizes)
         @test all(absolute_juveniles(
             relative_cover, no_juveniles, location_area
         ) .== 0.0)
 
-        all_juveniles = [true, true, true, true]
+        all_juveniles = fill(true, n_groups, n_sizes)
         abs_juv = absolute_juveniles(relative_cover, all_juveniles, location_area)
 
         @test abs_juv[1, 1] ≈ 80.0
@@ -251,7 +251,7 @@ end
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
     location_area = [100.0, 200.0]
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     # Timestep 1, Location 1
     relative_cover[1, 1, :, 1] .= [0.1, 0.1, 0.05, 0.05]  # Group 1
@@ -277,13 +277,13 @@ end
 
     @testset "Edge Cases" begin
         # Test with no juvenile classes
-        no_juveniles = [false, false, false, false]
+        no_juveniles = fill(false, n_groups, n_sizes)
         @test all(
             absolute_loc_taxa_juveniles(relative_cover, no_juveniles, location_area) .== 0.0
         )
 
         # Test with all classes as juveniles
-        all_juveniles = [true, true, true, true]
+        all_juveniles = fill(true, n_groups, n_sizes)
         rel_juv_all = absolute_loc_taxa_juveniles(
             relative_cover, all_juveniles, location_area
         )
@@ -297,7 +297,7 @@ end
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
     habitable_area = [100.0, 200.0]
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     relative_cover[1, 1, :, 1] = [0.1, 0.1, 0.05, 0.05]
     relative_cover[1, 2, :, 1] = [0.05, 0.05, 0.2, 0.2]
@@ -342,7 +342,7 @@ end
     end
 
     @testset "Edge Cases" begin
-        no_juveniles = [false, false, false, false]
+        no_juveniles = fill(false, n_groups, n_sizes)
         max_juv_density = 3.0
         @test all(
             juvenile_indicator(
@@ -357,7 +357,7 @@ end
     n_tsteps, n_groups, n_sizes, n_locs, n_scenarios = 2, 2, 4, 2, 2
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs, n_scenarios)
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     # Scenario 1
     relative_cover[1, 1, :, 1, 1] = [0.1, 0.1, 0.05, 0.05]
@@ -392,7 +392,7 @@ end
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs, n_scenarios)
     location_area = [100.0, 200.0]
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     # Scenario 1
     relative_cover[1, 1, :, 1, 1] = [0.1, 0.1, 0.05, 0.05]
@@ -427,7 +427,7 @@ end
     relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs, n_scenarios)
     habitable_area = [100.0, 200.0]
 
-    is_juvenile = [true, true, false, false]
+    is_juvenile = [true true false false; true true false false]
 
     # Scenario 1
     relative_cover[1, 1, :, 1, 1] = [0.1, 0.1, 0.05, 0.05]
