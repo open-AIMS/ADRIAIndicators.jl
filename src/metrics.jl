@@ -347,7 +347,7 @@ end
     relative_shelter_volume!(rel_cover::AbstractArray{T,4}, colony_mean_diam_cm::AbstractArray{T,2}, planar_area_params::AbstractArray{T,3}, habitable_area_m²::AbstractVector{T}, out_RSV::AbstractArray{T,4}, reference::Tuple{T, T, T})::Nothing where {T<:AbstractFloat}
 
 Calculate the relative shelter volume for a range of covers. Relative to the theoretical
-maximum of 50% cover of a coral species with the specified reference parameterisation.
+maximum of one reference coral per m² with the specified reference parameterisation.
 Relative shelter volume (RSV) is given by
 
 ```math
@@ -377,8 +377,10 @@ function relative_shelter_volume!(
     n_groups, n_sizes = size(colony_mean_diam_cm)
     n_timesteps, _, _, n_locations = size(rel_cover)
 
-    # Calculate max colony volume per m² from reference at 50% cover
-    max_colony_vol::T = _colony_Lcm2_to_m3m2(reference...) * 0.5
+    # One reference coral per m²
+    prop_cov::Float64 = π * (reference[1] / (100.0 * 2.0))^2
+    # Calculate max colony volume per m² from reference
+    max_colony_vol::T = _colony_Lcm2_to_m3m2(reference...) * prop_cov
 
     for l in 1:n_locations
         # Maximum shelter volume m³ = habitable_area * max_colony_vol
@@ -416,14 +418,13 @@ given by
 ```
 
 where ASV and MSV are Absolute Shelter Volume and Maximum Shelter Volume respectively.
-The maximum shelter volume is defined by assuming the maximum theoretical shelter volume
-produced by a specified reference parameterisation at 50% cover.
+The maximum shelter volume is defined by assuming one reference colony per m².
 For possible parametrisations of the log-log linear model used to predict shelter volume
 from planar area, see Urbina-Barreto et al., [1].
 
 # Arguments
 - `rel_cover` : Relative Cover array with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
-- `colony_mean_diam_cm` : Mean colony area per group and size class with dimensions [groups ⋅ sizes].
+- `colony_mean_diam_cm` : Mean colony diameter per group and size class with dimensions [groups ⋅ sizes].
 - `planar_area_params` : Array containing the planar area parameters with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
 - `habitable_area_m²` : Habitable area in m² with dimensions [locations].
 - `reference` : Parameterisation to use as reference (mean diameter, intercept, coefficient).
