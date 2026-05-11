@@ -97,12 +97,16 @@ end
         habitable_area,
         (100.0, 0.0, 1.0)
     )
-    agg_cover = sum(relative_cover, dims=(2, 3))
+    
+    # One reference coral per m²:
+    # diameter 100cm => radius 0.5m
+    # area = π * 0.5^2 = π * 0.25
+    prop_cov = π * 0.25
 
     @test all(rsv[1, :, :, 2] .≈ 0.0)
     @test all(rsv[2, :, :, 1] .≈ 0.0)
-    @test all(rsv[1, :, :, 1] .≈ relative_cover[1, :, :, 1] ./ 0.5)
-    @test all(rsv[2, :, :, 2] .≈ relative_cover[2, :, :, 2] ./ 0.5)
+    @test all(rsv[1, :, :, 1] .≈ relative_cover[1, :, :, 1] ./ prop_cov)
+    @test all(rsv[2, :, :, 2] .≈ relative_cover[2, :, :, 2] ./ prop_cov)
 
     colony_mean_diam_cm = [
         15.0 20.0 25.0;
@@ -125,7 +129,9 @@ end
     )
     sv .*= 0.001
 
-    msv = sv[1, 3] .* habitable_area .* 0.5
+    # MSV = sv[reference] * prop_cov * habitable_area
+    prop_cov = π * (25.0 / (100.0 * 2.0))^2
+    msv = sv[1, 3] .* habitable_area .* prop_cov
     rsv = relative_shelter_volume(
         relative_cover,
         colony_mean_diam_cm,
