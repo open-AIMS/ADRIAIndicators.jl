@@ -377,10 +377,8 @@ function relative_shelter_volume!(
     n_groups, n_sizes = size(colony_mean_diam_cm)
     n_timesteps, _, _, n_locations = size(rel_cover)
 
-    # One reference coral per m²
-    prop_cov::Float64 = π * (reference[1] / (100.0 * 2.0))^2
-    # Calculate max colony volume per m² from reference
-    max_colony_vol::T = _colony_Lcm2_to_m3m2(reference...) * prop_cov
+    # Calculate max colony volume per m² from reference at 50% cover
+    max_colony_vol::T = _colony_Lcm2_to_m3m2(reference...) * 0.5
 
     for l in 1:n_locations
         # Maximum shelter volume m³ = habitable_area * max_colony_vol
