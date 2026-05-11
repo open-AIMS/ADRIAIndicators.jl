@@ -426,7 +426,8 @@ function absolute_coral_area(
     out_dims = if N == 4
         (size(relative_cover, 1), size(relative_cover, 4))
     elseif N == 5
-        (size(relative_cover, 1), size(relative_cover, 4), size(relative_cover, 5))
+        n_scenarios = size(relative_cover, 5)
+        (size(relative_cover, 1), size(relative_cover, 4), n_scenarios)
     end
 
     out_absolute_coral_area = zeros(T, out_dims)
@@ -501,7 +502,8 @@ function coral_area_saved(
     out_dims = if N == 4
         (n_timesteps, n_locations)
     elseif N == 5
-        (n_timesteps, n_locations, size(intervention_cover, 5))
+        n_scenarios = size(intervention_cover, 5)
+        (n_timesteps, n_locations, n_scenarios)
     end
 
     out_coral_area_saved = zeros(T, out_dims)
