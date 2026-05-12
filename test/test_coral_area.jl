@@ -18,8 +18,8 @@ using ADRIAIndicators
     @testset "Absolute Coral Area 4D" begin
         abs_area = ADRIAIndicators.absolute_coral_area(rel_cover_4d, habitat_area)
         
-        # Expected: 0.6 * habitat_area * 100
-        expected = 0.6 .* habitat_area' .* 100.0
+        # Expected: 0.6 * habitat_area
+        expected = 0.6 .* habitat_area'
         # Result should be (2, 3)
         @test size(abs_area) == (n_timesteps, n_locations)
         for t in 1:n_timesteps
@@ -35,11 +35,11 @@ using ADRIAIndicators
         abs_area = ADRIAIndicators.absolute_coral_area(rel_cover_5d, habitat_area)
         @test size(abs_area) == (n_timesteps, n_locations, n_scenarios)
         
-        # Scenario 1: 0.6 * area * 100
-        # Scenario 2: 1.2 * area * 100
+        # Scenario 1: 0.6 * area
+        # Scenario 2: 1.2 * area
         for t in 1:n_timesteps
-            @test abs_area[t, :, 1] ≈ 0.6 .* habitat_area .* 100.0
-            @test abs_area[t, :, 2] ≈ 1.2 .* habitat_area .* 100.0
+            @test abs_area[t, :, 1] ≈ 0.6 .* habitat_area
+            @test abs_area[t, :, 2] ≈ 1.2 .* habitat_area
         end
     end
     
@@ -51,10 +51,10 @@ using ADRIAIndicators
         
         saved_area = ADRIAIndicators.coral_area_saved(intervention_cover, counterfactual_cover, habitat_area)
         
-        # Intervention Area = 1.2 * area * 100
-        # Counterfactual Area = 0.6 * area * 100
-        # Saved = 0.6 * area * 100
-        expected_saved = 0.6 .* habitat_area' .* 100.0
+        # Intervention Area = 1.2 * area
+        # Counterfactual Area = 0.6 * area
+        # Saved = 0.6 * area
+        expected_saved = 0.6 .* habitat_area'
         
         @test size(saved_area) == (n_timesteps, n_locations)
         for t in 1:n_timesteps
@@ -72,12 +72,12 @@ using ADRIAIndicators
         
         @test size(saved_area) == (n_timesteps, n_locations, n_scenarios)
         
-        # Scenario 1 Saved: (1.2 - 0.6) * area * 100 = 0.6 * area * 100
-        # Scenario 2 Saved: (1.2 - 0.96) * area * 100 = 0.24 * area * 100
+        # Scenario 1 Saved: (1.2 - 0.6) * area = 0.6 * area
+        # Scenario 2 Saved: (1.2 - 0.96) * area = 0.24 * area
         # 0.08 * 6 * 2 = 0.96
         for t in 1:n_timesteps
-            @test saved_area[t, :, 1] ≈ 0.6 .* habitat_area .* 100.0
-            @test saved_area[t, :, 2] ≈ 0.24 .* habitat_area .* 100.0
+            @test saved_area[t, :, 1] ≈ 0.6 .* habitat_area
+            @test saved_area[t, :, 2] ≈ 0.24 .* habitat_area
         end
     end
 end
