@@ -343,14 +343,14 @@ end
 """
     absolute_coral_area!(relative_cover::AbstractArray{T,4}, habitat_area::AbstractVector{T}, out_absolute_coral_area::AbstractArray{T,2})::Nothing where {T<:Real}
 
-Calculate the absolute coral area (hectares) for each timestep and location.
+Calculate the absolute coral area (km²) for each timestep and location.
 Coral area is calculated by summing relative cover across groups and sizes, and multiplying
 by the total available coral habitat area.
 
 # Arguments
 - `relative_cover` : Relative cover as a proportion [0, 1] with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations].
 - `habitat_area` : Total available coral habitat area (km²) for each reef.
-- `out_absolute_coral_area` : Output array buffer with dimensions [timesteps ⋅ locations] in hectares (ha).
+- `out_absolute_coral_area` : Output array buffer with dimensions [timesteps ⋅ locations] in square kilometers (km²).
 """
 function absolute_coral_area!(
     relative_cover::AbstractArray{T,4},
@@ -364,8 +364,8 @@ function absolute_coral_area!(
         relative_cover
     )
 
-    # Convert to hectares: Area (ha) = sum(proportion) * habitat_area (km²) * 100
-    out_absolute_coral_area .*= (habitat_area' .* 100.0)
+    # Area (km²) = sum(proportion) * habitat_area (km²)
+    out_absolute_coral_area .*= habitat_area'
 
     return nothing
 end
@@ -373,12 +373,12 @@ end
 """
     absolute_coral_area!(relative_cover::AbstractArray{T,5}, habitat_area::AbstractVector{T}, out_absolute_coral_area::AbstractArray{T,3})::Nothing where {T<:Real}
 
-Calculate the absolute coral area (hectares) for each timestep, location, and scenario.
+Calculate the absolute coral area (km²) for each timestep, location, and scenario.
 
 # Arguments
 - `relative_cover` : Relative cover as a proportion [0, 1] with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios].
 - `habitat_area` : Total available coral habitat area (km²) for each reef.
-- `out_absolute_coral_area` : Output array buffer with dimensions [timesteps ⋅ locations ⋅ scenarios] in hectares (ha).
+- `out_absolute_coral_area` : Output array buffer with dimensions [timesteps ⋅ locations ⋅ scenarios] in square kilometers (km²).
 """
 function absolute_coral_area!(
     relative_cover::AbstractArray{T,5},
@@ -399,14 +399,14 @@ end
 """
     absolute_coral_area(relative_cover::AbstractArray{T,N}, habitat_area::AbstractVector{T})::AbstractArray{T,N-2} where {T<:Real,N}
 
-Calculate the absolute coral area (hectares).
+Calculate the absolute coral area (km²).
 
 # Arguments
 - `relative_cover` : Relative cover as a proportion [0, 1] with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations (⋅ scenarios)].
 - `habitat_area` : Total available coral habitat area (km²) for each reef.
 
 # Returns
-Absolute coral area in hectares (ha).
+Absolute coral area in square kilometers (km²).
 """
 function absolute_coral_area(
     relative_cover::AbstractArray{T,N},
@@ -439,7 +439,7 @@ end
 """
     coral_area_saved!(intervention_cover::AbstractArray{T,N}, counterfactual_cover::AbstractArray{T,N}, habitat_area::AbstractVector{T}, out_coral_area_saved::AbstractArray{T,L})::Nothing where {T<:Real,N,L}
 
-Calculate the coral area saved (hectares) between an intervention and a counterfactual.
+Calculate the coral area saved (km²) between an intervention and a counterfactual.
 Both intervention and counterfactual arrays must have the same shape, implying a 1-to-1
 mapping between scenarios (e.g., cf1 -> int1, cf2 -> int2).
 
@@ -447,7 +447,7 @@ mapping between scenarios (e.g., cf1 -> int1, cf2 -> int2).
 - `intervention_cover` : Relative cover (proportion [0, 1]) for the intervention scenario(s) [timesteps ⋅ groups ⋅ sizes ⋅ locations (⋅ scenarios)].
 - `counterfactual_cover` : Relative cover (proportion [0, 1]) for the counterfactual scenario(s) [timesteps ⋅ groups ⋅ sizes ⋅ locations (⋅ scenarios)].
 - `habitat_area` : Total available coral habitat area (km²) for each reef.
-- `out_coral_area_saved` : Output array buffer with dimensions [timesteps ⋅ locations (⋅ scenarios)] in hectares (ha).
+- `out_coral_area_saved` : Output array buffer with dimensions [timesteps ⋅ locations (⋅ scenarios)] in square kilometers (km²).
 """
 function coral_area_saved!(
     intervention_cover::AbstractArray{T,N},
@@ -479,7 +479,7 @@ end
 """
     coral_area_saved(intervention_cover::AbstractArray{T,N}, counterfactual_cover::AbstractArray{T,N}, habitat_area::AbstractVector{T})::AbstractArray{T,N-2} where {T<:Real,N}
 
-Calculate the coral area saved (hectares) between an intervention and a counterfactual.
+Calculate the coral area saved (km²) between an intervention and a counterfactual.
 Both intervention and counterfactual arrays must have the same shape, implying a 1-to-1
 mapping between scenarios (e.g., cf1 -> int1, cf2 -> int2).
 
@@ -489,7 +489,7 @@ mapping between scenarios (e.g., cf1 -> int1, cf2 -> int2).
 - `habitat_area` : Total available coral habitat area (km²) for each reef.
 
 # Returns
-A array of coral area saved in hectares (ha) [timesteps ⋅ locations (⋅ scenarios)].
+A array of coral area saved in square kilometers (km²) [timesteps ⋅ locations (⋅ scenarios)].
 """
 function coral_area_saved(
     intervention_cover::AbstractArray{T,N},
