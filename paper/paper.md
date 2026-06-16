@@ -70,8 +70,8 @@ wide range of functions, from simple aggregations and unit conversions to more c
 indices and estimators derived from regression models. These tools help with the
 estimation of functional diversity, juvenile abundance, shelter volume, fish biomass, and
 overall reef condition, enabling consistent and comparable analysis across different coral
-ecology models such as CoralBlox [@CoralBlox], C~Scape [@CScape], ReefMod [@ReefMod], and
-CoCoNet [@CoCoNet].
+ecology models such as CoralBlox [@CoralBloxCode; @CoralBloxPreprint], C~Scape [@CScape],
+ReefMod [@ReefMod], and CoCoNet [@CoCoNet].
 
 # Statement of Need
 
@@ -194,13 +194,30 @@ relative_juveniles!(raw_model_cover, is_juvenile, rel_juveniles_out);
 
 # Research Impact
 
-ADRIAIndicators.jl provides a standardized framework for the analysis of reef model outputs,
-supporting comparative studies and ensemble modeling efforts. By implementing consistent
-metrics across different simulation platforms, the package enables researchers to integrate
-outputs from multiple models into shared decision-support workflows. This interoperability is
-particularly relevant for large research programs where results from different modeling groups
-must be synthesized to evaluate environmental trajectories and the potential outcomes of
-conservation strategies.
+ADRIAIndicators.jl provides a standardized collection of metrics for the analysis of reef
+model outputs, supporting consistent comparative studies and ensemble modeling efforts. By
+establishing a shared library of indicators, the package ensures that different simulation
+platforms can summarize raw outputs using identical mathematical formulations, facilitating
+like-for-like comparison across workflows.
+
+Currently, the package provides the mathematical definitions and computations for the metrics
+module of ADRIA.jl [@ADRIA], a decision-support platform used to evaluate coral reef intervention
+decisions. In this workflow, ADRIAIndicators.jl summarizes the
+high-dimensional spatial-demographic projections from CoralBlox [@CoralBloxCode] into standardized
+indicators, such as relative shelter volume and reef condition indices, which are then fed directly
+into ADRIA's decision-support algorithms. Similarly, CScapeInterface.jl [@CScapeInterface] leverages
+the package to post-process and export C~Scape [@CScape] simulation results, allowing these
+high-fidelity spatial projections to also be fed into ADRIA's analysis platform for the same
+analysis as CoralBlox.jl. Furthermore, usage is planned for the ReefGuide tool [@ReefGuide],
+a web-based assessment platform.
+
+Decoupling these indicators from ecological models ensures that different coral ecology
+models such as CoralBlox, C~Scape, or observational data are summarized consistently.
+This standardized definition of metrics is essential for large-scale collaborative initiatives
+like the Reef Restoration and Adaptation Program (RRAP), while the package's zero-allocation
+design ensures that post-processing massive simulation ensembles does not become a computational
+bottleneck. Additionally, the package facilitates the sharing of metrics with other reef
+systems beyond the Great Barrier Reef, where they are currently used.
 
 # AI Usage Disclosure
 

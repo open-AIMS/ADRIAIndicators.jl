@@ -95,13 +95,25 @@
     doi={10.1007/s00338-026-02844-9},
     url={https://doi.org/10.1007/s00338-026-02844-9}
 }
-@software{CoralBlox,
+@article {CoralBloxPreprint,
+	author = {Ribeiro de Almeida, Pedro and Crocker, Rose and Tan, Daniel and Bairos-Novak, Kevin R. and Ani, Chinenye J. and Benthuysen, Jessica A. and Robson, Barbara J. and Matthews, Samuel and Iwanaga, Takuya},
+	title = {CoralBlox: A computationally efficient coral model for decision support},
+	elocation-id = {2026.04.13.718315},
+	year = {2026},
+	doi = {10.64898/2026.04.13.718315},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {Coral reef management under climate change is challenging due to data sparsity and high uncertainty, yet it is essential for informing conservation strategies. We present CoralBlox, a mechanistic discrete time coral ecology model with the explicit aim of supporting rapid scenario exploration and decision making. The model represents discretized distributions of five coral functional groups across configurable spatial scales while incorporating key ecological processes, including coral growth, reproduction, thermal adaptation, and responses to disturbances. Validation against observed data demonstrates that CoralBlox effectively captures major trends in coral cover dynamics across the Great Barrier Reef, particularly for bleaching-driven mortality and recovery patterns. While simplifying ecological complexities, the model maintains sufficient ecological realism to evaluate and compare the result of distinct management strategies. CoralBlox enables comprehensive assessment of potential management interventions with high computational efficiency and interoperability. The model{\textquoteright}s flexible architecture makes it extensible to coral ecosystems worldwide, providing valuable exploratory capability for reef management.Teaser CoralBlox is an efficient coral reef ecology model supporting rapid scenario testing and management decision making under climate change.HighlightsMarine ecosystems are characterized by high uncertainty and data sparsity.Management decisions still need to be made under these uncertain contexts.CoralBlox offers a conceptually simple yet credible representation of ecological processes.Comparatively fast runtimes across different spatial scales enable rapid exploration of plausible future states.Competing Interest StatementThe authors have declared no competing interest.Great Barrier Reef FoundationAustralian Government Reef Trust},
+	URL = {https://www.biorxiv.org/content/early/2026/04/16/2026.04.13.718315},
+	eprint = {https://www.biorxiv.org/content/early/2026/04/16/2026.04.13.718315.full.pdf},
+	journal = {bioRxiv}
+}
+@software{CoralBloxCode,
     author       = {Ribeiro de Almeida, Pedro and
     Iwanaga, Takuya and
     Tan, Daniel},
     title        = {CoralBlox.jl},
     month        = aug,
-    year         = 2024,
+    year         = 2025,
     publisher    = {Zenodo},
     doi          = {10.5281/zenodo.13251118},
     url          = {https://doi.org/10.5281/zenodo.13251118},
@@ -148,3 +160,25 @@ ABSTRACT={Coral reefs are extremely vulnerable to climate change and their recen
     eprint = {https://doi.org/10.1137/141000671},
     abstract = { Bridging cultures that have often been distant, Julia combines expertise from the diverse fields of computer science and computational science to create a new approach to numerical computing. Julia is designed to be easy and fast and questions notions generally held to be “laws of nature" by practitioners of numerical computing: \beginlist \item High-level dynamic programs have to be slow. \item One must prototype in one language and then rewrite in another language for speed or deployment. \item There are parts of a system appropriate for the programmer, and other parts that are best left untouched as they have been built by the experts. \endlist We introduce the Julia programming language and its design---a dance between specialization and abstraction. Specialization allows for custom treatment. Multiple dispatch, a technique from computer science, picks the right algorithm for the right circumstance. Abstraction, which is what good computation is really about, recognizes what remains the same after differences are stripped away. Abstractions in mathematics are captured as code through another technique from computer science, generic programming. Julia shows that one can achieve machine performance without sacrificing human convenience. }
 }
+
+@software{CScapeInterface,
+    author       = {Haller-Bull, Vanessa},
+    title        = {CscapeInterface.jl: A Julia interface to the C-scape individual-based coral reef simulation model},
+    year         = {2026},
+    publisher    = {GitHub},
+    url          = {https://github.com/open-AIMS/CscapeInterface.jl}
+}
+@software{ReefGuide,
+  author       = {Arlo White and
+                  Peter Baker and
+                  Takuya Iwanaga},
+  title        = {open-AIMS/reefguide: v0.6.4},
+  month        = may,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {v0.6.4},
+  doi          = {10.5281/zenodo.20300810},
+  url          = {https://doi.org/10.5281/zenodo.20300810},
+}
+
+
