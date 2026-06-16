@@ -95,7 +95,7 @@ by JuliaC.jl).
 
 In the field of coral reef ecology, models such as ReefMod [@ReefMod], C~Scape [@CScape],
 and CoCoNet [@CoCoNet] have historically employed internal, custom-coded implementations for
-calculating ecological indicators. This lack of modularity often leads to redundant
+calculating ecological indicators. This lack of modularity often leads to duplicate
 development efforts for common metrics (e.g., Simpson’s Diversity or unit conversions) and
 can introduce subtle inconsistencies in the calculation of more complex indicators like
 Shelter Volume [@URBINABARRETO2021107151] or the Reef Condition Index [@ReefConditionIndex].
