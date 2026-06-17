@@ -98,9 +98,9 @@ end
 
         evenness = coral_evenness(rel_cover)
 
-        @test evenness[1, 1] ≈ 4.0
-        @test evenness[1, 2] ≈ (1 / 0.34375)
-        @test evenness[2, 1] ≈ 1.0
+        @test evenness[1, 1] ≈ 1.0
+        @test evenness[1, 2] ≈ (1 / 0.34375) / 4.0
+        @test evenness[2, 1] ≈ 0.25
         @test evenness[2, 2] == 0.0
 
         out_evenness = coral_evenness(rel_cover)
