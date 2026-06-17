@@ -99,7 +99,7 @@ end
     coral_evenness!(r_taxa_cover::AbstractArray{T,3}, out_coral_evenness::Array{T,2})::Nothing where {T<:Real}
 
 Calculates evenness across functional coral groups in ADRIA as a diversity metric.
-Inverse Simpsons diversity indicator.
+Inverse Simpsons diversity indicator, normalized by the number of groups ``G`` to range between ``[0, 1]``.
 
 # Arguments
 - `rel_cover` : Relative Taxa Cover of dimensions [timesteps ⋅ groups ⋅ locations], relative to habitable area.
@@ -129,7 +129,7 @@ function coral_evenness!(
                 for g in 1:n_groups
                     sum_sq += (rel_cover[t, g, l] / loc_cover)^2
                 end
-                out_coral_evenness[t, l] = 1.0 / sum_sq
+                out_coral_evenness[t, l] = (1.0 / sum_sq) / n_groups
             else
                 out_coral_evenness[t, l] = 0.0
             end
@@ -143,13 +143,13 @@ end
     coral_evenness(r_taxa_cover::AbstractArray{T})::AbstractArray{T} where {T<:Real}
 
 Calculates evenness across functional coral groups in ADRIA as a diversity metric.
-Inverse Simpsons diversity indicator.
+Inverse Simpsons diversity indicator, normalized by the number of groups ``G`` to range between ``[0, 1]``.
 
 The coral evenness metric (E) is given as follows,
 
 ```math
 \\begin{align*}
-E(x) = \\left(\\sum_{g=1}^{G}\\left(\\frac{x_g}{x_T} \\right)^2\\right)^{-1}
+E(x) = \\frac{1}{G} \\left(\\sum_{g=1}^{G}\\left(\\frac{x_g}{x_T} \\right)^2\\right)^{-1}
 \\end{align*}
 ```
 
