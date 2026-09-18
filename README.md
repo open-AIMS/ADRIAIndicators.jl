@@ -15,7 +15,13 @@ Pkg.add("ADRIAIndicators")
 ```
 
 ## Testing
-In the ADRIAIndicators.jl testing environment,
+
+To run tests in a project environment:
+```julia
+julia> ]test ADRIAIndicators
+```
+
+To run tests in a development/testing environment:
 ```julia
 julia> ]test
 ```
