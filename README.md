@@ -42,11 +42,18 @@ n_locations = 5
 # Raw model coral cover outputs with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations]
 raw_model_cover = rand(Float64, n_timesteps, n_groups, n_sizes, n_locations);
 
-# Juveniles mask with dimensions [sizes]
-is_juvenile = [true, true, false, false, false, false];
+# Juvenile mask with dimensions [groups ⋅ sizes]. Each row corresponds to a functional group,
+# and each column to a size class. Here, the first two size classes are juvenile for all groups.
+is_juvenile = repeat([true, true, false, false, false, false]', n_groups, 1);
 
 # Calculate and allocate new array for metric
 rel_juveniles = relative_juveniles(raw_model_cover, is_juvenile);
+# Output dimensions: [timesteps ⋅ locations] = (10, 5)
+
+# For convenience, if juvenile size classes are the same across all groups,
+# a boolean vector can be passed instead:
+is_juvenile_vec = [true, true, false, false, false, false];  # [sizes]
+rel_juveniles_vec = relative_juveniles(raw_model_cover, is_juvenile_vec);
 
 # Perform the computation and write the metric into a provided buffer.
 rel_juveniles_out = zeros(Float64, n_timesteps, n_locations);
