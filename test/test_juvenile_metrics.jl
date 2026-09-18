@@ -3,7 +3,7 @@ Tests for juvenile metrics
 """
 
 using Test
-using ADRIAIndicators: relative_juveniles, relative_loc_taxa_juveniles,
+using ADRIAIndicators: relative_juveniles, relative_juveniles!, relative_loc_taxa_juveniles,
     relative_taxa_juveniles
 
 using ADRIAIndicators: absolute_juveniles, absolute_loc_taxa_juveniles,
@@ -468,4 +468,90 @@ end
     # abs_juv_5d[2, 2, 2] was 120.0
     # Denominator for loc 2: 0.1 * 3.0 * 200.0 = 60.0
     @test juv_ind_5d[2, 2, 2] ≈ 120.0 / 60.0
+end
+
+@testset "Relative Juveniles with Vector is_juvenile" begin
+    n_tsteps, n_groups, n_sizes, n_locs = 2, 2, 4, 2
+    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs)
+
+    # Use a vector instead of a matrix - should be broadcast across all groups
+    is_juvenile_vec = [true, true, false, false]
+
+    relative_cover[1, 1, :, 1] = [0.1, 0.1, 0.05, 0.05]
+    relative_cover[1, 2, :, 1] = [0.05, 0.05, 0.2, 0.2]
+
+    relative_cover[2, 1, :, 2] = [0.0, 0.05, 0.3, 0.3]
+    relative_cover[2, 2, :, 2] = [0.2, 0.0, 0.05, 0.0]
+
+    # Test the vector overload returns same result as matrix overload
+    is_juvenile_mat = repeat(is_juvenile_vec', n_groups, 1)
+    rel_juv_mat = relative_juveniles(relative_cover, is_juvenile_mat)
+    rel_juv_vec = relative_juveniles(relative_cover, is_juvenile_vec)
+
+    @test rel_juv_vec ≈ rel_juv_mat
+    @test size(rel_juv_vec) == (n_tsteps, n_locs)
+
+    # Expected values:
+    # T1, L1: Group1 juvenile(0.1+0.1) + Group2 juvenile(0.05+0.05) = 0.3
+    @test rel_juv_vec[1, 1] ≈ 0.3
+    # T1, L2: no data
+    @test rel_juv_vec[1, 2] == 0.0
+    # T2, L1: no data
+    @test rel_juv_vec[2, 1] == 0.0
+    # T2, L2: Group1 juvenile(0.0+0.05) + Group2 juvenile(0.2+0.0) = 0.25
+    @test rel_juv_vec[2, 2] ≈ 0.25
+
+    # Test in-place version with vector
+    out_buf = zeros(Float64, n_tsteps, n_locs)
+    relative_juveniles!(relative_cover, is_juvenile_vec, out_buf)
+    @test out_buf ≈ rel_juv_mat
+
+    # Test dimension mismatch error
+    bad_vec = [true, false]  # wrong length
+    @test_throws DimensionMismatch relative_juveniles(relative_cover, bad_vec)
+end
+
+@testset "Relative Juveniles 5D with Vector is_juvenile" begin
+    n_tsteps, n_groups, n_sizes, n_locs, n_scenarios = 2, 2, 4, 2, 2
+    relative_cover = zeros(Float64, n_tsteps, n_groups, n_sizes, n_locs, n_scenarios)
+
+    # Use a vector instead of a matrix
+    is_juvenile_vec = [true, true, false, false]
+
+    # Scenario 1
+    relative_cover[1, 1, :, 1, 1] = [0.1, 0.1, 0.05, 0.05]
+    relative_cover[1, 2, :, 1, 1] = [0.05, 0.05, 0.2, 0.2]
+    relative_cover[2, 1, :, 2, 1] = [0.0, 0.05, 0.3, 0.3]
+    relative_cover[2, 2, :, 2, 1] = [0.2, 0.0, 0.05, 0.0]
+
+    # Scenario 2 - different values
+    relative_cover[1, 1, :, 1, 2] = [0.2, 0.2, 0.1, 0.1]
+    relative_cover[1, 2, :, 1, 2] = [0.1, 0.1, 0.3, 0.3]
+    relative_cover[2, 1, :, 2, 2] = [0.1, 0.1, 0.4, 0.4]
+    relative_cover[2, 2, :, 2, 2] = [0.3, 0.1, 0.1, 0.1]
+
+    # Compare vector vs matrix results
+    is_juvenile_mat = repeat(is_juvenile_vec', n_groups, 1)
+    rel_juv_5d_mat = relative_juveniles(relative_cover, is_juvenile_mat)
+    rel_juv_5d_vec = relative_juveniles(relative_cover, is_juvenile_vec)
+
+    @test rel_juv_5d_vec ≈ rel_juv_5d_mat
+    @test size(rel_juv_5d_vec) == (n_tsteps, n_locs, n_scenarios)
+
+    # Check scenario 1
+    @test rel_juv_5d_vec[1, 1, 1] ≈ 0.3
+    @test rel_juv_5d_vec[1, 2, 1] == 0.0
+    @test rel_juv_5d_vec[2, 1, 1] == 0.0
+    @test rel_juv_5d_vec[2, 2, 1] ≈ 0.25
+
+    # Check scenario 2
+    @test rel_juv_5d_vec[1, 1, 2] ≈ 0.6
+    @test rel_juv_5d_vec[1, 2, 2] == 0.0
+    @test rel_juv_5d_vec[2, 1, 2] == 0.0
+    @test rel_juv_5d_vec[2, 2, 2] ≈ 0.6
+
+    # Test in-place version with vector
+    out_buf = zeros(Float64, n_tsteps, n_locs, n_scenarios)
+    relative_juveniles!(relative_cover, is_juvenile_vec, out_buf)
+    @test out_buf ≈ rel_juv_5d_mat
 end

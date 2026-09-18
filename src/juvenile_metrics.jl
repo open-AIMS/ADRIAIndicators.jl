@@ -115,6 +115,132 @@ function relative_juveniles(
 end
 
 """
+    relative_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool}, out_relative_juveniles::AbstractArray{T,2})::Nothing where {T<:Real}
+
+Calculate the relative coral cover composed of juveniles. Accepts a boolean vector
+indicating which size classes are juvenile; the same mask is applied across all functional
+groups (i.e., juveniles are assumed to be of equivalent size across all groups).
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
+- `is_juvenile` : A boolean vector indicating which size classes are juvenile [sizes]. Length must match the number of size classes.
+- `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations].
+"""
+function relative_juveniles!(
+    relative_cover::AbstractArray{T,4},
+    is_juvenile::AbstractVector{Bool},
+    out_relative_juveniles::AbstractArray{T,2}
+)::Nothing where {T<:Real}
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+
+    if length(is_juvenile) != n_sizes
+        throw(
+            DimensionMismatch(
+                "The length of is_juvenile must match the number of size classes in relative_cover."
+            )
+        )
+    end
+
+    tmp = repeat(is_juvenile', n_groups, 1)
+    relative_juveniles!(relative_cover, tmp, out_relative_juveniles)
+
+    return nothing
+end
+
+"""
+    relative_juveniles(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractVector{Bool})::AbstractArray{T,2} where {T<:Real}
+
+Calculate the relative coral cover composed of juveniles. Accepts a boolean vector
+indicating which size classes are juvenile; the same mask is applied across all functional
+groups (i.e., juveniles are assumed to be of equivalent size across all groups).
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations], relative to habitable area.
+- `is_juvenile` : A boolean vector indicating which size classes are juvenile [sizes]. Length must match the number of size classes.
+
+# Returns
+A 2D array of relative juvenile cover with dimensions [timesteps ⋅ locations].
+"""
+function relative_juveniles(
+    relative_cover::AbstractArray{T,4},
+    is_juvenile::AbstractVector{Bool}
+)::AbstractArray{T,2} where {T<:Real}
+    n_timesteps, n_groups, n_sizes, n_locations = size(relative_cover)
+    if length(is_juvenile) != n_sizes
+        throw(
+            DimensionMismatch(
+                "The length of is_juvenile must match the number of size classes in relative_cover."
+            )
+        )
+    end
+    out_relative_juveniles = zeros(T, n_timesteps, n_locations)
+    relative_juveniles!(relative_cover, is_juvenile, out_relative_juveniles)
+
+    return out_relative_juveniles
+end
+
+"""
+    relative_juveniles!(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool}, out_relative_juveniles::AbstractArray{T,3})::Nothing where {T<:Real}
+
+Calculate the relative coral cover composed of juveniles for a 5-dimensional array of relative
+cover. Accepts a boolean vector indicating which size classes are juvenile; the same mask is
+applied across all functional groups (i.e., juveniles are assumed to be of equivalent size
+across all groups).
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
+- `is_juvenile` : A boolean vector indicating which size classes are juvenile [sizes]. Length must match the number of size classes.
+- `out_relative_juveniles` : Output array buffer with dimensions [timesteps ⋅ locations ⋅ scenarios].
+"""
+function relative_juveniles!(
+    relative_cover::AbstractArray{T,5},
+    is_juvenile::AbstractVector{Bool},
+    out_relative_juveniles::AbstractArray{T,3}
+)::Nothing where {T<:Real}
+    for scenario_idx in 1:size(relative_cover, 5)
+        relative_juveniles!(
+            view(relative_cover, :, :, :, :, scenario_idx),
+            is_juvenile,
+            view(out_relative_juveniles, :, :, scenario_idx)
+        )
+    end
+    return nothing
+end
+
+"""
+    relative_juveniles(relative_cover::AbstractArray{T,5}, is_juvenile::AbstractVector{Bool})::AbstractArray{T,3} where {T<:Real}
+
+Calculate the relative coral cover composed of juveniles for a 5-dimensional array of relative
+cover. Accepts a boolean vector indicating which size classes are juvenile; the same mask is
+applied across all functional groups (i.e., juveniles are assumed to be of equivalent size
+across all groups).
+
+# Arguments
+- `relative_cover` : Relative cover with dimensions [timesteps ⋅ groups ⋅ sizes ⋅ locations ⋅ scenarios], relative to habitable area.
+- `is_juvenile` : A boolean vector indicating which size classes are juvenile [sizes]. Length must match the number of size classes.
+
+# Returns
+A 3D array of relative juvenile cover with dimensions [timesteps ⋅ locations ⋅ scenarios].
+"""
+function relative_juveniles(
+    relative_cover::AbstractArray{T,5},
+    is_juvenile::AbstractVector{Bool}
+)::AbstractArray{T,3} where {T<:Real}
+    n_timesteps, n_groups, n_sizes, n_locations, n_scenarios = size(relative_cover)
+    if length(is_juvenile) != n_sizes
+        throw(
+            DimensionMismatch(
+                "The length of is_juvenile must match the number of size classes in relative_cover."
+            )
+        )
+    end
+    out_relative_juveniles = zeros(T, n_timesteps, n_locations, n_scenarios)
+    relative_juveniles!(relative_cover, is_juvenile, out_relative_juveniles)
+
+    return out_relative_juveniles
+end
+
+"""
     relative_taxa_juveniles!(relative_cover::AbstractArray{T,4}, is_juvenile::AbstractMatrix{Bool}, location_area::AbstractVector{T}, out_relative_taxa_juveniles::AbstractArray{T,2})::Nothing where {T<:AbstractFloat}
 
 Calculate the relative coral cover composed of juveniles over time and functional group.
