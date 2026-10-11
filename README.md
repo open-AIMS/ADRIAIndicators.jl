@@ -31,7 +31,7 @@ julia> ]test
 Each metric has an option to write the metric into a provided buffer, this version of the function is denoted by a `!` at the end of the function name.
 
 ```julia
-using ADRIAIndicators
+import ADRIAIndicators: relative_juveniles, relative_juveniles!
 
 # Create some dummy data
 n_timesteps = 10
