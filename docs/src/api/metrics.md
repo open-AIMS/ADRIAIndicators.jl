@@ -1,4 +1,4 @@
- # Metrics
+# Metrics
 
 General metrics that are not specific to a particular group or life stage: indicators of
 structural complexity such as `absolute_shelter_volume`, and ecological indicators such as
@@ -8,5 +8,5 @@ structural complexity such as `absolute_shelter_volume`, and ecological indicato
 Modules = [ADRIAIndicators]
 Pages = joinpath.("src", ["metrics.jl"])
 Order   = [:constant, :function, :type]
-Private = true
+Private = false
 ```
