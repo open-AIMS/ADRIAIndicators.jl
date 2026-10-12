@@ -170,7 +170,7 @@ account for any decisions in the future where another language may wrap this lib
 need to pass memory that is not managed by Julia.
 
 ```julia
-using ADRIAIndicators
+import ADRIAIndicators: relative_juveniles, relative_juveniles!
 
 # Create some dummy model output data
 n_timesteps = 75

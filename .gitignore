@@ -1,5 +1,6 @@
 sandbox/
 docs/build/
+docs/Manifest.toml
 build/*.so
 build/*.dll
 

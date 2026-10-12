@@ -1,9 +1,7 @@
 # Cover Metrics
 
-This section provides aggregation methods for summarizing coral cover across different
-model output dimensions (e.g., time, species, size class). These functions help
-reduce high-dimensional coral cover data into simpler, more interpretable summary
-metrics.
+Aggregations that summarize coral cover across model output dimensions such as time,
+species and size class.
 
 ```@autodocs
 Modules = [ADRIAIndicators]

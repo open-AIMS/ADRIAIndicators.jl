@@ -1,7 +1,6 @@
 # Conversions
 
-This section provides functions to handle transformations between different units or
-representations of coral cover.
+Transformations between different units and representations of coral cover.
 
 ```@autodocs
 Modules = [ADRIAIndicators]
