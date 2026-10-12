@@ -5,6 +5,7 @@ on:
     branches:
       - main  # update to match your development branch (master, main, dev, trunk, ...)
     tags: '*'
+  pull_request:  # build (but do not deploy) docs so runnable examples act as tests
 jobs:
   build:
     permissions:
@@ -14,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v2
         with:
-          version: '1.10'
+          version: '1'  # package requires julia >= 1.11 (see Project.toml compat)
       - uses: julia-actions/cache@v2
       - name: Install dependencies
         run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
