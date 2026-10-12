@@ -1,57 +1,126 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>ADRIAIndicators.jl · ADRIAIndicators</title><meta name="title" content="ADRIAIndicators.jl · ADRIAIndicators"/><meta property="og:title" content="ADRIAIndicators.jl · ADRIAIndicators"/><meta property="twitter:title" content="ADRIAIndicators.jl · ADRIAIndicators"/><meta name="description" content="Documentation for ADRIAIndicators."/><meta property="og:description" content="Documentation for ADRIAIndicators."/><meta property="twitter:description" content="Documentation for ADRIAIndicators."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script><link href="assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>ADRIAIndicators</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>ADRIAIndicators.jl</a><ul class="internal"><li><a class="tocitem" href="#Usage"><span>Usage</span></a></li><li><a class="tocitem" href="#Example-Plot"><span>Example Plot</span></a></li><li><a class="tocitem" href="#Available-Metrics"><span>Available Metrics</span></a></li><li><a class="tocitem" href="#Building-Documentation"><span>Building Documentation</span></a></li></ul></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="metrics/">Metrics</a></li><li><a class="tocitem" href="cover_metrics/">Cover Metrics</a></li><li><a class="tocitem" href="juvenile_metrics/">Juvenile Metrics</a></li><li><a class="tocitem" href="indices/">Reef Indices</a></li><li><a class="tocitem" href="conversions/">Conversions</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>ADRIAIndicators.jl</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>ADRIAIndicators.jl</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl/blob/main/docs/src/index.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="ADRIAIndicators.jl"><a class="docs-heading-anchor" href="#ADRIAIndicators.jl">ADRIAIndicators.jl</a><a id="ADRIAIndicators.jl-1"></a><a class="docs-heading-anchor-permalink" href="#ADRIAIndicators.jl" title="Permalink"></a></h1><p>ADRIAIndicators.jl is a Julia package for summarizing outputs from coral reef ecological models. Its primary purpose is to provide a standardized and dependency-free package for transforming high-dimensional model outputs such as coral abundance by reef, time, species, and size class into lower-dimensional, interpretable metrics.</p><p>The package offers a wide range of functions, from simple aggregations and unit conversions to more complex indices and estimators derived from regression models. These tools help with the estimation of functional diversity, juvenile abundance, shelter volume, fish biomass, and overall reef condition, enabling consistent and comparable analysis across different coral ecology models.</p><h2 id="Usage"><a class="docs-heading-anchor" href="#Usage">Usage</a><a id="Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Usage" title="Permalink"></a></h2><p>The following example demonstrates a typical workflow for calculating the Reef Condition Index (RCI) from raw model outputs.</p><pre><code class="language-julia hljs">using ADRIAIndicators
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>ADRIAIndicators.jl · ADRIAIndicators</title><meta name="title" content="ADRIAIndicators.jl · ADRIAIndicators"/><meta property="og:title" content="ADRIAIndicators.jl · ADRIAIndicators"/><meta property="twitter:title" content="ADRIAIndicators.jl · ADRIAIndicators"/><meta name="description" content="Documentation for ADRIAIndicators."/><meta property="og:description" content="Documentation for ADRIAIndicators."/><meta property="twitter:description" content="Documentation for ADRIAIndicators."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script><link href="assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>ADRIAIndicators</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>ADRIAIndicators.jl</a><ul class="internal"><li><a class="tocitem" href="#Usage"><span>Usage</span></a></li><li><a class="tocitem" href="#Available-Metrics"><span>Available Metrics</span></a></li><li><a class="tocitem" href="#Building-Documentation"><span>Building Documentation</span></a></li></ul></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="metrics/">Metrics</a></li><li><a class="tocitem" href="cover_metrics/">Cover Metrics</a></li><li><a class="tocitem" href="juvenile_metrics/">Juvenile Metrics</a></li><li><a class="tocitem" href="indices/">Reef Indices</a></li><li><a class="tocitem" href="conversions/">Conversions</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>ADRIAIndicators.jl</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>ADRIAIndicators.jl</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl/blob/main/docs/src/index.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="ADRIAIndicators.jl"><a class="docs-heading-anchor" href="#ADRIAIndicators.jl">ADRIAIndicators.jl</a><a id="ADRIAIndicators.jl-1"></a><a class="docs-heading-anchor-permalink" href="#ADRIAIndicators.jl" title="Permalink"></a></h1><p>ADRIAIndicators.jl is a Julia package for summarizing outputs from coral reef ecological models. It provides a standardized, dependency-free way to transform high-dimensional model outputs, such as coral abundance by reef, time, species and size class, into lower-dimensional, interpretable metrics.</p><p>Functions range from simple aggregations and unit conversions to indices and regression-based estimators, covering functional diversity, juvenile abundance, shelter volume, fish biomass and overall reef condition.</p><h2 id="Usage"><a class="docs-heading-anchor" href="#Usage">Usage</a><a id="Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Usage" title="Permalink"></a></h2><p>A typical workflow for calculating the Reef Condition Index (RCI), using synthetic arrays in place of real model outputs.</p><p>Metrics are public but not exported, so <code>import</code> the ones you need, or call them as <code>ADRIAIndicators.metric(...)</code>.</p><h3 id="1.-Model-outputs-and-parameters"><a class="docs-heading-anchor" href="#1.-Model-outputs-and-parameters">1. Model outputs and parameters</a><a id="1.-Model-outputs-and-parameters-1"></a><a class="docs-heading-anchor-permalink" href="#1.-Model-outputs-and-parameters" title="Permalink"></a></h3><pre><code class="language-julia hljs">import ADRIAIndicators: ltmp_cover, relative_shelter_volume, juvenile_indicator
+import ADRIAIndicators: reef_condition_index, reef_condition_index!
 
-# 1. Define model outputs and parameters.
-# These are assumed to be pre-loaded or defined externally.
+n_timesteps, n_groups, n_sizes, n_locations = 10, 5, 6, 3
 
-# Main model output: 4D array of relative coral cover.
-# Dimensions: [timesteps, groups, sizes, locations]
-relative_cover::Array{Float64, 4} = ...
+# Coral cover relative to habitable area [timesteps ⋅ groups ⋅ sizes ⋅ locations].
+# Total cover grows from 2%, split across groups, sizes and locations by weight.
+total_cover = [0.02 * 1.3^(t - 1) for t in 1:n_timesteps]
+size_weights = [0.02, 0.05, 0.18, 0.25, 0.30, 0.20]       # [sizes]
+group_weights = [0.20, 0.18, 0.22, 0.16, 0.24]            # [groups]
+location_weights = [1.00, 0.85, 1.15]                     # [locations]
 
-# Vector of habitable area in m² for each location.
-# Dimensions: [locations]
-habitable_area::Vector{Float64} = ...
-
-# Vector of total reef area in m² for each location.
-# Dimensions: [locations]
-reef_area::Vector{Float64} = ...
-
-# Boolean vector indicating which size classes are considered juvenile.
-# Length must match the number of size classes.
-is_juvenile::Vector{Bool} = [true, true, false, ...]
-
-# Matrix of mean colony diameters in cm for each functional group and size class.
-# Dimensions: [groups, sizes]
-mean_colony_diameters::Matrix{Float64} = [
-    5.0, 10.0, ...;
-    4.0, 11.0, ...;
-    ...
+relative_cover = [
+    total_cover[t] * size_weights[s] * group_weights[g] * location_weights[l]
+    for t in 1:n_timesteps, g in 1:n_groups, s in 1:n_sizes, l in 1:n_locations
 ]
 
-# 3D array of parameters (intercept, coefficient) for the log-log planar area model.
-# Dimensions: [groups, sizes, 2]
-# Note: Planar area parameters are based on the log-log model described in [Urbina-Barreto et al. 2021].
+# Habitable area in m² [locations]
+habitable_area = [1.0e5, 2.0e5, 1.5e5]
 
-planar_area_params::Array{Float64, 3} = ...
+# Total reef area in m², which may include non-habitable area [locations]
+reef_area = [1.5e5, 2.5e5, 2.0e5]
 
+# Which group and size class combinations are juvenile [groups ⋅ sizes].
+# Here, the first two size classes, for every group.
+is_juvenile = repeat([true, true, false, false, false, false]&#39;, n_groups, 1)
 
-# A scalar representing the maximum possible density of juveniles (individuals/m²).
-max_juv_density::Float64 = 15.0</code></pre><pre><code class="language-julia hljs">
-# 2. Calculate intermediate metrics required for the RCI.
+# Mean colony diameter in cm [groups ⋅ sizes]
+mean_colony_diameters = repeat([2.5, 5.0, 10.0, 15.0, 20.0, 25.0]&#39;, n_groups, 1)
 
-# (a) LTMP Cover
-ltmp_cover = ADRIAIndicators.ltmp_cover(relative_cover, habitable_area, reef_area)
+# Parameters of the log-log planar area model of [Urbina-Barreto et al. 2021],
+# with dimensions [groups ⋅ sizes ⋅ (intercept, coefficient)].
+planar_area_params = zeros(Float64, n_groups, n_sizes, 2)
+planar_area_params[:, :, 1] .= -8.31  # intercept
+planar_area_params[:, :, 2] .= 2.47   # coefficient
 
-# (b) Relative Shelter Volume
-# First, calculate 4D shelter volume, then aggregate to 2D [timesteps, locations].
-# For the relative shelter volume, we provide a reference parameterisation.
-reference = (25.0, -8.31, 2.47) # (diam, intercept, coefficient)
-sv_4d = ADRIAIndicators.relative_shelter_volume(relative_cover, mean_colony_diameters, planar_area_params, habitable_area, reference)
-relative_shelter_volume = dropdims(sum(sv_4d, dims=(2, 3)), dims=(2, 3))
+# Maximum possible juvenile density (individuals/m²)
+max_juv_density = 15.0
 
-# (c) Juvenile Indicator
-juvenile_indicator = ADRIAIndicators.juvenile_indicator(relative_cover, is_juvenile, habitable_area, mean_colony_diameters ./ 100, max_juv_density)
+size(relative_cover)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(10, 5, 6, 3)</code></pre><h3 id="2.-Intermediate-metrics"><a class="docs-heading-anchor" href="#2.-Intermediate-metrics">2. Intermediate metrics</a><a id="2.-Intermediate-metrics-1"></a><a class="docs-heading-anchor-permalink" href="#2.-Intermediate-metrics" title="Permalink"></a></h3><pre><code class="language-julia hljs"># (a) LTMP cover [timesteps ⋅ locations]
+cover = ltmp_cover(relative_cover, habitable_area, reef_area)
 
-# 3. Calculate the final Reef Condition Index.
-rci = ADRIAIndicators.reef_condition_index(ltmp_cover, relative_shelter_volume, juvenile_indicator)</code></pre><p>Each metric also has an in-place version (ending in <code>!</code>) that accepts a pre-allocated output array. This is useful for integrating with other languages like Python or R where memory may not be managed by the Julia runtime.</p><h2 id="Example-Plot"><a class="docs-heading-anchor" href="#Example-Plot">Example Plot</a><a id="Example-Plot-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Plot" title="Permalink"></a></h2><p>The following is an example plot generated from the metrics, showing the mean trend of several key indicators over time against the variation of all locations. They are the model results of <a href="https://github.com/open-AIMS/CoralBlox.jl"><code>CoralBlox.jl</code></a> with no environmental disturbances and toy parameters.</p><p><img src="assets/rci_plots_makie.png" alt="Example RCI Plots"/></p><h2 id="Available-Metrics"><a class="docs-heading-anchor" href="#Available-Metrics">Available Metrics</a><a id="Available-Metrics-1"></a><a class="docs-heading-anchor-permalink" href="#Available-Metrics" title="Permalink"></a></h2><ul><li><a href="cover_metrics/#Cover-Metrics">Relative/Absolute/LTMP Cover</a></li><li><a href="metrics/#Metrics">Relative/Absolute Shelter Volume</a></li><li><a href="juvenile_metrics/#Juvenile-Metrics">Relative/Absolute Juveniles</a></li><li><a href="juvenile_metrics/#Juvenile-Metrics">Juvenile Indicator</a></li><li><a href="metrics/#Metrics">Coral Diversity</a></li><li><a href="metrics/#Metrics">Coral Evenness</a></li><li><a href="indices/#Reef-Indices">Reef Indices</a></li></ul><h2 id="Building-Documentation"><a class="docs-heading-anchor" href="#Building-Documentation">Building Documentation</a><a id="Building-Documentation-1"></a><a class="docs-heading-anchor-permalink" href="#Building-Documentation" title="Permalink"></a></h2><p>The documentation is hosted online but can also be built locally for offline use or development purposes.</p><p>First, ensure you have the project dependencies installed:</p><pre><code class="language-bash hljs">cd docs
-julia --project=. -e &#39;using Pkg; Pkg.instantiate()&#39;</code></pre><p>Then, build the documentation:</p><pre><code class="language-bash hljs">julia --project=. make.jl</code></pre><p>Finally, open <code>index.html</code> in the <code>docs/build</code> directory to view the documentation.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="metrics/">Metrics »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Friday 18 September 2026 04:56">Friday 18 September 2026</span>. Using Julia version 1.10.12.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+round.(cover; digits=3)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10×3 Matrix{Float64}:
+ 0.013  0.014  0.017
+ 0.017  0.018  0.022
+ 0.023  0.023  0.029
+ 0.029  0.03   0.038
+ 0.038  0.039  0.049
+ 0.05   0.05   0.064
+ 0.064  0.066  0.083
+ 0.084  0.085  0.108
+ 0.109  0.111  0.141
+ 0.141  0.144  0.183</code></pre><pre><code class="language-julia hljs"># (b) Relative shelter volume, aggregated over groups and sizes to
+# [timesteps ⋅ locations]. The reference parameterisation defines the maximum
+# shelter volume, assuming one reference colony per m².
+reference = (25.0, -8.31, 2.47)  # (mean diameter cm, intercept, coefficient)
+shelter_volume_4d = relative_shelter_volume(
+    relative_cover, mean_colony_diameters, planar_area_params, habitable_area, reference
+)
+shelter_volume = dropdims(sum(shelter_volume_4d; dims=(2, 3)); dims=(2, 3))
+
+round.(shelter_volume; digits=3)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10×3 Matrix{Float64}:
+ 0.189  0.16   0.217
+ 0.245  0.209  0.282
+ 0.319  0.271  0.367
+ 0.415  0.353  0.477
+ 0.539  0.458  0.62
+ 0.701  0.596  0.806
+ 0.911  0.775  1.048
+ 1.185  1.007  1.362
+ 1.54   1.309  1.771
+ 2.002  1.702  2.303</code></pre><pre><code class="language-julia hljs"># (c) Juvenile indicator [timesteps ⋅ locations].
+# Colony diameters are expected in m here, hence the conversion from cm.
+juveniles = juvenile_indicator(
+    relative_cover,
+    is_juvenile,
+    habitable_area,
+    mean_colony_diameters ./ 100,
+    max_juv_density
+)
+
+round.(juveniles; digits=3)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10×3 Matrix{Float64}:
+ 0.048  0.04   0.055
+ 0.062  0.053  0.071
+ 0.08   0.068  0.092
+ 0.104  0.089  0.12
+ 0.136  0.115  0.156
+ 0.176  0.15   0.203
+ 0.229  0.195  0.264
+ 0.298  0.254  0.343
+ 0.388  0.33   0.446
+ 0.504  0.428  0.58</code></pre><h3 id="3.-The-Reef-Condition-Index"><a class="docs-heading-anchor" href="#3.-The-Reef-Condition-Index">3. The Reef Condition Index</a><a id="3.-The-Reef-Condition-Index-1"></a><a class="docs-heading-anchor-permalink" href="#3.-The-Reef-Condition-Index" title="Permalink"></a></h3><p>The RCI is categorical: one of five values from 0.1 (&quot;very poor&quot;) to 0.9 (&quot;very good&quot;) per timestep and location.</p><pre><code class="language-julia hljs">rci = reef_condition_index(cover, shelter_volume, juveniles)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10×3 Matrix{Float64}:
+ 0.1  0.1  0.1
+ 0.1  0.1  0.1
+ 0.1  0.1  0.1
+ 0.1  0.1  0.1
+ 0.1  0.1  0.1
+ 0.1  0.1  0.3
+ 0.3  0.1  0.5
+ 0.5  0.5  0.7
+ 0.9  0.7  0.9
+ 0.9  0.9  0.9</code></pre><p>Every metric also has an in-place version (ending in <code>!</code>) taking a pre-allocated output array, for cases where memory is not managed by the Julia runtime, such as wrappers for other languages.</p><pre><code class="language-julia hljs">out_rci = zeros(Float64, n_timesteps, n_locations)
+reef_condition_index!(cover, shelter_volume, juveniles, out_rci)
+
+out_rci == rci</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">true</code></pre><h3 id="4.-Plotting-the-results"><a class="docs-heading-anchor" href="#4.-Plotting-the-results">4. Plotting the results</a><a id="4.-Plotting-the-results-1"></a><a class="docs-heading-anchor-permalink" href="#4.-Plotting-the-results" title="Permalink"></a></h3><p>Any Julia plotting package can be used; <a href="https://docs.makie.org"><code>Makie.jl</code></a> is shown here.</p><pre><code class="language-julia hljs">using CairoMakie
+
+indicators = [
+    &quot;LTMP cover&quot; =&gt; cover,
+    &quot;Relative shelter volume&quot; =&gt; shelter_volume,
+    &quot;Juvenile indicator&quot; =&gt; juveniles,
+    &quot;Reef Condition Index&quot; =&gt; rci
+]
+
+fig = Figure(; size=(800, 520))
+for (i, (name, data)) in enumerate(indicators)
+    ax = Axis(fig[fld(i - 1, 2) + 1, mod(i - 1, 2) + 1]; title=name, xlabel=&quot;Timestep&quot;)
+    series!(
+        ax, 1:n_timesteps, permutedims(data);
+        marker=:circle, labels=[&quot;Location $l&quot; for l in 1:n_locations]
+    )
+end
+Legend(fig[3, 1:2], contents(fig[1, 1])[1]; orientation=:horizontal)
+
+fig</code></pre><img src="index-bc37a426.png" alt="Example block output"/><h2 id="Available-Metrics"><a class="docs-heading-anchor" href="#Available-Metrics">Available Metrics</a><a id="Available-Metrics-1"></a><a class="docs-heading-anchor-permalink" href="#Available-Metrics" title="Permalink"></a></h2><ul><li><a href="cover_metrics/#Cover-Metrics">Relative/Absolute/LTMP Cover</a></li><li><a href="metrics/#Metrics">Relative/Absolute Shelter Volume</a></li><li><a href="juvenile_metrics/#Juvenile-Metrics">Relative/Absolute Juveniles</a></li><li><a href="juvenile_metrics/#Juvenile-Metrics">Juvenile Indicator</a></li><li><a href="metrics/#Metrics">Coral Diversity</a></li><li><a href="metrics/#Metrics">Coral Evenness</a></li><li><a href="indices/#Reef-Indices">Reef Indices</a></li></ul><h2 id="Building-Documentation"><a class="docs-heading-anchor" href="#Building-Documentation">Building Documentation</a><a id="Building-Documentation-1"></a><a class="docs-heading-anchor-permalink" href="#Building-Documentation" title="Permalink"></a></h2><p>The documentation is hosted online, and can also be built locally.</p><p>First, install the dependencies:</p><pre><code class="language-bash hljs">cd docs
+julia --project=. -e &#39;using Pkg; Pkg.instantiate()&#39;</code></pre><p>Then build:</p><pre><code class="language-bash hljs">julia --project=. make.jl</code></pre><p>The built documentation is <code>docs/build/index.html</code>.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="metrics/">Metrics »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Monday 12 October 2026 01:24">Monday 12 October 2026</span>. Using Julia version 1.13.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
