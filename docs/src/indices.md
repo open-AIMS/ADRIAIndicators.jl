@@ -1,8 +1,7 @@
 # Reef Indices
 
-This section provides high-level reef indices. These indices, such as the
-`ReefConditionIndex`, combine multiple lower-level metrics to provide a composite
-summary of overall reef state or health for different purposes.
+High-level reef indices, such as `reef_condition_index`, which combine lower-level metrics
+into a composite summary of reef state.
 
 ```@autodocs
 Modules = [ADRIAIndicators]

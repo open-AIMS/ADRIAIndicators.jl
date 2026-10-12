@@ -1,8 +1,8 @@
  # Metrics
 
-This section provides general metrics that are not specific to a particular group or
-life stage. These include indicators of structural complexity, such as
-`AbsoluteShelterVolume`, and ecological indicators like `CoralDiversity`.
+General metrics that are not specific to a particular group or life stage: indicators of
+structural complexity such as `absolute_shelter_volume`, and ecological indicators such as
+`coral_diversity`.
 
 ```@autodocs
 Modules = [ADRIAIndicators]
