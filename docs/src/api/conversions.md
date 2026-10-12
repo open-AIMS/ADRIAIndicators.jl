@@ -6,5 +6,5 @@ Transformations between different units and representations of coral cover.
 Modules = [ADRIAIndicators]
 Pages = joinpath.("src", ["conversions.jl"])
 Order   = [:constant, :function, :type]
-Private = true
+Private = false
 ```

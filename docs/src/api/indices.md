@@ -7,5 +7,5 @@ into a composite summary of reef state.
 Modules = [ADRIAIndicators]
 Pages = joinpath.("src", ["indices.jl"])
 Order   = [:constant, :function, :type]
-Private = true
+Private = false
 ```

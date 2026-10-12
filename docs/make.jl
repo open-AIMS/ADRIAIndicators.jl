@@ -6,20 +6,24 @@ makedocs(
     ;
     sitename="ADRIAIndicators",
     modules = [ADRIAIndicators],
+    checkdocs = :public,
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", nothing) == "true",
         assets=["assets/favicon.ico"]
     ),
     pages=[
-        "index.md",
+        "Home" => "index.md",
+        "usage.md",
+        "cookbook.md",
         "API" =>
             [
-                "metrics.md",
-                "cover_metrics.md",
-                "juvenile_metrics.md",
-                "indices.md",
-                "conversions.md"
+                "api/metrics.md",
+                "api/cover_metrics.md",
+                "api/juvenile_metrics.md",
+                "api/indices.md",
+                "api/conversions.md"
             ],
+        "developing.md",
     ]
 )
 
