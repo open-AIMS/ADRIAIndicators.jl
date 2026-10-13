@@ -8,8 +8,7 @@ makedocs(
     modules = [ADRIAIndicators],
     checkdocs = :public,
     format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", nothing) == "true",
-        assets=["assets/favicon.ico"]
+        prettyurls=get(ENV, "CI", nothing) == "true"
     ),
     pages=[
         "Home" => "index.md",
