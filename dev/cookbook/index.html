@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Cookbook · ADRIAIndicators</title><meta name="title" content="Cookbook · ADRIAIndicators"/><meta property="og:title" content="Cookbook · ADRIAIndicators"/><meta property="twitter:title" content="Cookbook · ADRIAIndicators"/><meta name="description" content="Documentation for ADRIAIndicators."/><meta property="og:description" content="Documentation for ADRIAIndicators."/><meta property="twitter:description" content="Documentation for ADRIAIndicators."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.63.2/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ADRIAIndicators</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../usage/">Usage</a></li><li class="is-active"><a class="tocitem" href>Cookbook</a><ul class="internal"><li><a class="tocitem" href="#CoralBlox.jl"><span>CoralBlox.jl</span></a></li></ul></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../api/metrics/">Metrics</a></li><li><a class="tocitem" href="../api/cover_metrics/">Cover Metrics</a></li><li><a class="tocitem" href="../api/juvenile_metrics/">Juvenile Metrics</a></li><li><a class="tocitem" href="../api/indices/">Reef Indices</a></li><li><a class="tocitem" href="../api/conversions/">Conversions</a></li></ul></li><li><a class="tocitem" href="../developing/">Developing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Cookbook</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Cookbook</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl/blob/main/docs/src/cookbook.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Cookbook"><a class="docs-heading-anchor" href="#Cookbook">Cookbook</a><a id="Cookbook-1"></a><a class="docs-heading-anchor-permalink" href="#Cookbook" title="Permalink"></a></h1><h2 id="CoralBlox.jl"><a class="docs-heading-anchor" href="#CoralBlox.jl">CoralBlox.jl</a><a id="CoralBlox.jl-1"></a><a class="docs-heading-anchor-permalink" href="#CoralBlox.jl" title="Permalink"></a></h2><p><a href="https://github.com/open-AIMS/CoralBlox.jl">CoralBlox.jl</a> is a standalone coral growth and mortality model, simulating coral functional groups competing for limited space over time. This example runs a small CoralBlox simulation for several locations and uses its output to calculate the cover, shelter volume, diversity, juvenile and composite index metrics provided by ADRIAIndicators.</p><p>Note: To run the following code, CoralBlox.jl should be added to the environment.</p><p>The CoralBlox parameters are mock values taken from its Quick Start, so the resulting metrics are illustrative only.</p><pre><code class="language-julia hljs">using CoralBlox: FunctionalGroup
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Cookbook · ADRIAIndicators</title><meta name="title" content="Cookbook · ADRIAIndicators"/><meta property="og:title" content="Cookbook · ADRIAIndicators"/><meta property="twitter:title" content="Cookbook · ADRIAIndicators"/><meta name="description" content="Documentation for ADRIAIndicators."/><meta property="og:description" content="Documentation for ADRIAIndicators."/><meta property="twitter:description" content="Documentation for ADRIAIndicators."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.63.2/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ADRIAIndicators</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../usage/">Usage</a></li><li class="is-active"><a class="tocitem" href>Cookbook</a><ul class="internal"><li><a class="tocitem" href="#CoralBlox.jl"><span>CoralBlox.jl</span></a></li><li><a class="tocitem" href="#ReefMod-Engine"><span>ReefMod Engine</span></a></li></ul></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../api/metrics/">Metrics</a></li><li><a class="tocitem" href="../api/cover_metrics/">Cover Metrics</a></li><li><a class="tocitem" href="../api/juvenile_metrics/">Juvenile Metrics</a></li><li><a class="tocitem" href="../api/indices/">Reef Indices</a></li><li><a class="tocitem" href="../api/conversions/">Conversions</a></li></ul></li><li><a class="tocitem" href="../developing/">Developing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Cookbook</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Cookbook</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl/blob/main/docs/src/cookbook.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Cookbook"><a class="docs-heading-anchor" href="#Cookbook">Cookbook</a><a id="Cookbook-1"></a><a class="docs-heading-anchor-permalink" href="#Cookbook" title="Permalink"></a></h1><p>This page contains worked examples of applying ADRIAIndicators to the output of distinct coral ecological models: <a href="https://github.com/open-AIMS/CoralBlox.jl">CoralBlox.jl</a> and ReefMod Engine (via <a href="https://github.com/open-AIMS/ReefModEngine.jl">ReefModEngine.jl</a>). Models differ in the units they report, the order of their array dimensions and the level of detail they resolve, so model output rarely matches the input ADRIAIndicators expects (see <a href="../usage/#Usage">Usage</a>). Each example shows how to adapt a model&#39;s output to those conventions and which metrics can be calculated from it, and can be used as a starting point for incorporating ADRIAIndicators into your own workflow.</p><p>The examples are meant to illustrate the workflow, not to describe real reefs: CoralBlox is run with synthetic, hand-picked parameter values, and ReefMod Engine with a deliberately small and short configuration, so the values they produce should not be read as ecological projections.</p><h2 id="CoralBlox.jl"><a class="docs-heading-anchor" href="#CoralBlox.jl">CoralBlox.jl</a><a id="CoralBlox.jl-1"></a><a class="docs-heading-anchor-permalink" href="#CoralBlox.jl" title="Permalink"></a></h2><p><a href="https://github.com/open-AIMS/CoralBlox.jl">CoralBlox.jl</a> is a standalone coral growth and mortality model, simulating coral functional groups competing for limited space over time. This example runs a small CoralBlox simulation for several locations and uses its output to calculate the cover, shelter volume, diversity, juvenile and composite index metrics provided by ADRIAIndicators.</p><p>Note: To run the following code, CoralBlox.jl should be added to the environment.</p><p>The CoralBlox parameters are mock values taken from its Quick Start, so the resulting metrics are illustrative only.</p><p>Keep in mind that CoralBlox on its own has no disturbances: cyclones, heat stress and crown-of-thorns starfish are not part of the model, so the simulated trajectories reflect only growth, mortality and competition for space.</p><pre><code class="language-julia hljs">using CoralBlox: FunctionalGroup
 using CoralBlox: linear_extension_scale_factors, max_projected_cover
 using CoralBlox: timestep!, coral_cover
 
@@ -202,24 +202,139 @@ reef_tourism_index = AI.reef_tourism_index_no_rubble(
     ltmp_cover, coral_evenness, total_rsv, relative_juveniles
 )
 
-reef_fish_index = AI.reef_fish_index(total_relative_cover)</code></pre><h3 id="8.-Results"><a class="docs-heading-anchor" href="#8.-Results">8. Results</a><a id="8.-Results-1"></a><a class="docs-heading-anchor-permalink" href="#8.-Results" title="Permalink"></a></h3><pre><code class="language-julia hljs">final_values = [
-    &quot;Relative cover&quot; =&gt; total_relative_cover,
-    &quot;LTMP cover&quot; =&gt; ltmp_cover,
-    &quot;Absolute cover (km²)&quot; =&gt; absolute_cover_km2,
-    &quot;Absolute shelter volume (m³)&quot; =&gt; total_asv_m3,
-    &quot;Relative shelter volume&quot; =&gt; total_rsv,
-    &quot;Coral diversity&quot; =&gt; coral_diversity,
-    &quot;Coral evenness&quot; =&gt; coral_evenness,
-    &quot;Relative juveniles&quot; =&gt; relative_juveniles,
-    &quot;Absolute juveniles&quot; =&gt; absolute_juveniles,
-    &quot;Juvenile indicator&quot; =&gt; juvenile_indicator,
-    &quot;Reef Condition Index&quot; =&gt; reef_condition_index,
-    &quot;Reef Biodiversity Condition Index&quot; =&gt; reef_biodiversity_condition_index,
-    &quot;Reef Tourism Index&quot; =&gt; reef_tourism_index,
-    &quot;Reef Fish Index&quot; =&gt; reef_fish_index
-]
+reef_fish_index = AI.reef_fish_index(total_relative_cover)</code></pre><h3 id="8.-Results"><a class="docs-heading-anchor" href="#8.-Results">8. Results</a><a id="8.-Results-1"></a><a class="docs-heading-anchor-permalink" href="#8.-Results" title="Permalink"></a></h3><p>The indicators over time, with a line per location. Remember that CoralBlox alone has no disturbances, so these trajectories show no cyclone, heat stress or crown-of-thorns starfish events:</p><p><img src="../assets/coralblox_indicators.png" alt="Indicators calculated from CoralBlox output"/></p><p>Values at the final timestep:</p><table><tr><th style="text-align: right">Metric</th><th style="text-align: right">Location 1</th><th style="text-align: right">Location 2</th><th style="text-align: right">Location 3</th></tr><tr><td style="text-align: right">Relative cover</td><td style="text-align: right">0.26</td><td style="text-align: right">0.144</td><td style="text-align: right">0.3</td></tr><tr><td style="text-align: right">LTMP cover</td><td style="text-align: right">0.173</td><td style="text-align: right">0.12</td><td style="text-align: right">0.225</td></tr><tr><td style="text-align: right">Absolute cover (km²)</td><td style="text-align: right">0.26</td><td style="text-align: right">0.36</td><td style="text-align: right">0.45</td></tr><tr><td style="text-align: right">Absolute shelter volume (m³)</td><td style="text-align: right">6511.333</td><td style="text-align: right">9037.487</td><td style="text-align: right">11227.541</td></tr><tr><td style="text-align: right">Relative shelter volume</td><td style="text-align: right">0.073</td><td style="text-align: right">0.041</td><td style="text-align: right">0.084</td></tr><tr><td style="text-align: right">Coral diversity</td><td style="text-align: right">0.534</td><td style="text-align: right">0.516</td><td style="text-align: right">0.54</td></tr><tr><td style="text-align: right">Coral evenness</td><td style="text-align: right">0.715</td><td style="text-align: right">0.688</td><td style="text-align: right">0.725</td></tr><tr><td style="text-align: right">Relative juveniles</td><td style="text-align: right">0.003</td><td style="text-align: right">0.002</td><td style="text-align: right">0.004</td></tr><tr><td style="text-align: right">Absolute juveniles</td><td style="text-align: right">3435.379</td><td style="text-align: right">4874.049</td><td style="text-align: right">5891.269</td></tr><tr><td style="text-align: right">Juvenile indicator</td><td style="text-align: right">0.467</td><td style="text-align: right">0.265</td><td style="text-align: right">0.533</td></tr><tr><td style="text-align: right">Reef Condition Index</td><td style="text-align: right">0.3</td><td style="text-align: right">0.1</td><td style="text-align: right">0.3</td></tr><tr><td style="text-align: right">Reef Biodiversity Condition Index</td><td style="text-align: right">0.289</td><td style="text-align: right">0.233</td><td style="text-align: right">0.308</td></tr><tr><td style="text-align: right">Reef Tourism Index</td><td style="text-align: right">0.74</td><td style="text-align: right">0.72</td><td style="text-align: right">0.75</td></tr><tr><td style="text-align: right">Reef Fish Index</td><td style="text-align: right">10.63</td><td style="text-align: right">8.99</td><td style="text-align: right">11.19</td></tr></table><h2 id="ReefMod-Engine"><a class="docs-heading-anchor" href="#ReefMod-Engine">ReefMod Engine</a><a id="ReefMod-Engine-1"></a><a class="docs-heading-anchor-permalink" href="#ReefMod-Engine" title="Permalink"></a></h2><p>ReefMod Engine (RME) is a coral reef model for the Great Barrier Reef, accessed from Julia with <a href="https://github.com/open-AIMS/ReefModEngine.jl">ReefModEngine.jl</a>. This example runs RME with an outplanting intervention and uses its output to calculate the metrics that its reef-level output supports. It is independent of the CoralBlox example above, and highlights how model outputs can differ in units, dimension order and detail.</p><p>Note: To run the following code, ReefModEngine.jl, CSV.jl and DataFrames.jl should be added to the environment, together with a copy of RME, which is not distributed with ReefModEngine.jl.</p><pre><code class="language-julia hljs">using CSV
+using DataFrames
+using ReefModEngine
 
-println(&quot;Final timestep, one value per location:&quot;)
-for (name, metric) in final_values
-    println(rpad(name, 35), round.(metric[end, :]; digits=3))
-end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../usage/">« Usage</a><a class="docs-footer-nextpage" href="../api/metrics/">Metrics »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Tuesday 13 October 2026 02:56">Tuesday 13 October 2026</span>. Using Julia version 1.13.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+import ADRIAIndicators as AI</code></pre><h3 id="1.-RME-simulation"><a class="docs-heading-anchor" href="#1.-RME-simulation">1. RME simulation</a><a id="1.-RME-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#1.-RME-simulation" title="Permalink"></a></h3><p>This follows the ReefModEngine.jl Getting Started. RME always pairs each intervention run with a counterfactual run.</p><pre><code class="language-julia hljs">rme_path = &quot;path to RME directory&quot;
+init_rme(rme_path)
+
+set_option(&quot;thread_count&quot;, 2)
+set_option(&quot;use_fixed_seed&quot;, 1)
+set_option(&quot;fixed_seed&quot;, 123.0)
+
+# Reef ids and areas (km²), in the order used by RME
+reef_id_list = reef_ids()
+reef_area_km2 = reef_areas()
+
+# Deploy on the first reef only
+target_reef_ids = [reef_id_list[1]]
+target_reef_areas_km² = reef_areas(target_reef_ids)
+
+name = &quot;ADRIAIndicators example&quot;
+start_year = 2022
+end_year = 2050
+RCP_scen = &quot;SSP 2.45&quot;
+gcm = &quot;CNRM_ESM2_1&quot;
+reps = 2
+
+result_store = ResultStore(start_year, end_year)
+
+reset_rme()
+
+@RME runCreate(
+    name::Cstring,
+    start_year::Cint,
+    end_year::Cint,
+    RCP_scen::Cstring,
+    gcm::Cstring,
+    reps::Cint
+)::Cint
+
+@RME reefSetAddFromIdList(
+    &quot;iv_example&quot;::Cstring, target_reef_ids::Ptr{Cstring}, length(target_reef_ids)::Cint
+)::Cint
+
+set_outplant_deployment!(
+    &quot;outplant_iv_2026&quot;, &quot;iv_example&quot;, 100_000, 2026, target_reef_areas_km²
+)
+
+run_init()
+@RME runProcess()::Cint
+
+concat_results!(result_store, start_year, end_year, reps)</code></pre><h3 id="2.-Adapting-the-output-to-ADRIAIndicators-2"><a class="docs-heading-anchor" href="#2.-Adapting-the-output-to-ADRIAIndicators-2">2. Adapting the output to ADRIAIndicators</a><a class="docs-heading-anchor-permalink" href="#2.-Adapting-the-output-to-ADRIAIndicators-2" title="Permalink"></a></h3><p>RME output (in <code>result_store.results</code>) differs from what ADRIAIndicators expects:</p><table><tr><th style="text-align: right"></th><th style="text-align: right">RME</th><th style="text-align: right">ADRIAIndicators</th></tr><tr><td style="text-align: right">Cover</td><td style="text-align: right">% of reef area</td><td style="text-align: right">proportion of habitable area</td></tr><tr><td style="text-align: right">Dimensions</td><td style="text-align: right"><code>[timesteps ⋅ locations ⋅ taxa ⋅ scenarios]</code></td><td style="text-align: right"><code>[timesteps ⋅ groups ⋅ sizes ⋅ locations (⋅ scenarios)]</code></td></tr><tr><td style="text-align: right">Size classes</td><td style="text-align: right">not available</td><td style="text-align: right">required</td></tr><tr><td style="text-align: right">Scenarios</td><td style="text-align: right">counterfactual runs first, then intervention runs</td><td style="text-align: right"></td></tr></table><p>Cover as a proportion of reef area is what ADRIAIndicators calls LTMP cover. The habitable area of each reef is a fraction of its reef area. RME provides it in its <code>id_list</code> file as the proportion of the reef that is non-grazable (sand).</p><pre><code class="language-julia hljs"># Columns: reef id, area (km²), non-grazable proportion, shelf position, CoTS cull sites
+# (the file name depends on the RME version)
+id_list_path = joinpath(rme_path, &quot;data_files&quot;, &quot;id&quot;, &quot;id_list_2024_12_01.csv&quot;)
+id_list = CSV.read(id_list_path, DataFrame; header=false, comment=&quot;#&quot;, delim=&quot;,&quot;)
+
+# Match the id_list rows to the order of reefs used by RME
+id_order = indexin(reef_id_list, uppercase.(string.(id_list[:, 1])))
+@assert !any(isnothing, id_order)
+
+habitable_fraction = 1.0 .- Float64.(id_list[id_order, 3])
+
+reef_area_m2 = reef_area_km2 .* 1e6                       # [locations], m²
+habitable_area_m2 = habitable_fraction .* reef_area_m2    # [locations], m²
+habitable_area_km2 = habitable_area_m2 ./ 1e6             # [locations], km²
+
+rme_results = result_store.results
+n_timesteps = result_store.year_range
+n_locations = length(reef_id_list)
+n_taxa = 6
+n_scenarios = 2 * reps
+
+# Cover per taxa as a proportion of reef area, moving taxa to the dimension of groups and
+# adding a single size class: [timesteps ⋅ taxa ⋅ sizes ⋅ locations ⋅ scenarios]
+rme_taxa_cover = reshape(
+    permutedims(Array(rme_results.total_taxa_cover.data), (1, 3, 2, 4)) ./ 100,
+    n_timesteps, n_taxa, 1, n_locations, n_scenarios
+)
+
+# Convert from cover relative to reef area to cover relative to habitable area, with the
+# location in dimension 4
+rel_cover = AI.ltmp_cover_to_relative_cover(
+    rme_taxa_cover, habitable_area_m2, reef_area_m2, 4
+)
+
+# RME stores counterfactual scenarios first, followed by intervention scenarios
+cf_rel_cover = rel_cover[:, :, :, :, 1:reps]
+iv_rel_cover = rel_cover[:, :, :, :, (reps + 1):end]
+
+# Metrics without a scenario dimension are calculated for the first counterfactual run
+scenario = 1
+scenario_rel_cover = rel_cover[:, :, :, :, scenario]</code></pre><h3 id="3.-Cover-2"><a class="docs-heading-anchor" href="#3.-Cover-2">3. Cover</a><a class="docs-heading-anchor-permalink" href="#3.-Cover-2" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Relative cover, proportion of habitable area [timesteps ⋅ locations]
+total_relative_cover = AI.relative_cover(scenario_rel_cover)
+
+# Relative cover per taxa, summed across locations [timesteps ⋅ taxa]
+relative_taxa_cover = AI.relative_taxa_cover(scenario_rel_cover, habitable_area_m2)
+
+# Relative cover per taxa and location [timesteps ⋅ taxa ⋅ locations]
+relative_loc_taxa_cover = AI.relative_loc_taxa_cover(scenario_rel_cover)
+
+# LTMP cover is relative to the whole reef area, which is the unit used by RME
+ltmp_cover = AI.ltmp_cover(scenario_rel_cover, habitable_area_m2, reef_area_m2)
+ltmp_taxa_cover = AI.ltmp_taxa_cover(scenario_rel_cover, habitable_area_m2, reef_area_m2)
+ltmp_loc_taxa_cover = AI.ltmp_loc_taxa_cover(
+    scenario_rel_cover, habitable_area_m2, reef_area_m2
+)
+
+# Check against RME&#39;s own total cover (% of reef area)
+rme_total_cover = Array(rme_results.total_cover.data)[:, :, scenario] ./ 100
+@assert isapprox(ltmp_cover, rme_total_cover; atol=1e-5)
+
+# Absolute cover [timesteps ⋅ locations ⋅ scenarios], km². Note that habitat area is given
+# in km² here, whereas most other functions take areas in m².
+absolute_cover_km2 = AI.absolute_coral_area(rel_cover, habitable_area_km2)
+
+# Convert between relative and LTMP cover, with the location in dimension 2
+@assert AI.relative_cover_to_ltmp_cover(
+    total_relative_cover, habitable_area_m2, reef_area_m2, 2
+) ≈ ltmp_cover
+
+# Aggregate across all reefs [timesteps]
+gbr_relative_cover = AI.scenario_metric(total_relative_cover, habitable_area_m2, 2)
+gbr_ltmp_cover = AI.scenario_metric(ltmp_cover, reef_area_m2, 2)
+
+# Coral area saved by the intervention, compared with its paired counterfactual
+# [timesteps ⋅ locations ⋅ reps], km²
+# Can be negative: paired runs share climate but diverge in individual coral events
+coral_area_saved_km2 = AI.coral_area_saved(iv_rel_cover, cf_rel_cover, habitable_area_km2)</code></pre><h3 id="4.-Diversity-and-indices"><a class="docs-heading-anchor" href="#4.-Diversity-and-indices">4. Diversity and indices</a><a id="4.-Diversity-and-indices-1"></a><a class="docs-heading-anchor-permalink" href="#4.-Diversity-and-indices" title="Permalink"></a></h3><p>Both diversity metrics take relative cover per taxa and location <code>[timesteps ⋅ taxa ⋅ locations]</code> and return <code>[timesteps ⋅ locations]</code>.</p><p>RME reports shelter volume directly, so the shelter volume functions of ADRIAIndicators, which need cover per size class, are not used. Without size classes there is also no juvenile cover, so the juvenile metrics, the Reef Condition Index and the Reef Tourism Index (which depend on them) cannot be calculated from this output.</p><pre><code class="language-julia hljs">coral_diversity = AI.coral_diversity(relative_loc_taxa_cover)
+coral_evenness = AI.coral_evenness(relative_loc_taxa_cover)
+
+rme_relative_shelter_volume = Array(rme_results.relative_shelter_volume.data)[:, :, scenario]
+
+reef_biodiversity_condition_index = AI.reef_biodiversity_condition_index(
+    total_relative_cover, coral_diversity, rme_relative_shelter_volume
+)
+
+reef_fish_index = AI.reef_fish_index(total_relative_cover)</code></pre><h3 id="5.-Results"><a class="docs-heading-anchor" href="#5.-Results">5. Results</a><a id="5.-Results-1"></a><a class="docs-heading-anchor-permalink" href="#5.-Results" title="Permalink"></a></h3><p>The indicators over time for the first three reefs (counterfactual run 1), using the same panels and axes as the CoralBlox figure above:</p><p><img src="../assets/rme_indicators.png" alt="Indicators calculated from ReefMod Engine output"/></p><p>Values in the final year, for counterfactual run 1 (except coral area saved):</p><table><tr><th style="text-align: right">Metric</th><th style="text-align: right">First reef</th><th style="text-align: right">Great Barrier Reef</th></tr><tr><td style="text-align: right">Relative cover</td><td style="text-align: right">0.255</td><td style="text-align: right">0.511</td></tr><tr><td style="text-align: right">LTMP cover</td><td style="text-align: right">0.185</td><td style="text-align: right">0.363</td></tr><tr><td style="text-align: right">Absolute cover (km²)</td><td style="text-align: right">0.155</td><td style="text-align: right"></td></tr><tr><td style="text-align: right">Coral diversity</td><td style="text-align: right">0.791</td><td style="text-align: right"></td></tr><tr><td style="text-align: right">Coral evenness</td><td style="text-align: right">0.798</td><td style="text-align: right"></td></tr><tr><td style="text-align: right">Reef Biodiversity Condition Index</td><td style="text-align: right">0.356</td><td style="text-align: right"></td></tr><tr><td style="text-align: right">Reef Fish Index</td><td style="text-align: right">10.56</td><td style="text-align: right"></td></tr><tr><td style="text-align: right">Coral area saved (km²), rep 1</td><td style="text-align: right">-0.01604</td><td style="text-align: right"></td></tr><tr><td style="text-align: right">Coral area saved (km²), rep 2</td><td style="text-align: right">0.00394</td><td style="text-align: right"></td></tr></table></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../usage/">« Usage</a><a class="docs-footer-nextpage" href="../api/metrics/">Metrics »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Tuesday 13 October 2026 05:56">Tuesday 13 October 2026</span>. Using Julia version 1.13.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
