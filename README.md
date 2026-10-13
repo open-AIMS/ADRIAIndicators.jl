@@ -30,6 +30,8 @@ julia> ]test
 
 Each metric has an option to write the metric into a provided buffer, this version of the function is denoted by a `!` at the end of the function name.
 
+All cover inputs are expected to be provided as cover relative to the habitable area (a proportion between 0 and 1).
+
 ```julia
 import ADRIAIndicators: relative_juveniles, relative_juveniles!
 

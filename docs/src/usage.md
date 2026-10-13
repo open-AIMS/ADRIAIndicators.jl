@@ -13,6 +13,9 @@ Array dimensions always follow the same order:
 Missing dimensions are dropped without changing the order of the rest. For example, a
 metric aggregated over groups and sizes returns `[timesteps ⋅ locations]`.
 
+All cover inputs are expected to be provided as cover relative to the habitable area (a
+proportion between 0 and 1).
+
 ## Importing metrics
 
 Metrics are public but not exported, so `import` the ones you need, or call them as
