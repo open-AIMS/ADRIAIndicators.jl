@@ -13,7 +13,10 @@ makedocs(
     pages=[
         "Home" => "index.md",
         "usage.md",
-        "cookbook.md",
+        "Cookbook" => [
+            "CoralBlox.jl" => "cookbook/coralblox.md",
+            "C~scape and CoralPop" => "cookbook/cscape_coralpop.md",
+        ],
         "API" =>
             [
                 "api/metrics.md",

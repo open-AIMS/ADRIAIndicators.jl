@@ -1,4 +1,4 @@
-# Cookbook
+# CoralBlox.jl
 
 This page contains worked examples of applying ADRIAIndicators to the output of distinct
 coral ecological models: [CoralBlox.jl](https://github.com/open-AIMS/CoralBlox.jl) and
@@ -39,7 +39,7 @@ using CoralBlox: timestep!, coral_cover
 import ADRIAIndicators as AI
 ```
 
-### 1. CoralBlox simulation
+## 1. CoralBlox simulation
 
 This follows the CoralBlox Quick Start, wrapped in a function so that it can be run for
 each location. CoralBlox output is absolute coral cover in m² with dimensions
@@ -143,7 +143,7 @@ initial_cover_scale = [1.0, 0.5, 1.2]
 C_cover = stack(run_coralblox.(habitable_area_m2, initial_cover_scale))
 ```
 
-### 2. Adapting the output to ADRIAIndicators
+## 2. Adapting the output to ADRIAIndicators
 
 ADRIAIndicators expects *relative* cover (a proportion of habitable area) with dimensions
 `[timesteps ⋅ groups ⋅ sizes ⋅ locations]`. CoralBlox orders its dimensions as
@@ -157,7 +157,7 @@ rel_cover = C_cover ./ reshape(habitable_area_m2, 1, 1, 1, :)
 habitable_area_km2 = habitable_area_m2 ./ 1e6
 ```
 
-### 3. Cover
+## 3. Cover
 
 ```julia
 # Relative cover, proportion of habitable area [timesteps ⋅ locations]
@@ -203,7 +203,7 @@ all_locations_absolute_cover_km2 = AI.scenario_metric(
 )
 ```
 
-### 4. Shelter volume
+## 4. Shelter volume
 
 Shelter volume needs a mean colony diameter for each group and size class, and the
 parameters of a log-log model relating colony size to shelter volume.
@@ -239,7 +239,7 @@ total_asv_m3 = dropdims(sum(asv; dims=(2, 3)); dims=(2, 3))
 total_rsv = dropdims(sum(rsv; dims=(2, 3)); dims=(2, 3))
 ```
 
-### 5. Diversity
+## 5. Diversity
 
 Both diversity metrics take the relative cover per group and location
 `[timesteps ⋅ groups ⋅ locations]` and return `[timesteps ⋅ locations]`.
@@ -249,7 +249,7 @@ coral_diversity = AI.coral_diversity(relative_loc_taxa_cover)
 coral_evenness = AI.coral_evenness(relative_loc_taxa_cover)
 ```
 
-### 6. Juveniles
+## 6. Juveniles
 
 Juveniles are defined by which group and size class combinations count as juvenile. Here
 that is the first size class of every group.
@@ -290,7 +290,7 @@ juvenile_indicator = AI.juvenile_indicator(
 )
 ```
 
-### 7. Composite indices
+## 7. Composite indices
 
 CoralBlox does not model rubble, so only the indices that do not need it are used here.
 All of them return `[timesteps ⋅ locations]`.
@@ -309,7 +309,7 @@ reef_tourism_index = AI.reef_tourism_index_no_rubble(
 reef_fish_index = AI.reef_fish_index(total_relative_cover)
 ```
 
-### 8. Results
+## 8. Results
 
 The indicators over time, with a line per location. Remember that CoralBlox alone has no
 disturbances, so these trajectories show no cyclone, heat stress or crown-of-thorns
