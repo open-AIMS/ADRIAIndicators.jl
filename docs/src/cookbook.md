@@ -311,30 +311,6 @@ reef_fish_index = AI.reef_fish_index(total_relative_cover)
 
 ### 8. Results
 
-```julia
-final_values = [
-    "Relative cover" => total_relative_cover,
-    "LTMP cover" => ltmp_cover,
-    "Absolute cover (km²)" => absolute_cover_km2,
-    "Absolute shelter volume (m³)" => total_asv_m3,
-    "Relative shelter volume" => total_rsv,
-    "Coral diversity" => coral_diversity,
-    "Coral evenness" => coral_evenness,
-    "Relative juveniles" => relative_juveniles,
-    "Absolute juveniles" => absolute_juveniles,
-    "Juvenile indicator" => juvenile_indicator,
-    "Reef Condition Index" => reef_condition_index,
-    "Reef Biodiversity Condition Index" => reef_biodiversity_condition_index,
-    "Reef Tourism Index" => reef_tourism_index,
-    "Reef Fish Index" => reef_fish_index
-]
-
-println("Final timestep, one value per location:")
-for (name, metric) in final_values
-    println(rpad(name, 35), round.(metric[end, :]; digits=3))
-end
-```
-
 The indicators over time, with a line per location. Remember that CoralBlox alone has no
 disturbances, so these trajectories show no cyclone, heat stress or crown-of-thorns
 starfish events:
@@ -513,9 +489,9 @@ ltmp_loc_taxa_cover = AI.ltmp_loc_taxa_cover(
     scenario_rel_cover, habitable_area_m2, reef_area_m2
 )
 
-# Check against RME's own total cover (% of reef area). Should be close to zero.
+# Check against RME's own total cover (% of reef area)
 rme_total_cover = Array(rme_results.total_cover.data)[:, :, scenario] ./ 100
-max_cover_difference = maximum(abs.(ltmp_cover .- rme_total_cover))
+@assert isapprox(ltmp_cover, rme_total_cover; atol=1e-5)
 
 # Absolute cover [timesteps ⋅ locations ⋅ scenarios], km². Note that habitat area is given
 # in km² here, whereas most other functions take areas in m².
@@ -560,32 +536,6 @@ reef_fish_index = AI.reef_fish_index(total_relative_cover)
 ```
 
 ### 5. Results
-
-```julia
-println("Final year, counterfactual run $scenario:")
-println("Maximum difference to RME total cover: ", max_cover_difference)
-println("Great Barrier Reef relative cover: ", round(gbr_relative_cover[end]; digits=3))
-println("Great Barrier Reef LTMP cover:     ", round(gbr_ltmp_cover[end]; digits=3))
-
-println("\nFirst reef (the intervention reef), final year:")
-final_values = [
-    "Relative cover" => total_relative_cover,
-    "LTMP cover" => ltmp_cover,
-    "Absolute cover (km²)" => absolute_cover_km2[:, :, scenario],
-    "Coral diversity" => coral_diversity,
-    "Coral evenness" => coral_evenness,
-    "Reef Biodiversity Condition Index" => reef_biodiversity_condition_index,
-    "Reef Fish Index" => reef_fish_index
-]
-for (metric_name, metric) in final_values
-    println(rpad(metric_name, 35), round(metric[end, 1]; digits=3))
-end
-
-println(
-    rpad("Coral area saved (km²), per rep", 35),
-    round.(coral_area_saved_km2[end, 1, :]; digits=5)
-)
-```
 
 The indicators over time for the first three reefs (counterfactual run 1), using the same
 panels and axes as the CoralBlox figure above:
