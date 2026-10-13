@@ -555,3 +555,71 @@ Values in the final year, for counterfactual run 1 (except coral area saved):
 | Reef Fish Index | 10.56 | |
 | Coral area saved (km²), rep 1 | -0.01604 | |
 | Coral area saved (km²), rep 2 | 0.00394 | |
+
+## 9. Plots
+
+The metrics are plain arrays, so any plotting package can be used; [`Makie.jl`](https://docs.makie.org)
+is shown here. This code is not run when the documentation is built: the images below are
+produced by running this whole page's code with
+[`docs/figures/coralblox_figures.jl`](https://github.com/open-AIMS/ADRIAIndicators.jl/blob/main/docs/figures/coralblox_figures.jl).
+
+```julia
+using CairoMakie
+
+timesteps = 1:n_timesteps
+location_names = ["Location 1", "Location 2", "Location 3"]
+location_colors = ["#0072B2", "#D55E00", "#009E73"]  # one colour, line style per location
+location_styles = [:solid, :dash, :dot]
+group_colors = ["#2a78d6", "#eb6834", "#1baf7a"]
+
+# Relative cover of each functional group, one panel per location
+fig_groups = Figure(size=(1200, 400))
+for l in eachindex(location_names)
+    ax = Axis(
+        fig_groups[1, l]; title=location_names[l], xlabel="Timestep",
+        ylabel=l == 1 ? "Relative cover" : ""
+    )
+    for g in 1:n_functional_groups
+        lines!(
+            ax, timesteps, relative_loc_taxa_cover[:, g, l];
+            color=group_colors[g], linewidth=2
+        )
+    end
+end
+Legend(
+    fig_groups[1, 4],
+    [LineElement(; color=c, linewidth=2) for c in group_colors],
+    ["Group $g" for g in 1:n_functional_groups]; framevisible=false
+)
+
+# Every metric of the results above, one panel per metric and one line per location
+fig_metrics = Figure(size=(1200, 1500))
+for (i, (name, metric)) in enumerate(final_values)
+    ax = Axis(
+        fig_metrics[fld1(i, 3), mod1(i, 3)]; title=name,
+        xlabel=i >= 12 ? "Timestep" : ""
+    )
+    for l in axes(metric, 2)
+        lines!(
+            ax, timesteps, metric[:, l];
+            color=location_colors[l], linestyle=location_styles[l], linewidth=2
+        )
+    end
+end
+Legend(
+    fig_metrics[6, :],
+    [LineElement(; color=c, linestyle=s, linewidth=2)
+     for (c, s) in zip(location_colors, location_styles)],
+    location_names; framevisible=false, orientation=:horizontal
+)
+```
+
+![Relative cover of each functional group at each location](../assets/cookbook/coralblox_groups.png)
+
+Cover of each functional group at the three locations. The shapes are the same at every
+location: the first group grows and comes to dominate, the third declines steadily, and the
+second declines towards the end. The levels differ with each location's initial cover.
+
+![ADRIAIndicators metrics at each location](../assets/cookbook/coralblox_metrics.png)
+
+All metrics, one line per location.
