@@ -15,7 +15,11 @@ makedocs(
         "usage.md",
         "Cookbook" => [
             "CoralBlox.jl" => "cookbook/coralblox.md",
-            "C~scape and CoralPop" => "cookbook/cscape_coralpop.md",
+            "C~scape" => "cookbook/cscape.md",
+            "CoralPOP" => "cookbook/coralpop.md",
+        ],
+        "Examples" => [
+            "Comparing C~scape and CoralPOP" => "examples/cscape_coralpop.md",
         ],
         "API" =>
             [

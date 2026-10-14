@@ -12,4 +12,4 @@ build/*.dll
 
 # Local environments of the cookbook examples (not committed)
 docs/figures/Manifest.toml
-examples/*/Manifest.toml
+docs/examples/*/Manifest.toml
