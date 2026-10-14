@@ -203,11 +203,6 @@ reef_fish_index = AI.reef_fish_index(total_relative_cover)
 
 ## 5. Results
 
-The indicators over time for the first three reefs (counterfactual run 1), using the same
-panels and axes as the [CoralBlox.jl figure](coralblox.md):
-
-![Indicators calculated from ReefMod Engine output](../assets/rme_indicators.png)
-
 Values in the final year, for counterfactual run 1 (except coral area saved):
 
 | Metric | First reef | Great Barrier Reef |
@@ -221,3 +216,44 @@ Values in the final year, for counterfactual run 1 (except coral area saved):
 | Reef Fish Index | 10.56 | |
 | Coral area saved (km²), rep 1 | -0.01604 | |
 | Coral area saved (km²), rep 2 | 0.00394 | |
+
+## 6. Plots
+
+The metrics are plain arrays, so any plotting package can be used; [`Makie.jl`](https://docs.makie.org)
+is shown here. This code is not run when the documentation is built.
+
+```julia
+using CairoMakie
+
+years = start_year:end_year
+n_plot_reefs = 3  # the first three reefs
+reef_colors = ["#0072B2", "#E69F00", "#009E73"]
+
+# One panel per metric (counterfactual run 1) and one line per reef
+panels = [
+    "LTMP cover" => ltmp_cover,
+    "Coral evenness" => coral_evenness,
+    "Reef Biodiversity Condition Index" => reef_biodiversity_condition_index,
+    "Reef Fish Index" => reef_fish_index
+]
+
+fig_metrics = Figure(size=(800, 520))
+for (i, (name, metric)) in enumerate(panels)
+    ax = Axis(
+        fig_metrics[fld1(i, 2), mod1(i, 2)]; title=name,
+        xlabel=i > length(panels) - 2 ? "Year" : ""
+    )
+    for l in 1:n_plot_reefs
+        lines!(ax, years, metric[:, l]; color=reef_colors[l], linewidth=2)
+    end
+end
+Legend(
+    fig_metrics[3, :],
+    [LineElement(; color=c, linewidth=2) for c in reef_colors],
+    ["Reef $id" for id in reef_id_list[1:n_plot_reefs]]; orientation=:horizontal
+)
+```
+
+![Indicators calculated from ReefMod Engine output](../assets/rme_indicators.png)
+
+The indicators over time for the first three reefs (counterfactual run 1).
