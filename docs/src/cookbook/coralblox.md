@@ -382,3 +382,6 @@ second declines towards the end. The levels differ with each location's initial 
 ![ADRIAIndicators metrics at each location](../assets/cookbook/coralblox_metrics.png)
 
 All metrics, one line per location.
+
+This is a small illustrative simulation with made-up parameters, so the metrics show how to
+use ADRIAIndicators with CoralBlox.jl output, not a result for any real reef.

@@ -35,6 +35,10 @@ their figures are committed to `docs/src/assets/cookbook/`.
 - The CoralBlox.jl figures are regenerated from the page's own code with
   `julia --project=docs/figures docs/figures/coralblox_figures.jl` (the environment is
   instantiated with `julia --project=docs/figures -e 'using Pkg; Pkg.instantiate()'`).
-- The C~scape and CoralPop figures are written by `examples/coral_models/run_all.jl` to its
+- The CoralPOP figures are regenerated from the page's own code with
+  `julia --project=docs/figures docs/figures/coralpop_figures.jl`.
+- The C~scape figures are regenerated with
+  `julia --project=docs/figures docs/figures/cscape_figures.jl`.
+- The C~scape and CoralPOP comparison figures are written by `docs/examples/coral_models/run_all.jl` to its
   `output/` folder, from where they are copied.
 
