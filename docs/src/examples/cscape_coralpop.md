@@ -31,9 +31,9 @@ area, so the reef's total and habitable area are read from a small table.
 ### C~scape
 
 C~scape saves one `.rds` file per run (`Array_scenario_<id>_rep_<rep>_draw_<draw>.rds`; here
-`draw_NA`). It holds one
-six-dimensional array. The file stores the names of the dimensions, but `RData.jl` returns a
-plain array without them, so the dimensions are selected by position, as in this table:
+`draw_NA`). It holds one six-dimensional array. The file stores the names of the dimensions,
+but `RData.load` drops them by default, and ADRIAIndicators expects plain arrays anyway, so
+the dimensions are selected by position, as in this table:
 
 ```julia
 using RData
