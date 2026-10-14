@@ -22,10 +22,11 @@ import ADRIAIndicators as AI
 
 C~scape saves one `.rds` file per run, holding one six-dimensional array of `[year ⋅ site ⋅
 intervened ⋅ type ⋅ enhancement ⋅ value]`. The file stores the names of the dimensions, but
-`RData.jl` returns a plain array without them, so the code below selects each dimension by
-its position in that order. The 100 size classes are in value slots 7-106 and are colony
-*counts*, so converting to cover needs the diameter of each class, and which classes are
-juvenile. Both belong to the demography of each type, and are stored in `size_classes.rds`.
+`RData.load` drops them by default, and ADRIAIndicators expects plain arrays anyway, so the
+code below selects each dimension by its position in that order. The 100 size classes are in
+value slots 7-106 and are colony *counts*, so converting to cover needs the diameter of each
+class, and which classes are juvenile. Both belong to the demography of each type, and are
+stored in `size_classes.rds`.
 
 The output does not record the reef's area either, so the total and habitable area are taken
 from the domain description.
