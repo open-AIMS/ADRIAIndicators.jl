@@ -15,6 +15,7 @@ makedocs(
         "usage.md",
         "Cookbook" => [
             "CoralBlox.jl" => "cookbook/coralblox.md",
+            "ReefMod Engine" => "cookbook/reefmod_engine.md",
             "C~scape" => "cookbook/cscape.md",
             "CoralPOP" => "cookbook/coralpop.md",
         ],
