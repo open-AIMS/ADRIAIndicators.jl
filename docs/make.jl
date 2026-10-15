@@ -13,7 +13,15 @@ makedocs(
     pages=[
         "Home" => "index.md",
         "usage.md",
-        "cookbook.md",
+        "Cookbook" => [
+            "CoralBlox.jl" => "cookbook/coralblox.md",
+            "ReefMod Engine" => "cookbook/reefmod_engine.md",
+            "C~scape" => "cookbook/cscape.md",
+            "CoralPOP" => "cookbook/coralpop.md",
+        ],
+        "Examples" => [
+            "Comparing C~scape and CoralPOP" => "examples/cscape_coralpop.md",
+        ],
         "API" =>
             [
                 "api/metrics.md",

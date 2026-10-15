@@ -9,3 +9,7 @@ build/*.dll
 *.pdf
 
 .vscode/
+
+# Local environments of the cookbook examples (not committed)
+docs/figures/Manifest.toml
+docs/examples/*/Manifest.toml

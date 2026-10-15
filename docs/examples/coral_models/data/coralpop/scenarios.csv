@@ -1,0 +1,2 @@
+scenario,scenario_id,seed,growth_scale_Branching,growth_scale_Foliose,growth_scale_Other,mortality_scale_Branching,mortality_scale_Foliose,mortality_scale_Other,recruitment_scale_brooder,recruitment_scale_spawner_BF,recruitment_scale_spawner_Other,bleaching_scale_Branching,bleaching_scale_Foliose,bleaching_scale_Other,rcp,year_start,year_end,bleaching_dhw_threshold
+1,100001,1,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,45.0,2025.0,2099.0,4.0
