@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>C~scape · ADRIAIndicators</title><meta name="title" content="C~scape · ADRIAIndicators"/><meta property="og:title" content="C~scape · ADRIAIndicators"/><meta property="twitter:title" content="C~scape · ADRIAIndicators"/><meta name="description" content="Documentation for ADRIAIndicators."/><meta property="og:description" content="Documentation for ADRIAIndicators."/><meta property="twitter:description" content="Documentation for ADRIAIndicators."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.63.2/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">ADRIAIndicators</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../usage/">Usage</a></li><li><span class="tocitem">Cookbook</span><ul><li><a class="tocitem" href="../coralblox/">CoralBlox.jl</a></li><li><a class="tocitem" href="../reefmod_engine/">ReefMod Engine</a></li><li class="is-active"><a class="tocitem" href>C~scape</a><ul class="internal"><li><a class="tocitem" href="#1.-Cscape-output"><span>1. C~scape output</span></a></li><li><a class="tocitem" href="#2.-Adapting-the-output-to-ADRIAIndicators"><span>2. Adapting the output to ADRIAIndicators</span></a></li><li><a class="tocitem" href="#3.-Indicators"><span>3. Indicators</span></a></li><li><a class="tocitem" href="#4.-Results"><span>4. Results</span></a></li><li><a class="tocitem" href="#5.-Plots"><span>5. Plots</span></a></li></ul></li><li><a class="tocitem" href="../coralpop/">CoralPOP</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../../examples/cscape_coralpop/">Comparing C~scape and CoralPOP</a></li></ul></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../../api/metrics/">Metrics</a></li><li><a class="tocitem" href="../../api/cover_metrics/">Cover Metrics</a></li><li><a class="tocitem" href="../../api/juvenile_metrics/">Juvenile Metrics</a></li><li><a class="tocitem" href="../../api/indices/">Reef Indices</a></li><li><a class="tocitem" href="../../api/conversions/">Conversions</a></li></ul></li><li><a class="tocitem" href="../../developing/">Developing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Cookbook</a></li><li class="is-active"><a href>C~scape</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>C~scape</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/open-AIMS/ADRIAIndicators.jl/blob/main/docs/src/cookbook/cscape.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Cscape"><a class="docs-heading-anchor" href="#Cscape">C~scape</a><a id="Cscape-1"></a><a class="docs-heading-anchor-permalink" href="#Cscape" title="Permalink"></a></h1><p>C~scape is an integral-projection model of coral colony size classes written in R. This example reads the saved output of one C~scape run on a synthetic one-reef domain (2025-2099), puts it into the layout ADRIAIndicators expects, and calculates the cover, shelter volume, diversity, juvenile and composite index metrics.</p><p>Note: To run the following code, RData.jl should be added to the environment.</p><p>The output file and the reef are synthetic, so the resulting metrics are illustrative only. To run the code, download the files from the <a href="https://github.com/open-AIMS/ADRIAIndicators.jl/tree/main/docs/examples/coral_models"><code>docs/examples/coral_models</code></a> folder of the ADRIAIndicators.jl repository.</p><pre><code class="language-julia hljs">using RData
+
+import ADRIAIndicators as AI</code></pre><h2 id="1.-Cscape-output"><a class="docs-heading-anchor" href="#1.-Cscape-output">1. C~scape output</a><a id="1.-Cscape-output-1"></a><a class="docs-heading-anchor-permalink" href="#1.-Cscape-output" title="Permalink"></a></h2><p>C~scape saves one <code>.rds</code> file per run, holding one six-dimensional array of <code>[year ⋅ site ⋅ intervened ⋅ type ⋅ enhancement ⋅ value]</code>. The file stores the names of the dimensions, but <code>RData.load</code> drops them by default, and ADRIAIndicators expects plain arrays anyway, so the code below selects each dimension by its position in that order. The 100 size classes are in value slots 7-106 and are colony <em>counts</em>, so converting to cover needs the diameter of each class, and which classes are juvenile. Both belong to the demography of each type, and are stored in <code>size_classes.rds</code>.</p><p>The output does not record the reef&#39;s area either, so the total and habitable area are taken from the domain description.</p><pre><code class="language-julia hljs">habitable_area_m2 = [38910.4]  # [locations], m²
+reef_area_m2 = [83897.0]       # [locations], m², includes non-habitable area
+
+types = [&quot;acro_table&quot;, &quot;acro_corym&quot;, &quot;corym_non_acro&quot;, &quot;small_massive&quot;, &quot;large_massive&quot;, &quot;brooder&quot;]
+size_classes = RData.load(&quot;data/cscape/size_classes.rds&quot;)
+
+# Colony diameter (cm) and juvenile classes [groups ⋅ sizes]
+diam_cm = permutedims(reduce(hcat, [Float64.(size_classes[t][&quot;meshpoints_diam&quot;]) for t in types]))
+is_juvenile = permutedims(reduce(hcat, [Bool.(size_classes[t][&quot;juvenile&quot;]) for t in types]))
+
+out = RData.load(&quot;data/cscape/Array_scenario_101000100001_rep_1_draw_NA.rds&quot;)
+size(out)  # (76, 1, 2, 6, 14, 107)</code></pre><h2 id="2.-Adapting-the-output-to-ADRIAIndicators"><a class="docs-heading-anchor" href="#2.-Adapting-the-output-to-ADRIAIndicators">2. Adapting the output to ADRIAIndicators</a><a id="2.-Adapting-the-output-to-ADRIAIndicators-1"></a><a class="docs-heading-anchor-permalink" href="#2.-Adapting-the-output-to-ADRIAIndicators" title="Permalink"></a></h2><p>ADRIAIndicators expects <em>relative</em> cover (a proportion of habitable area) with dimensions <code>[timesteps ⋅ groups ⋅ sizes ⋅ locations]</code>. The first year is the initial state, so it is dropped. The <code>intervened</code> sub-areas and the 14 enhancement classes are summed, and counts are converted to cover: a colony of diameter <em>d</em> cm has a planar area of π(<em>d</em>/200)² m².</p><pre><code class="language-julia hljs"># [timesteps ⋅ locations ⋅ groups ⋅ sizes]
+counts = dropdims(sum(out[2:end, :, :, :, :, 7:106]; dims=(3, 5)); dims=(3, 5))
+counts = permutedims(counts, (1, 3, 4, 2))  # [timesteps ⋅ groups ⋅ sizes ⋅ locations]
+
+colony_area_m2 = π .* (diam_cm ./ 200) .^ 2
+rel_cover = counts .* reshape(colony_area_m2, 1, size(colony_area_m2)...) ./
+            reshape(habitable_area_m2, 1, 1, 1, :)</code></pre><h2 id="3.-Indicators"><a class="docs-heading-anchor" href="#3.-Indicators">3. Indicators</a><a id="3.-Indicators-1"></a><a class="docs-heading-anchor-permalink" href="#3.-Indicators" title="Permalink"></a></h2><p>Shelter volume needs the colony diameters (cm) and the parameters of a log-log planar area model for each group and size class. Here every group uses the same illustrative values; the <a href="../../examples/cscape_coralpop/">in-depth example</a> maps C~scape&#39;s groups onto ADRIA&#39;s functional group parameters.</p><pre><code class="language-julia hljs">n_groups, n_sizes = size(diam_cm)
+
+planar_area_params = zeros(Float64, n_groups, n_sizes, 2)  # [groups ⋅ sizes ⋅ (intercept, coefficient)]
+planar_area_params[:, :, 1] .= -8.95  # intercept
+planar_area_params[:, :, 2] .= 2.80   # coefficient
+
+# Reference colony defining the maximum shelter volume: (diameter cm, intercept, coefficient)
+reference = (95.0, -8.95, 2.80)
+
+max_juvenile_density = 15.0  # individuals/m²</code></pre><pre><code class="language-julia hljs"># Cover [timesteps ⋅ locations]
+relative_cover = AI.relative_cover(rel_cover)
+ltmp_cover = AI.ltmp_cover(rel_cover, habitable_area_m2, reef_area_m2)
+
+# Shelter volume, summed over groups and sizes [timesteps ⋅ locations]
+rsv = AI.relative_shelter_volume(
+    rel_cover, diam_cm, planar_area_params, habitable_area_m2, reference
+)
+total_rsv = clamp.(dropdims(sum(rsv; dims=(2, 3)); dims=(2, 3)), 0.0, 1.0)
+
+# Diversity, from the cover of each group [timesteps ⋅ groups ⋅ locations]
+relative_loc_taxa_cover = AI.relative_loc_taxa_cover(rel_cover)
+coral_diversity = AI.coral_diversity(relative_loc_taxa_cover)
+coral_evenness = AI.coral_evenness(relative_loc_taxa_cover)
+
+# Juveniles. Note that mean colony diameters are expected in m here, whereas the
+# shelter volume functions take cm.
+relative_juveniles = AI.relative_juveniles(rel_cover, is_juvenile)
+juvenile_indicator = AI.juvenile_indicator(
+    rel_cover, is_juvenile, habitable_area_m2, diam_cm ./ 100, max_juvenile_density
+)</code></pre><p>C~scape does not model rubble, so only the composite indices that do not need it are used.</p><pre><code class="language-julia hljs">reef_condition_index = AI.reef_condition_index(ltmp_cover, total_rsv, juvenile_indicator)
+
+reef_biodiversity_condition_index = AI.reef_biodiversity_condition_index(
+    relative_cover, coral_diversity, total_rsv
+)
+
+reef_tourism_index = AI.reef_tourism_index_no_rubble(
+    ltmp_cover, coral_evenness, total_rsv, relative_juveniles
+)
+
+reef_fish_index = AI.reef_fish_index(relative_cover)</code></pre><h2 id="4.-Results"><a class="docs-heading-anchor" href="#4.-Results">4. Results</a><a id="4.-Results-1"></a><a class="docs-heading-anchor-permalink" href="#4.-Results" title="Permalink"></a></h2><pre><code class="language-julia hljs">final_values = [
+    &quot;Relative cover&quot; =&gt; relative_cover,
+    &quot;LTMP cover&quot; =&gt; ltmp_cover,
+    &quot;Relative shelter volume&quot; =&gt; total_rsv,
+    &quot;Coral diversity&quot; =&gt; coral_diversity,
+    &quot;Coral evenness&quot; =&gt; coral_evenness,
+    &quot;Relative juveniles&quot; =&gt; relative_juveniles,
+    &quot;Juvenile indicator&quot; =&gt; juvenile_indicator,
+    &quot;Reef Condition Index&quot; =&gt; reef_condition_index,
+    &quot;Reef Biodiversity Condition Index&quot; =&gt; reef_biodiversity_condition_index,
+    &quot;Reef Tourism Index&quot; =&gt; reef_tourism_index,
+    &quot;Reef Fish Index&quot; =&gt; reef_fish_index
+]
+
+println(&quot;Final timestep:&quot;)
+for (name, metric) in final_values
+    println(rpad(name, 35), round.(metric[end, :]; digits=3))
+end</code></pre><h2 id="5.-Plots"><a class="docs-heading-anchor" href="#5.-Plots">5. Plots</a><a id="5.-Plots-1"></a><a class="docs-heading-anchor-permalink" href="#5.-Plots" title="Permalink"></a></h2><p>The metrics are plain arrays, so any plotting package can be used; <a href="https://docs.makie.org"><code>Makie.jl</code></a> is shown here. This code is not run when the documentation is built: the images below are produced by running this whole page&#39;s code with <a href="https://github.com/open-AIMS/ADRIAIndicators.jl/blob/main/docs/figures/cscape_figures.jl"><code>docs/figures/cscape_figures.jl</code></a>.</p><pre><code class="language-julia hljs">using CairoMakie
+
+years = 2025:2099
+group_names = [&quot;Tabular Acropora&quot;, &quot;Corymbose Acropora&quot;, &quot;Corymbose non-Acropora&quot;,
+    &quot;Small massives&quot;, &quot;Large massives&quot;, &quot;Brooders&quot;]
+group_colors = [&quot;#2a78d6&quot;, &quot;#eb6834&quot;, &quot;#1baf7a&quot;, &quot;#8e5bd0&quot;, &quot;#c9a227&quot;, &quot;#d6457a&quot;]
+
+# Relative cover of each coral type
+fig_groups = Figure(size=(800, 400))
+ax_groups = Axis(fig_groups[1, 1]; xlabel=&quot;Year&quot;, ylabel=&quot;Relative cover&quot;)
+for g in 1:n_groups
+    lines!(ax_groups, years, relative_loc_taxa_cover[:, g, 1]; color=group_colors[g], linewidth=2)
+end
+Legend(
+    fig_groups[1, 2],
+    [LineElement(; color=c, linewidth=2) for c in group_colors],
+    group_names; framevisible=false
+)
+
+# Every metric of the results above, one panel per metric
+fig_metrics = Figure(size=(1200, 1200))
+for (i, (name, metric)) in enumerate(final_values)
+    ax = Axis(
+        fig_metrics[fld1(i, 3), mod1(i, 3)]; title=name,
+        xlabel=i &gt; length(final_values) - 3 ? &quot;Year&quot; : &quot;&quot;
+    )
+    lines!(ax, years, metric[:, 1]; color=&quot;#2a78d6&quot;, linewidth=2)
+end</code></pre><p><img src="../../assets/cookbook/cscape_groups.png" alt="Relative cover of each C~scape coral type"/></p><p>Cover of each coral type over time. Tabular and corymbose <em>Acropora</em> carry nearly all the cover, lose most of it in the strong heat events (around 2058 and 2087-2089) and recover.</p><p><img src="../../assets/cookbook/cscape_metrics.png" alt="ADRIAIndicators metrics for C~scape"/></p><p>All metrics over time.</p><p>This is one default run of C~scape, so it shows the model&#39;s trajectory, not its uncertainty. <a href="../../examples/cscape_coralpop/">Comparing C~scape and CoralPOP</a> calculates the same metrics for CoralPOP, run under the same heat stress, and compares the two models. It also checks the results against each model&#39;s own cover and lists the most common pitfalls when adapting an output.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../reefmod_engine/">« ReefMod Engine</a><a class="docs-footer-nextpage" href="../coralpop/">CoralPOP »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Thursday 15 October 2026 00:30">Thursday 15 October 2026</span>. Using Julia version 1.13.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
