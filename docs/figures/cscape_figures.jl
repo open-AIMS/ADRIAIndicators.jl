@@ -7,7 +7,7 @@ docs dependencies), so the figures are generated here and committed to
 docs/src/assets/cookbook/. This script runs every ```julia block of the page, in order,
 exactly as written, and then saves the two figures that the page's last section builds.
 The page reads the C~scape output files from its own folder, so the blocks are run from
-docs/examples/coral_models/data/cscape.
+docs/examples/coral_models.
 
 From the repository root:
 
@@ -16,7 +16,7 @@ From the repository root:
 =#
 
 const PAGE = joinpath(@__DIR__, "..", "src", "cookbook", "cscape.md")
-const DATA = joinpath(@__DIR__, "..", "examples", "coral_models", "data", "cscape")
+const DATA = joinpath(@__DIR__, "..", "examples", "coral_models")
 const OUT = mkpath(joinpath(@__DIR__, "..", "src", "assets", "cookbook"))
 
 text = replace(read(PAGE, String), "\r\n" => "\n")

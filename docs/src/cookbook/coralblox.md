@@ -305,6 +305,32 @@ starfish outbreak events:
 
 ![Indicators calculated from CoralBlox output](../assets/coralblox_indicators.png)
 
+Collecting the metrics, each of shape `[timesteps ⋅ locations]`:
+
+```julia
+final_values = [
+    "Relative cover" => total_relative_cover,
+    "LTMP cover" => ltmp_cover,
+    "Absolute cover (km²)" => absolute_cover_km2,
+    "Absolute shelter volume (m³)" => total_asv_m3,
+    "Relative shelter volume" => total_rsv,
+    "Coral diversity" => coral_diversity,
+    "Coral evenness" => coral_evenness,
+    "Relative juveniles" => relative_juveniles,
+    "Absolute juveniles" => absolute_juveniles,
+    "Juvenile indicator" => juvenile_indicator,
+    "Reef Condition Index" => reef_condition_index,
+    "Reef Biodiversity Condition Index" => reef_biodiversity_condition_index,
+    "Reef Tourism Index" => reef_tourism_index,
+    "Reef Fish Index" => reef_fish_index
+]
+
+println("Final timestep:")
+for (name, metric) in final_values
+    println(rpad(name, 35), round.(metric[end, :]; digits=3))
+end
+```
+
 Values at the final timestep:
 
 | Metric | Location 1 | Location 2 | Location 3 |
